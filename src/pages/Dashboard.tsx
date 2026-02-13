@@ -18,7 +18,7 @@ export function Dashboard() {
         <div className="h-full flex flex-col overflow-hidden">
             <header className="flex items-center justify-between px-5 py-3 bg-bg-card border-b border-bg-border shrink-0">
                 <h1 className="text-2xl font-bold text-fg-primary tracking-tight">
-                    MIAMITECH<span className="text-accent-pink">.AI</span>
+                    miamitech<span className="text-accent-pink">.ai</span>
                 </h1>
             </header>
 
