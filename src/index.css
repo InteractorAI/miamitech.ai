@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-miami-black text-gray-300 font-mono;
+  }
+}
+
+@layer components {
+  .terminal-border {
+    @apply border border-gray-800 hover:border-miami-pink/50 transition-colors duration-300;
+  }
+}
