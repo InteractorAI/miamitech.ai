@@ -13,7 +13,7 @@ export function CapitalFocused() {
                     to="/"
                     className="text-xs font-medium text-fg-muted hover:text-fg-primary transition-colors"
                 >
-                    ← Dashboard
+                    ← Home
                 </Link>
                 <h1 className="text-sm font-semibold text-fg-primary tracking-tight">
                     Capital Index

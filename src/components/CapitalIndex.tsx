@@ -24,9 +24,11 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                 e =>
                     e.name.toLowerCase().includes(q) ||
                     e.type.toLowerCase().includes(q) ||
+                    e.stage.toLowerCase().includes(q) ||
                     e.focus.toLowerCase().includes(q) ||
                     e.location.toLowerCase().includes(q) ||
-                    e.contact.toLowerCase().includes(q)
+                    e.contact.toLowerCase().includes(q) ||
+                    e.description.toLowerCase().includes(q)
             );
         }
         if (stageFilter !== 'All') {

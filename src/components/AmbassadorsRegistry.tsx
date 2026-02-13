@@ -2,9 +2,6 @@ import { useState } from 'react';
 import { Panel } from './TerminalBlock';
 
 const AMBASSADORS = [
-    { name: 'Dave Notik', handle: '@dave' },
-    { name: 'Maria Derchi', handle: '@maria' },
-    { name: 'Natalia Martinez-Kalinina', handle: '@natalia' },
     { name: 'Melissa Medina', handle: '@melmedina305' },
     { name: 'Ruben Harris', handle: '@rubenharris' },
     { name: 'Michael Vega-Sanz', handle: '@MattVanzz' },
@@ -15,6 +12,7 @@ const AMBASSADORS = [
     { name: 'Geoffrey Woo', handle: '@geoffreywoo' },
     { name: 'Katherine Boyle', handle: '@KTmBoyle' },
     { name: 'Rony Abovitz', handle: '@rabovitz' },
+    { name: 'Chester Ng', handle: '@chest' },
     { name: 'Nafis Azad', handle: '@AzadNafis' },
 ];
 
