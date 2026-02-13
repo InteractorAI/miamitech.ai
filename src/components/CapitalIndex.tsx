@@ -54,7 +54,7 @@ export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
 
     const handleRowClick = (entry: CapitalEntry) => {
         window.interactor?.message.send(
-            `Tell me more about ${entry.name}. What do they invest in and what's their typical process?`
+            `Tell me about ${entry.name}`
         );
     };
 
@@ -73,8 +73,8 @@ export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
                             key={s}
                             onClick={() => setStageFilter(s)}
                             className={`text-[11px] px-2.5 py-1 rounded-md font-medium transition-all duration-150 ${stageFilter === s
-                                    ? 'bg-accent-pink/12 text-accent-pink'
-                                    : 'text-fg-muted hover:text-fg-secondary hover:bg-bg-hover'
+                                ? 'bg-accent-pink/12 text-accent-pink'
+                                : 'text-fg-muted hover:text-fg-secondary hover:bg-bg-hover'
                                 }`}
                         >
                             {s}
@@ -85,16 +85,18 @@ export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
         >
             {/* Search */}
             <div className="px-5 py-3 border-b border-bg-border">
-                <div className="relative">
-                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-fg-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+                <div className="flex items-center bg-bg-elevated rounded-lg focus-within:ring-1 focus-within:ring-accent-pink/30 transition-shadow">
+                    <div className="pl-3 flex items-center justify-center pointer-events-none">
+                        <svg className="w-4 h-4 text-fg-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
                     <input
                         type="text"
                         placeholder="Search investors..."
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        className="w-full bg-bg-elevated border-none text-sm text-fg-primary placeholder:text-fg-muted pl-10 pr-4 py-2.5 outline-none focus:ring-1 focus:ring-accent-pink/30 rounded-lg font-sans transition-shadow"
+                        className="w-full bg-transparent border-none text-sm text-fg-primary placeholder:text-fg-muted pl-3 pr-4 py-2.5 outline-none font-sans"
                     />
                 </div>
             </div>
@@ -108,19 +110,20 @@ export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
                 </div>
             ) : (
                 <div className="overflow-auto flex-1">
-                    <table className="w-full text-sm">
+                    <table className="w-full text-sm table-fixed">
                         <thead className="sticky top-0 z-10 bg-bg-card">
                             <tr className="border-b border-bg-border">
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider">Name</th>
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider">Stage</th>
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider">Check Size</th>
+                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[25%]">Name</th>
+                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[20%]">Stage</th>
+                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[15%]">Check Size</th>
                                 {expanded && (
-                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider">Type</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[12%]">Type</th>
                                 )}
                                 <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider">Focus</th>
                                 {expanded && (
-                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider">Location</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[14%]">Location</th>
                                 )}
+                                <th className="w-10" />
                             </tr>
                         </thead>
                         <tbody>
@@ -130,26 +133,43 @@ export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
                                     onClick={() => handleRowClick(entry)}
                                     className="border-b border-bg-border/50 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                                 >
-                                    <td className="py-3 px-5 font-medium text-fg-primary group-hover:text-accent-pink transition-colors whitespace-nowrap">
+                                    <td className="py-3 px-5 font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
                                         {entry.topTen && (
                                             <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-green mr-2 align-middle" />
                                         )}
                                         {entry.name}
                                     </td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px]">{entry.stage || '—'}</td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums">{entry.checkSize || '—'}</td>
+                                    <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">{entry.stage || '—'}</td>
+                                    <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate">{entry.checkSize || '—'}</td>
                                     {expanded && (
-                                        <td className="py-3 px-5 text-fg-secondary text-[13px]">{entry.type || '—'}</td>
+                                        <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">{entry.type || '—'}</td>
                                     )}
-                                    <td className="py-3 px-5 text-fg-muted text-[13px] truncate max-w-[220px]">{entry.focus || '—'}</td>
+                                    <td className="py-3 px-5 text-fg-muted text-[13px] truncate">{entry.focus || '—'}</td>
                                     {expanded && (
-                                        <td className="py-3 px-5 text-fg-muted text-[13px] truncate max-w-[180px]">{entry.location || '—'}</td>
+                                        <td className="py-3 px-5 text-fg-muted text-[13px] truncate">{entry.location || '—'}</td>
                                     )}
+                                    <td className="py-3 px-2 text-center w-10">
+                                        {entry.website && (
+                                            <a
+                                                href={entry.website}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                onClick={e => e.stopPropagation()}
+                                                className="inline-flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-fg-muted hover:text-accent-blue"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
+                                                </svg>
+                                            </a>
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                             {filtered.length === 0 && (
                                 <tr>
-                                    <td colSpan={expanded ? 6 : 4} className="py-12 text-center text-fg-muted text-sm">
+                                    <td colSpan={expanded ? 7 : 5} className="py-12 text-center text-fg-muted text-sm">
                                         No results found
                                     </td>
                                 </tr>

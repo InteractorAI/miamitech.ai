@@ -12,7 +12,7 @@ const SPACES = [
 export function SpacesDirectory() {
     const handleRowClick = (space: (typeof SPACES)[number]) => {
         window.interactor?.message.send(
-            `Tell me about ${space.name} in ${space.hood}. What are the amenities, pricing, and vibe?`
+            `Tell me about ${space.name}`
         );
     };
 
