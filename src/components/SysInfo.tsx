@@ -14,16 +14,12 @@ export function SysInfo() {
 
                 <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                        <span className="text-xs text-fg-muted">Version</span>
-                        <span className="text-sm text-fg-primary font-medium">1.0</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-xs text-fg-muted">Status</span>
-                        <span className="text-sm text-accent-green font-medium">Active</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-xs text-fg-muted">Entries</span>
+                        <span className="text-xs text-fg-muted">Datapoints</span>
                         <span className="text-sm text-fg-primary font-medium">235+</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <span className="text-xs text-fg-muted">Last Updated</span>
+                        <span className="text-sm text-fg-primary font-medium">Feb 2025</span>
                     </div>
                 </div>
 

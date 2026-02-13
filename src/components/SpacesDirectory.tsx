@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Panel } from './TerminalBlock';
 
 const SPACES = [
@@ -9,7 +10,13 @@ const SPACES = [
     { name: 'WeWork', hood: 'Multiple', type: 'Coworking' },
 ] as const;
 
+const PREVIEW_COUNT = 4;
+
 export function SpacesDirectory() {
+    const [expanded, setExpanded] = useState(false);
+    const visible = expanded ? SPACES : SPACES.slice(0, PREVIEW_COUNT);
+    const remaining = SPACES.length - PREVIEW_COUNT;
+
     const handleRowClick = (space: (typeof SPACES)[number]) => {
         window.interactor?.message.send(
             `Tell me about ${space.name}`
@@ -17,9 +24,9 @@ export function SpacesDirectory() {
     };
 
     return (
-        <Panel title="Spaces" noPadding>
+        <Panel title="Spaces" subtitle={`${SPACES.length}`} noPadding>
             <div>
-                {SPACES.map((space, idx) => (
+                {visible.map((space, idx) => (
                     <div
                         key={idx}
                         onClick={() => handleRowClick(space)}
@@ -34,6 +41,14 @@ export function SpacesDirectory() {
                         <span className="text-[11px] text-fg-muted font-medium">{space.type}</span>
                     </div>
                 ))}
+                {SPACES.length > PREVIEW_COUNT && (
+                    <button
+                        onClick={() => setExpanded(!expanded)}
+                        className="w-full px-5 py-2.5 text-[11px] font-medium text-fg-muted hover:text-accent-pink transition-colors duration-150 text-center"
+                    >
+                        {expanded ? '↑ Show less' : `↓ ${remaining} more`}
+                    </button>
+                )}
             </div>
         </Panel>
     );

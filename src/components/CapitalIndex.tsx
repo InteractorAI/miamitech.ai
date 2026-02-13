@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Panel } from './TerminalBlock';
 import { parseCSV, type CapitalEntry } from '../lib/googleSheets';
 
@@ -8,6 +9,7 @@ const SHEET_CSV_URL =
 const STAGES = ['All', 'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Growth'] as const;
 
 export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
+    const navigate = useNavigate();
     const [data, setData] = useState<CapitalEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
@@ -58,33 +60,44 @@ export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
         );
     };
 
-    const count = filtered.length;
+
 
     return (
         <Panel
             title="Capital"
-            subtitle={loading ? '...' : `${count} entries`}
+
             className="h-full"
             noPadding
             action={
-                <div className="flex gap-1.5">
-                    {STAGES.map(s => (
+                <div className="flex items-center gap-2">
+                    <div className="flex gap-1.5 overflow-x-auto">
+                        {STAGES.map(s => (
+                            <button
+                                key={s}
+                                onClick={() => setStageFilter(s)}
+                                className={`text-[11px] px-2.5 py-1 rounded-md font-medium transition-all duration-150 whitespace-nowrap ${stageFilter === s
+                                    ? 'bg-accent-pink/12 text-accent-pink'
+                                    : 'text-fg-muted hover:text-fg-secondary hover:bg-bg-hover'
+                                    }`}
+                            >
+                                {s}
+                            </button>
+                        ))}
+                    </div>
+                    {!expanded && (
                         <button
-                            key={s}
-                            onClick={() => setStageFilter(s)}
-                            className={`text-[11px] px-2.5 py-1 rounded-md font-medium transition-all duration-150 ${stageFilter === s
-                                ? 'bg-accent-pink/12 text-accent-pink'
-                                : 'text-fg-muted hover:text-fg-secondary hover:bg-bg-hover'
-                                }`}
+                            onClick={() => navigate('/capital')}
+                            className="p-1.5 rounded-md text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-all duration-150 shrink-0 text-sm leading-none"
+                            title="Expand"
                         >
-                            {s}
+                            ↗
                         </button>
-                    ))}
+                    )}
                 </div>
             }
         >
             {/* Search */}
-            <div className="px-5 py-3 border-b border-bg-border">
+            <div className="px-5 py-3 border-b border-bg-border shrink-0">
                 <div className="flex items-center bg-bg-elevated rounded-lg focus-within:ring-1 focus-within:ring-accent-pink/30 transition-shadow">
                     <div className="pl-3 flex items-center justify-center pointer-events-none">
                         <svg className="w-4 h-4 text-fg-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -93,7 +106,7 @@ export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
                     </div>
                     <input
                         type="text"
-                        placeholder="Search investors..."
+                        placeholder={loading ? 'Search investors...' : `Search ${data.length} investors...`}
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                         className="w-full bg-transparent border-none text-sm text-fg-primary placeholder:text-fg-muted pl-3 pr-4 py-2.5 outline-none font-sans"
@@ -109,19 +122,19 @@ export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
                     ))}
                 </div>
             ) : (
-                <div className="overflow-auto flex-1">
+                <div className="overflow-auto flex-1 min-h-0">
                     <table className="w-full text-sm table-fixed">
                         <thead className="sticky top-0 z-10 bg-bg-card">
                             <tr className="border-b border-bg-border">
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[25%]">Name</th>
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[20%]">Stage</th>
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[15%]">Check Size</th>
+                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[35%] md:w-[25%]">Name</th>
+                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[30%] md:w-[20%]">Stage</th>
+                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider md:w-[15%]">Check Size</th>
                                 {expanded && (
-                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[12%]">Type</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[12%] hidden md:table-cell">Type</th>
                                 )}
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider">Focus</th>
+                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden md:table-cell">Focus</th>
                                 {expanded && (
-                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[14%]">Location</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[14%] hidden lg:table-cell">Location</th>
                                 )}
                                 <th className="w-10" />
                             </tr>
@@ -142,11 +155,11 @@ export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
                                     <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">{entry.stage || '—'}</td>
                                     <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate">{entry.checkSize || '—'}</td>
                                     {expanded && (
-                                        <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">{entry.type || '—'}</td>
+                                        <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden md:table-cell">{entry.type || '—'}</td>
                                     )}
-                                    <td className="py-3 px-5 text-fg-muted text-[13px] truncate">{entry.focus || '—'}</td>
+                                    <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden md:table-cell">{entry.focus || '—'}</td>
                                     {expanded && (
-                                        <td className="py-3 px-5 text-fg-muted text-[13px] truncate">{entry.location || '—'}</td>
+                                        <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden lg:table-cell">{entry.location || '—'}</td>
                                     )}
                                     <td className="py-3 px-2 text-center w-10">
                                         {entry.website && (
