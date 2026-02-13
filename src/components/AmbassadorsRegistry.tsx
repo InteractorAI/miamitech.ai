@@ -14,6 +14,7 @@ const AMBASSADORS = [
     { name: 'Rony Abovitz', handle: '@rabovitz' },
     { name: 'Chester Ng', handle: '@chest' },
     { name: 'Nafis Azad', handle: '@AzadNafis' },
+    { name: 'Saif Ishoof', handle: '@saif305' },
 ];
 
 const PREVIEW_COUNT = 5;

@@ -21,7 +21,7 @@ export function SysInfo({ dataCount }: SysInfoProps) {
                         className="text-fg-primary font-medium hover:text-accent-blue transition-colors"
                     >
                         Interactor
-                    </a>.
+                    </a>. Data is messy; will get better.
                 </p>
 
                 <div className="space-y-3">

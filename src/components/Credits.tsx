@@ -7,8 +7,9 @@ interface Contributor {
 
 const CONTRIBUTORS: Contributor[] = [
     { name: 'Michael Morgenstern', handle: '@M___Morgenstern' },
-    { name: 'David Notik', handle: '@davenotik' },
     { name: 'Auston Bunsen', handle: '@bunsen' },
+    { name: 'Saif Ishoof', handle: '@saif305' },
+    { name: 'David Notik', handle: '@davenotik' },
 ];
 
 export function Credits() {
