@@ -1,24 +1,25 @@
-import React from 'react';
-import { TerminalBlock } from './TerminalBlock';
+import { Panel } from './TerminalBlock';
 
 const AMBASSADORS = [
-    { name: "Dave Notik", handle: "@dave" },
-    { name: "Maria Derchi", handle: "@maria" },
-    { name: "Natalia Martinez-Kalinina", handle: "@natalia" },
-    // Add more placeholders
+    { name: 'Dave Notik', handle: '@dave' },
+    { name: 'Maria Derchi', handle: '@maria' },
+    { name: 'Natalia Martinez-Kalinina', handle: '@natalia' },
 ];
 
-export const AmbassadorsRegistry: React.FC = () => {
+export function AmbassadorsRegistry() {
     return (
-        <TerminalBlock title="AMBASSADORS_REGISTRY" className="h-full">
-            <ul className="space-y-2 text-xs">
-                {AMBASSADORS.map((p, i) => (
-                    <li key={i} className="flex justify-between items-center border-b border-gray-900 pb-1 last:border-0 hover:text-miami-purple cursor-help transition-colors">
-                        <span className="text-gray-300">{p.name}</span>
-                        <span className="text-gray-500 font-mono">{p.handle}</span>
-                    </li>
+        <Panel title="Ambassadors" noPadding>
+            <div>
+                {AMBASSADORS.map((a, i) => (
+                    <div
+                        key={i}
+                        className="flex items-center justify-between px-5 py-3 border-b border-bg-border/50 last:border-b-0"
+                    >
+                        <span className="text-sm font-medium text-fg-primary">{a.name}</span>
+                        <span className="text-xs text-fg-muted">{a.handle}</span>
+                    </div>
                 ))}
-            </ul>
-        </TerminalBlock>
+            </div>
+        </Panel>
     );
-};
+}

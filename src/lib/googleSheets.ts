@@ -1,5 +1,6 @@
 export interface CapitalEntry {
     name: string;
+    topTen: boolean;
     website: string;
     checkSize: string;
     contact: string;
@@ -8,37 +9,48 @@ export interface CapitalEntry {
     type: string;
     stage: string;
     focus: string;
+    leads: string;
+    notes: string;
 }
 
-export const parseCSV = (csvText: string): CapitalEntry[] => {
-    const lines = csvText.split('\n');
-    // const headers = lines[0].split(',');
+/**
+ * Parses a CSV line respecting quoted fields that may contain commas.
+ */
+function parseCSVLine(line: string): string[] {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
 
-    // Basic CSV parsing (skipping complex quote handling for MVP unless needed)
-    return lines.slice(1).filter(line => line.trim() !== '').map(line => {
-        // Handle quoted fields simply by checking for "
-        // A robust CSV parser is better, but for MVP we do basic split or regex
-        // Using a regex to split by comma but ignoring commas inside quotes
-        // const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-        // Fallback if regex fails or matches weirdly, manual split is safer for simple CSVs
-        // strict split:
-        // const values = line.split(','); 
-        // Cleaning:
-        const clean = (val: string) => val ? val.replace(/^"|"$/g, '').trim() : '';
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+            if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
+                current += '"';
+                i++; // skip escaped quote
+            } else {
+                inQuotes = !inQuotes;
+            }
+        } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    result.push(current.trim());
+    return result;
+}
 
-        // Values mapping based on assumed column order from inspection:
-        // Name, Top 10 Cited, Website, Typical Check Size, Key Miami Contact, Location, Description, Type, Investment Stage, Focus Industries...
+export function parseCSV(csvText: string): CapitalEntry[] {
+    const lines = csvText.split(/\r?\n/);
+    // Skip header rows (first 3 rows are metadata, row 4 is headers)
+    const dataLines = lines.slice(4).filter(l => l.trim() !== '');
 
-        // We need to map correctly. Since we don't have a robust parser lib installed, 
-        // and the data might contain commas in "Description", we should be careful.
-        // For now, let's assume standard CSV structure and use a simple regex split.
-
-        // Better regex for CSV:
-        const matches = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
-        const cols = matches ? matches.map(m => clean(m)) : [];
-
+    return dataLines.map(line => {
+        const cols = parseCSVLine(line);
         return {
             name: cols[0] || '',
+            topTen: (cols[1] || '').toLowerCase() === 'yes',
             website: cols[2] || '',
             checkSize: cols[3] || '',
             contact: cols[4] || '',
@@ -47,6 +59,8 @@ export const parseCSV = (csvText: string): CapitalEntry[] => {
             type: cols[7] || '',
             stage: cols[8] || '',
             focus: cols[9] || '',
+            leads: cols[10] || '',
+            notes: cols[11] || '',
         };
-    });
-};
+    }).filter(e => e.name !== '');
+}

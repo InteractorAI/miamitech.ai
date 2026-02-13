@@ -7,19 +7,28 @@ export default {
   theme: {
     extend: {
       colors: {
-        miami: {
-          black: '#050505',
-          dark: '#121212',
-          pink: '#FF00FF',
-          orange: '#FF4500',
-          purple: '#8A2BE2',
-        }
+        bg: {
+          primary: '#0b0b0e',
+          card: '#111116',
+          elevated: '#18181e',
+          hover: '#1e1e26',
+          border: '#232329',
+        },
+        fg: {
+          primary: '#f0f0f5',
+          secondary: '#9a9aad',
+          muted: '#55555e',
+        },
+        accent: {
+          green: '#00c853',
+          pink: '#e040fb',
+          blue: '#448aff',
+        },
       },
       fontFamily: {
-        mono: ['"JetBrains Mono"', 'monospace'],
+        sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
       },
     },
   },
   plugins: [],
 }
-

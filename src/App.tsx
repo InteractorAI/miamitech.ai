@@ -6,7 +6,7 @@ import { InteractorWidget } from './components/InteractorWidget';
 function App() {
   return (
     <Router>
-      <div className="bg-miami-black min-h-screen text-gray-300 font-mono selection:bg-miami-pink selection:text-white">
+      <div className="h-full">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/capital" element={<CapitalFocused />} />
