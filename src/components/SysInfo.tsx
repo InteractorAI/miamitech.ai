@@ -1,6 +1,10 @@
 import { Panel } from './TerminalBlock';
 
-export function SysInfo() {
+interface SysInfoProps {
+    dataCount: number;
+}
+
+export function SysInfo({ dataCount }: SysInfoProps) {
     const handleRoadmap = () => {
         window.interactor?.message.send('What\'s on the roadmap?');
     };
@@ -9,17 +13,21 @@ export function SysInfo() {
         <Panel title="About">
             <div className="space-y-5">
                 <p className="text-sm text-fg-secondary leading-relaxed">
-                    The operating layer for Miami's tech ecosystem. Connecting capital, builders, and spaces.
+                    The AI concierge and index for the Miami tech and startup ecosystem, powered by{' '}
+                    <a
+                        href="https://interactor.ai"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-fg-primary font-medium hover:text-accent-blue transition-colors"
+                    >
+                        Interactor
+                    </a>.
                 </p>
 
                 <div className="space-y-3">
                     <div className="flex justify-between items-center">
                         <span className="text-xs text-fg-muted">Datapoints</span>
-                        <span className="text-sm text-fg-primary font-medium">235+</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-xs text-fg-muted">Last Updated</span>
-                        <span className="text-sm text-fg-primary font-medium">Feb 2025</span>
+                        <span className="text-sm text-fg-primary font-medium">{dataCount || 235}+</span>
                     </div>
                 </div>
 

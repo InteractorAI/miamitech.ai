@@ -13,9 +13,10 @@ export interface CapitalEntry {
     notes: string;
 }
 
-/**
- * Parses a CSV line respecting quoted fields that may contain commas.
- */
+export interface SheetData {
+    entries: CapitalEntry[];
+}
+
 function parseCSVLine(line: string): string[] {
     const result: string[] = [];
     let current = '';
@@ -26,7 +27,7 @@ function parseCSVLine(line: string): string[] {
         if (char === '"') {
             if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
                 current += '"';
-                i++; // skip escaped quote
+                i++;
             } else {
                 inQuotes = !inQuotes;
             }
@@ -41,12 +42,15 @@ function parseCSVLine(line: string): string[] {
     return result;
 }
 
-export function parseCSV(csvText: string): CapitalEntry[] {
-    const lines = csvText.split(/\r?\n/);
-    // Skip header rows (first 3 rows are metadata, row 4 is headers)
-    const dataLines = lines.slice(4).filter(l => l.trim() !== '');
+export const SHEET_CSV_URL =
+    'https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/export?format=csv';
 
-    return dataLines.map(line => {
+export function parseCSV(csvText: string): SheetData {
+    const lines = csvText.split(/\r?\n/);
+
+
+    const dataLines = lines.slice(4).filter(l => l.trim() !== '');
+    const entries = dataLines.map(line => {
         const cols = parseCSVLine(line);
         return {
             name: cols[0] || '',
@@ -63,4 +67,6 @@ export function parseCSV(csvText: string): CapitalEntry[] {
             notes: cols[11] || '',
         };
     }).filter(e => e.name !== '');
+
+    return { entries };
 }

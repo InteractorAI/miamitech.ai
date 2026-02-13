@@ -1,37 +1,20 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Panel } from './TerminalBlock';
-import { parseCSV, type CapitalEntry } from '../lib/googleSheets';
-
-const SHEET_CSV_URL =
-    'https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/export?format=csv';
+import { type CapitalEntry } from '../lib/googleSheets';
 
 const STAGES = ['All', 'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Growth'] as const;
 
-export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
+interface CapitalIndexProps {
+    data: CapitalEntry[];
+    loading: boolean;
+    expanded?: boolean;
+}
+
+export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexProps) {
     const navigate = useNavigate();
-    const [data, setData] = useState<CapitalEntry[]>([]);
-    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [stageFilter, setStageFilter] = useState<string>('All');
-
-    const fetchData = async () => {
-        try {
-            const res = await fetch(SHEET_CSV_URL);
-            const text = await res.text();
-            setData(parseCSV(text));
-        } catch (err) {
-            console.error('Failed to fetch capital data:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-        const interval = setInterval(fetchData, 60_000);
-        return () => clearInterval(interval);
-    }, []);
 
     const filtered = useMemo(() => {
         let result = data;
@@ -60,12 +43,9 @@ export function CapitalIndex({ expanded = false }: { expanded?: boolean }) {
         );
     };
 
-
-
     return (
         <Panel
             title="Capital"
-
             className="h-full"
             noPadding
             action={

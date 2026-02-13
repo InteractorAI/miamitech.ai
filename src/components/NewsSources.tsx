@@ -29,7 +29,7 @@ export function NewsSources() {
                         rel="noopener noreferrer"
                         className="flex items-center justify-between px-5 py-3 border-b border-bg-border/50 last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
                     >
-                        <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors">
+                        <span className="text-sm font-medium text-fg-primary group-hover:text-accent-blue transition-colors">
                             {source.name}
                         </span>
                         <span className="text-[11px] text-fg-muted font-medium">{source.desc}</span>
