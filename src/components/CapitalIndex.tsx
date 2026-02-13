@@ -91,8 +91,18 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         placeholder={loading ? 'Search investors...' : `Search ${data.length} investors...`}
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        className="w-full bg-transparent border-none text-sm text-fg-primary placeholder:text-fg-muted pl-3 pr-4 py-2.5 outline-none font-sans"
+                        className="w-full bg-transparent border-none text-sm text-fg-primary placeholder:text-fg-muted pl-3 pr-2 py-2.5 outline-none font-sans"
                     />
+                    {search && (
+                        <button
+                            onClick={() => setSearch('')}
+                            className="pr-3 pl-1 flex items-center justify-center text-fg-muted hover:text-fg-primary transition-colors"
+                        >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    )}
                 </div>
             </div>
 

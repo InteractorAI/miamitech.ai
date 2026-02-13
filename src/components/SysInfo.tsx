@@ -5,8 +5,8 @@ interface SysInfoProps {
 }
 
 export function SysInfo({ dataCount }: SysInfoProps) {
-    const handleRoadmap = () => {
-        window.interactor?.message.send('What\'s on the roadmap?');
+    const handleLearnMore = () => {
+        window.interactor?.message.send('Tell me about this project');
     };
 
     return (
@@ -33,7 +33,7 @@ export function SysInfo({ dataCount }: SysInfoProps) {
 
                 <div className="flex gap-2">
                     <button
-                        onClick={handleRoadmap}
+                        onClick={handleLearnMore}
                         className="flex-1 text-xs font-medium text-fg-secondary border border-bg-border hover:border-fg-muted hover:text-fg-primary py-2.5 rounded-md transition-all duration-200"
                     >
                         Learn More

@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Panel } from './TerminalBlock';
 
 const SPACES = [
+    { name: 'The LAB Miami', hood: 'Wynwood', type: 'Coworking' },
     { name: 'Mana Tech', hood: 'Downtown', type: 'Tech Hub' },
-    { name: 'The Lab Miami', hood: 'Wynwood', type: 'Coworking' },
     { name: 'CIC Miami', hood: 'Miami', type: 'Innovation Campus' },
     { name: 'Büro', hood: 'Multiple', type: 'Coworking' },
     { name: 'The Cannon', hood: 'Coral Gables', type: 'Coworking' },
