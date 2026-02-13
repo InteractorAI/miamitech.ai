@@ -5,6 +5,7 @@ import { AmbassadorsRegistry } from '../components/AmbassadorsRegistry';
 import { NewsSources } from '../components/NewsSources';
 import { Credits } from '../components/Credits';
 import { FAQ } from '../components/FAQ';
+import { Sponsors } from '../components/Sponsors';
 import { useSheetData } from '../hooks/useSheetData';
 
 const SECTIONS = ['About', 'Spaces', 'Ambassadors', 'News', 'FAQ', 'Capital'] as const;
@@ -45,6 +46,9 @@ export function Dashboard() {
                 <div className="shrink-0 lg:col-span-3 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo dataCount={data.length} />
+                    </div>
+                    <div className="border-b border-bg-border">
+                        <Sponsors />
                     </div>
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
                         <SpacesDirectory />
