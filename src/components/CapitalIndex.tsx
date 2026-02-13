@@ -49,8 +49,8 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
             className="h-full"
             noPadding
             action={
-                <div className="flex items-center gap-2">
-                    <div className="flex gap-1.5 overflow-x-auto">
+                <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-1">
                         {STAGES.map(s => (
                             <button
                                 key={s}
@@ -67,7 +67,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                     {!expanded && (
                         <button
                             onClick={() => navigate('/capital')}
-                            className="p-1.5 rounded-md text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-all duration-150 shrink-0 text-sm leading-none"
+                            className="p-1.5 rounded-md text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border ml-1"
                             title="Expand"
                         >
                             ↗
@@ -108,7 +108,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                             <tr className="border-b border-bg-border">
                                 <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[35%] md:w-[25%]">Name</th>
                                 <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[30%] md:w-[20%]">Stage</th>
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider md:w-[15%]">Check Size</th>
+                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider md:w-[15%]">Check</th>
                                 {expanded && (
                                     <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[12%] hidden md:table-cell">Type</th>
                                 )}

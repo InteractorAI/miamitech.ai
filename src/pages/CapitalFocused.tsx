@@ -1,7 +1,10 @@
 import { CapitalIndex } from '../components/CapitalIndex';
 import { Link } from 'react-router-dom';
+import { useSheetData } from '../hooks/useSheetData';
 
 export function CapitalFocused() {
+    const { data, loading } = useSheetData();
+
     return (
         <div className="h-full flex flex-col overflow-hidden">
             {/* Header */}
@@ -20,7 +23,7 @@ export function CapitalFocused() {
 
             {/* Full Capital view */}
             <div className="flex-1 min-h-0">
-                <CapitalIndex expanded />
+                <CapitalIndex data={data} loading={loading} expanded />
             </div>
         </div>
     );
