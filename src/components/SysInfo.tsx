@@ -16,13 +16,6 @@ export function SysInfo({ dataCount }: SysInfoProps) {
                     The AI concierge for the Miami tech ecosystem, connecting you to the best resources in our community.
                 </p>
 
-                <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                        <span className="text-xs text-fg-muted">Datapoints</span>
-                        <span className="text-sm text-fg-primary font-medium">{dataCount || 235}+</span>
-                    </div>
-                </div>
-
                 <div className="flex gap-2">
                     <button
                         onClick={handleLearnMore}
