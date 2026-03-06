@@ -13,7 +13,7 @@ export function SysInfo({ dataCount }: SysInfoProps) {
         <Panel title="About">
             <div className="space-y-5">
                 <p className="text-sm text-fg-secondary leading-relaxed">
-                    The AI concierge and index for the Miami tech and startup ecosystem. Note: Data is messy; will get better.
+                    The AI concierge for the Miami tech ecosystem, connecting you to the best resources in our community.
                 </p>
 
                 <div className="space-y-3">
