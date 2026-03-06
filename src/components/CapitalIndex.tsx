@@ -91,7 +91,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         placeholder={loading ? 'Search investors...' : `Search ${data.length} investors...`}
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        className="w-full bg-transparent border-none text-sm text-fg-primary placeholder:text-fg-muted pl-3 pr-2 py-2.5 outline-none font-sans"
+                        className="w-full bg-transparent border-none text-base text-fg-primary placeholder:text-fg-muted pl-3 pr-2 py-2 outline-none font-sans"
                     />
                     {search && (
                         <button

@@ -29,7 +29,7 @@ export function AskAI() {
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder="Message Miami Tech AI"
-                            className="w-full bg-transparent text-fg-primary text-[13px] px-4 py-3 focus:outline-none placeholder:text-fg-muted"
+                            className="w-full bg-transparent text-fg-primary text-base px-4 py-2.5 focus:outline-none placeholder:text-fg-muted"
                         />
                         <button
                             type="submit"
