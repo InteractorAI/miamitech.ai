@@ -1,10 +1,6 @@
 import { Panel } from './TerminalBlock';
 
-interface SysInfoProps {
-    dataCount: number;
-}
-
-export function SysInfo({ dataCount }: SysInfoProps) {
+export function SysInfo() {
     const handleLearnMore = () => {
         window.interactor?.message.send('Tell me about this project');
     };

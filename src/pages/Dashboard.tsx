@@ -46,7 +46,7 @@ export function Dashboard() {
             <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 min-h-0 overflow-auto lg:overflow-hidden">
                 <div className="shrink-0 lg:col-span-3 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
-                        <SysInfo dataCount={data.length} />
+                        <SysInfo />
                     </div>
                     <div id="ask-ai" className="border-b border-bg-border scroll-mt-12">
                         <AskAI />
