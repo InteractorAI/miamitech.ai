@@ -1,4 +1,5 @@
 import { SysInfo } from '../components/SysInfo';
+import { AskAI } from '../components/AskAI';
 import { CapitalIndex } from '../components/CapitalIndex';
 import { SpacesDirectory } from '../components/SpacesDirectory';
 import { AmbassadorsRegistry } from '../components/AmbassadorsRegistry';
@@ -8,7 +9,7 @@ import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
 import { useSheetData } from '../hooks/useSheetData';
 
-const SECTIONS = ['About', 'Spaces', 'Ambassadors', 'News', 'FAQ', 'Capital'] as const;
+const SECTIONS = ['About', 'Ask anything', 'Spaces', 'Ambassadors', 'News', 'FAQ', 'Capital'] as const;
 
 export function Dashboard() {
     const { data, loading } = useSheetData();
@@ -34,7 +35,7 @@ export function Dashboard() {
                 {SECTIONS.map(s => (
                     <button
                         key={s}
-                        onClick={() => scrollTo(s.toLowerCase())}
+                        onClick={() => scrollTo(s.toLowerCase().replace(' ', '-'))}
                         className="text-[11px] px-3 py-1.5 rounded-md font-medium text-fg-muted hover:text-fg-secondary hover:bg-bg-hover transition-all duration-150 whitespace-nowrap"
                     >
                         {s}
@@ -46,6 +47,9 @@ export function Dashboard() {
                 <div className="shrink-0 lg:col-span-3 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo dataCount={data.length} />
+                    </div>
+                    <div id="ask-ai" className="border-b border-bg-border scroll-mt-12">
+                        <AskAI />
                     </div>
                     <div className="border-b border-bg-border">
                         <Sponsors />
