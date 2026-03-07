@@ -13,9 +13,22 @@ export interface CapitalEntry {
     notes: string;
 }
 
-export interface SheetData {
-    entries: CapitalEntry[];
+export interface SpaceEntry {
+    name: string;
+    location: string;
+    type: string;
+    url: string;
 }
+
+export const SHEET_CONFIG = {
+    BASE_URL: 'https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/export?format=csv',
+    TABS: {
+        VCs: '0',
+        Spaces: '1501823864',
+        Groups: '585764250',
+        Resources: '358470130'
+    }
+} as const;
 
 function parseCSVLine(line: string): string[] {
     const result: string[] = [];
@@ -42,31 +55,39 @@ function parseCSVLine(line: string): string[] {
     return result;
 }
 
-export const SHEET_CSV_URL =
-    'https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/export?format=csv';
-
-export function parseCSV(csvText: string): SheetData {
+export function parseSheetCSV<T>(csvText: string, mapper: (cols: string[]) => T, skipRows: number = 0): T[] {
     const lines = csvText.split(/\r?\n/);
+    const dataLines = lines.slice(skipRows).filter(l => l.trim() !== '');
 
-
-    const dataLines = lines.slice(4).filter(l => l.trim() !== '');
-    const entries = dataLines.map(line => {
+    return dataLines.map(line => {
         const cols = parseCSVLine(line);
-        return {
-            name: cols[0] || '',
-            topTen: (cols[1] || '').toLowerCase() === 'yes',
-            website: cols[2] || '',
-            checkSize: cols[3] || '',
-            contact: cols[4] || '',
-            location: cols[5] || '',
-            description: cols[6] || '',
-            type: cols[7] || '',
-            stage: cols[8] || '',
-            focus: cols[9] || '',
-            leads: cols[10] || '',
-            notes: cols[11] || '',
-        };
-    }).filter(e => e.name !== '');
-
-    return { entries };
+        return mapper(cols);
+    }).filter(e => {
+        // Filter out empty rows (usually checked by name or first column)
+        const entry = e as any;
+        return entry && entry.name && entry.name !== '';
+    });
 }
+
+export const mappers = {
+    capital: (cols: string[]): CapitalEntry => ({
+        name: cols[0] || '',
+        topTen: (cols[1] || '').toLowerCase() === 'yes',
+        website: cols[2] || '',
+        checkSize: cols[3] || '',
+        contact: cols[4] || '',
+        location: cols[5] || '',
+        description: cols[6] || '',
+        type: cols[7] || '',
+        stage: cols[8] || '',
+        focus: cols[9] || '',
+        leads: cols[10] || '',
+        notes: cols[11] || '',
+    }),
+    spaces: (cols: string[]): SpaceEntry => ({
+        name: cols[0] || '',
+        location: cols[1] || '',
+        type: cols[2] || '',
+        url: cols[3] || '',
+    })
+};

@@ -1,32 +1,30 @@
 import { useState } from 'react';
 import { Panel } from './TerminalBlock';
-
-const SPACES = [
-    { name: 'The LAB Miami', hood: 'Wynwood', type: 'Coworking' },
-    { name: 'Mana Tech', hood: 'Downtown', type: 'Tech Hub' },
-    { name: 'CIC Miami', hood: 'Miami', type: 'Innovation Campus' },
-    { name: 'Büro', hood: 'Multiple', type: 'Coworking' },
-    { name: 'The Cannon', hood: 'Coral Gables', type: 'Coworking' },
-    { name: 'Pipeline Workspaces', hood: 'Multiple', type: 'Coworking' },
-    { name: 'WeWork', hood: 'Multiple', type: 'Coworking' },
-] as const;
+import { useSpacesData } from '../hooks/useSheetData';
+import type { SpaceEntry } from '../lib/googleSheets';
 
 const PREVIEW_COUNT = 4;
 
 export function SpacesDirectory() {
+    const { data: spaces, loading } = useSpacesData();
     const [expanded, setExpanded] = useState(false);
-    const visible = expanded ? SPACES : SPACES.slice(0, PREVIEW_COUNT);
-    const remaining = SPACES.length - PREVIEW_COUNT;
 
-    const handleRowClick = (space: (typeof SPACES)[number]) => {
+    const visible = expanded ? spaces : spaces.slice(0, PREVIEW_COUNT);
+    const remaining = spaces.length - PREVIEW_COUNT;
+
+    const handleRowClick = (space: SpaceEntry) => {
+        if (space.url) {
+            window.open(space.url, '_blank');
+            return;
+        }
         window.interactor?.message.send(
             `Tell me about ${space.name}`
         );
     };
 
     return (
-        <Panel title="Spaces" subtitle={`${SPACES.length}`} noPadding>
-            <div>
+        <Panel title="Spaces" subtitle={loading ? '...' : `${spaces.length}`} noPadding>
+            <div className={loading ? 'opacity-50 pointer-events-none' : ''}>
                 {visible.map((space, idx) => (
                     <div
                         key={idx}
@@ -37,12 +35,12 @@ export function SpacesDirectory() {
                             <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors">
                                 {space.name}
                             </span>
-                            <span className="text-xs text-fg-muted">{space.hood}</span>
+                            <span className="text-xs text-fg-muted">{space.location}</span>
                         </div>
                         <span className="text-[11px] text-fg-muted font-medium">{space.type}</span>
                     </div>
                 ))}
-                {SPACES.length > PREVIEW_COUNT && (
+                {spaces.length > PREVIEW_COUNT && (
                     <button
                         onClick={() => setExpanded(!expanded)}
                         className="w-full px-5 py-2.5 text-[11px] font-medium text-fg-muted hover:text-accent-pink transition-colors duration-150 text-center"

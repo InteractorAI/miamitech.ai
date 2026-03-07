@@ -7,12 +7,12 @@ import { NewsSources } from '../components/NewsSources';
 import { Credits } from '../components/Credits';
 import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
-import { useSheetData } from '../hooks/useSheetData';
+import { useCapitalData } from '../hooks/useSheetData';
 
 const SECTIONS = ['About', 'Ask anything', 'Spaces', 'Ambassadors', 'News', 'FAQ', 'Capital'] as const;
 
 export function Dashboard() {
-    const { data, loading } = useSheetData();
+    const { data, loading } = useCapitalData();
 
     const scrollTo = (id: string) => {
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
