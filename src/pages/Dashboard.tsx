@@ -31,8 +31,8 @@ export function Dashboard() {
                     miamitech<span className="text-accent-pink">.ai</span>
                 </h1>
                 <div className="flex items-center gap-3">
-                    <ThemeToggle />
                     <Credits />
+                    <ThemeToggle />
                 </div>
             </header>
 
