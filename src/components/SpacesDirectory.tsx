@@ -13,10 +13,6 @@ export function SpacesDirectory() {
     const remaining = spaces.length - PREVIEW_COUNT;
 
     const handleRowClick = (space: SpaceEntry) => {
-        if (space.url) {
-            window.open(space.url, '_blank');
-            return;
-        }
         window.interactor?.message.send(
             `Tell me about ${space.name}`
         );
@@ -31,13 +27,31 @@ export function SpacesDirectory() {
                         onClick={() => handleRowClick(space)}
                         className="flex items-center justify-between px-5 py-3 border-b border-bg-border/50 last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                     >
-                        <div className="flex items-baseline gap-2">
-                            <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors">
+                        <div className="flex items-baseline gap-2 min-w-0">
+                            <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
                                 {space.name}
                             </span>
-                            <span className="text-xs text-fg-muted">{space.location}</span>
+                            <span className="text-xs text-fg-muted truncate">{space.location}</span>
                         </div>
-                        <span className="text-[11px] text-fg-muted font-medium">{space.type}</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[11px] text-fg-muted font-medium">{space.type}</span>
+                            {space.url && (
+                                <a
+                                    href={space.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-0 group-hover:opacity-100"
+                                    title="Website"
+                                >
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
+                                    </svg>
+                                </a>
+                            )}
+                        </div>
                     </div>
                 ))}
                 {spaces.length > PREVIEW_COUNT && (
