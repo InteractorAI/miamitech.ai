@@ -20,12 +20,18 @@ export interface SpaceEntry {
     url: string;
 }
 
+export interface CommunityEntry {
+    name: string;
+    url: string;
+    calendar: string;
+}
+
 export const SHEET_CONFIG = {
     BASE_URL: 'https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/export?format=csv',
     TABS: {
         VCs: '0',
         Spaces: '1501823864',
-        Groups: '585764250',
+        Communities: '585764250',
         Resources: '358470130'
     }
 } as const;
@@ -89,5 +95,10 @@ export const mappers = {
         location: cols[1] || '',
         type: cols[2] || '',
         url: cols[3] || '',
+    }),
+    communities: (cols: string[]): CommunityEntry => ({
+        name: cols[0] || '',
+        url: cols[1] || '',
+        calendar: cols[2] || '',
     })
 };

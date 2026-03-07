@@ -2,6 +2,7 @@ import { SysInfo } from '../components/SysInfo';
 import { AskAI } from '../components/AskAI';
 import { CapitalIndex } from '../components/CapitalIndex';
 import { SpacesDirectory } from '../components/SpacesDirectory';
+import { CommunitiesDirectory } from '../components/CommunitiesDirectory';
 import { AmbassadorsRegistry } from '../components/AmbassadorsRegistry';
 import { NewsSources } from '../components/NewsSources';
 import { Credits } from '../components/Credits';
@@ -9,7 +10,7 @@ import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
 import { useCapitalData } from '../hooks/useSheetData';
 
-const SECTIONS = ['About', 'Ask anything', 'Spaces', 'Ambassadors', 'News', 'FAQ', 'Capital'] as const;
+const SECTIONS = ['About', 'Ask anything', 'Spaces', 'Communities', 'Ambassadors', 'News', 'FAQ', 'Capital'] as const;
 
 export function Dashboard() {
     const { data, loading } = useCapitalData();
@@ -56,6 +57,9 @@ export function Dashboard() {
                     </div>
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
                         <SpacesDirectory />
+                    </div>
+                    <div id="communities" className="border-b border-bg-border scroll-mt-12">
+                        <CommunitiesDirectory />
                     </div>
                     <div id="ambassadors" className="border-b border-bg-border scroll-mt-12">
                         <AmbassadorsRegistry />

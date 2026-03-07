@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { parseSheetCSV, SHEET_CONFIG, mappers, type CapitalEntry, type SpaceEntry } from '../lib/googleSheets';
+import { parseSheetCSV, SHEET_CONFIG, mappers, type CapitalEntry, type SpaceEntry, type CommunityEntry } from '../lib/googleSheets';
 
 export function useGoogleSheet<T>(
     gid: string,
@@ -48,6 +48,14 @@ export function useSpacesData() {
         SHEET_CONFIG.TABS.Spaces,
         mappers.spaces,
         1 // Skip 1 row for Spaces tab
+    );
+}
+
+export function useCommunitiesData() {
+    return useGoogleSheet<CommunityEntry>(
+        SHEET_CONFIG.TABS.Communities,
+        mappers.communities,
+        1 // Skip 1 row for Communities tab
     );
 }
 
