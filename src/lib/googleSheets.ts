@@ -26,13 +26,20 @@ export interface CommunityEntry {
     calendar: string;
 }
 
+export interface AmbassadorEntry {
+    name: string;
+    linkedin: string;
+    twitter: string;
+}
+
 export const SHEET_CONFIG = {
     BASE_URL: 'https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/export?format=csv',
     TABS: {
         VCs: '0',
         Spaces: '1501823864',
         Communities: '585764250',
-        Resources: '358470130'
+        Resources: '358470130',
+        Ambassadors: '1836408446'
     }
 } as const;
 
@@ -100,5 +107,10 @@ export const mappers = {
         name: cols[0] || '',
         url: cols[1] || '',
         calendar: cols[2] || '',
+    }),
+    ambassadors: (cols: string[]): AmbassadorEntry => ({
+        name: cols[0] || '',
+        linkedin: cols[1] || '',
+        twitter: cols[2] || '',
     })
 };
