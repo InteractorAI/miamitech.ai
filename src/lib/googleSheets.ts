@@ -38,6 +38,13 @@ export interface ContributorEntry {
     linkedin: string;
 }
 
+export interface ConferenceEntry {
+    name: string;
+    website: string;
+    linkedin: string;
+    twitter: string;
+}
+
 export const SHEET_CONFIG = {
     BASE_URL: 'https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/export?format=csv',
     TABS: {
@@ -46,7 +53,8 @@ export const SHEET_CONFIG = {
         Communities: '585764250',
         Resources: '358470130',
         Ambassadors: '1836408446',
-        Contributors: '18134085'
+        Contributors: '18134085',
+        Conferences: '1124651295'
     }
 } as const;
 
@@ -124,5 +132,11 @@ export const mappers = {
         name: cols[0] || '',
         twitter: cols[2] || '',
         linkedin: cols[1] || '',
-    })
+    }),
+    conferences: (cols: string[]): ConferenceEntry => ({
+        name: cols[0] || '',
+        website: cols[1] || '',
+        linkedin: cols[2] || '',
+        twitter: cols[3] || '',
+    }),
 };

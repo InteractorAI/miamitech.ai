@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { parseSheetCSV, SHEET_CONFIG, mappers, type CapitalEntry, type SpaceEntry, type CommunityEntry, type AmbassadorEntry, type ContributorEntry } from '../lib/googleSheets';
+import { parseSheetCSV, SHEET_CONFIG, mappers, type CapitalEntry, type SpaceEntry, type CommunityEntry, type AmbassadorEntry, type ContributorEntry, type ConferenceEntry } from '../lib/googleSheets';
 
 export function useGoogleSheet<T>(
     gid: string,
@@ -77,3 +77,11 @@ export function useContributorsData() {
 
 // Deprecated: use useCapitalData instead (providing compatibility for now)
 export const useSheetData = useCapitalData;
+
+export function useConferencesData() {
+    return useGoogleSheet<ConferenceEntry>(
+        SHEET_CONFIG.TABS.Conferences,
+        mappers.conferences,
+        1 // Skip 1 header row
+    );
+}
