@@ -1,5 +1,5 @@
-/** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -8,20 +8,22 @@ export default {
     extend: {
       colors: {
         bg: {
-          primary: '#0b0b0e',
-          card: '#111116',
-          elevated: '#18181e',
-          hover: '#1e1e26',
-          border: '#232329',
+          primary: 'rgb(var(--bg-primary) / <alpha-value>)',
+          card: 'rgb(var(--bg-card) / <alpha-value>)',
+          elevated: 'rgb(var(--bg-elevated) / <alpha-value>)',
+          hover: 'rgb(var(--bg-hover) / <alpha-value>)',
+          border: 'rgb(var(--bg-border) / <alpha-value>)',
+          'border-subtle': 'var(--bg-border-subtle)',
         },
         fg: {
-          primary: '#f0f0f5',
-          secondary: '#9a9aad',
-          muted: '#55555e',
+          primary: 'rgb(var(--fg-primary) / <alpha-value>)',
+          secondary: 'rgb(var(--fg-secondary) / <alpha-value>)',
+          muted: 'rgb(var(--fg-muted) / <alpha-value>)',
         },
         accent: {
           green: '#00c853',
           pink: '#e040fb',
+          'pink-alpha': 'var(--accent-pink-alpha)',
           blue: '#448aff',
         },
       },

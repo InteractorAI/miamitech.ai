@@ -21,7 +21,7 @@ export function FAQ() {
                     <button
                         key={i}
                         onClick={() => handleClick(q)}
-                        className="w-full text-left flex items-center gap-2 px-5 py-3 border-b border-bg-border/50 last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                        className="w-full text-left flex items-center gap-2 px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                     >
                         <span className="text-fg-muted text-xs shrink-0">?</span>
                         <span className="text-sm text-fg-primary group-hover:text-accent-pink transition-colors">

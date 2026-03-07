@@ -5,6 +5,40 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-primary: 249 250 251;
+    --bg-card: 255 255 255;
+    --bg-elevated: 243 244 246;
+    --bg-hover: 241 245 249;
+    --bg-border: 226 232 240;
+    --bg-border-subtle: #f0f2f5;
+    --fg-primary: 15 23 42;
+    --fg-secondary: 30 41 59;
+    --fg-muted: 71 85 105;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-thumb-hover: #94a3b8;
+    --selection-bg: rgba(224, 64, 251, 0.15);
+    --selection-fg: #d946ef;
+    --accent-pink-alpha: rgba(224, 64, 251, 0.12);
+  }
+
+  html.dark {
+    --bg-primary: 11 11 14;
+    --bg-card: 17 17 22;
+    --bg-elevated: 24 24 30;
+    --bg-hover: 30 30 38;
+    --bg-border: 35 35 41;
+    --bg-border-subtle: #1d1d24;
+    --fg-primary: 240 240 245;
+    --fg-secondary: 154 154 173;
+    --fg-muted: 85 85 94;
+    --scrollbar-thumb: #232329;
+    --scrollbar-thumb-hover: #333340;
+    --selection-bg: rgba(224, 64, 251, 0.2);
+    --selection-fg: #ffffff;
+    --accent-pink-alpha: rgba(224, 64, 251, 0.12);
+  }
+
   * {
     @apply box-border;
     margin: 0;
@@ -17,6 +51,8 @@
     @apply h-full w-full overflow-hidden;
   }
 
+
+
   body {
     @apply bg-bg-primary text-fg-primary font-sans antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
@@ -25,13 +61,14 @@
   }
 
   ::selection {
-    background: rgba(224, 64, 251, 0.2);
-    color: #fff;
+    background: var(--selection-bg);
+    color: var(--selection-fg);
   }
 
   /* Minimal scrollbar */
   ::-webkit-scrollbar {
     width: 4px;
+    height: 4px;
   }
 
   ::-webkit-scrollbar-track {
@@ -39,12 +76,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #232329;
+    background: var(--scrollbar-thumb);
     border-radius: 2px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #333340;
+    background: var(--scrollbar-thumb-hover);
   }
 }
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark" style="color-scheme: dark">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8" />
@@ -8,7 +8,22 @@
   <meta name="description"
     content="The AI concierge and index for the Miami tech and startup ecosystem. Discover investors, coworking spaces, ambassadors, news sources, and more." />
   <link rel="canonical" href="https://miamitech.ai" />
-  <meta name="theme-color" content="#0e0e12" />
+  <meta name="theme-color" content="#f9fafb" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0b0b0e" media="(prefers-color-scheme: dark)" />
+
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('theme');
+      const theme = savedTheme || 'dark'; // Always default to dark mode, override if user explicitly saved 'light'
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.documentElement.style.colorScheme = 'dark';
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.style.colorScheme = 'light';
+      }
+    })();
+  </script>
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />

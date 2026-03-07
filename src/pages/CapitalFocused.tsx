@@ -1,6 +1,7 @@
 import { CapitalIndex } from '../components/CapitalIndex';
 import { Link } from 'react-router-dom';
 import { useSheetData } from '../hooks/useSheetData';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 export function CapitalFocused() {
     const { data, loading } = useSheetData();
@@ -18,7 +19,9 @@ export function CapitalFocused() {
                 <h1 className="text-sm font-semibold text-fg-primary tracking-tight">
                     Capital Index
                 </h1>
-                <div className="w-16" />
+                <div className="w-16 flex justify-end">
+                    <ThemeToggle />
+                </div>
             </header>
 
             {/* Full Capital view */}

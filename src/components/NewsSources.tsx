@@ -27,7 +27,7 @@ export function NewsSources() {
                         href={source.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-between px-5 py-3 border-b border-bg-border/50 last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
+                        className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
                     >
                         <span className="text-sm font-medium text-fg-primary group-hover:text-accent-blue transition-colors">
                             {source.name}

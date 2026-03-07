@@ -8,6 +8,7 @@ import { NewsSources } from '../components/NewsSources';
 import { Credits } from '../components/Credits';
 import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
+import { ThemeToggle } from '../components/ThemeToggle';
 import { useCapitalData } from '../hooks/useSheetData';
 
 const SECTIONS = ['About', 'Ask anything', 'Spaces', 'Communities', 'Ambassadors', 'News', 'FAQ', 'Capital'] as const;
@@ -29,7 +30,10 @@ export function Dashboard() {
                 >
                     miamitech<span className="text-accent-pink">.ai</span>
                 </h1>
-                <Credits />
+                <div className="flex items-center gap-3">
+                    <ThemeToggle />
+                    <Credits />
+                </div>
             </header>
 
             <nav className="lg:hidden flex items-center gap-1 px-4 py-2 bg-bg-card/90 backdrop-blur-sm border-b border-bg-border shrink-0 sticky top-0 z-20 overflow-x-auto">

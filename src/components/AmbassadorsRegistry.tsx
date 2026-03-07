@@ -35,7 +35,7 @@ export function AmbassadorsRegistry() {
                     <div
                         key={i}
                         onClick={() => handleRowClick(a.name)}
-                        className="flex items-center justify-between px-5 py-3 border-b border-bg-border/50 last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                        className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                     >
                         <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors">
                             {a.name}

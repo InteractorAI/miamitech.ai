@@ -58,7 +58,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                 key={s}
                                 onClick={() => setStageFilter(s)}
                                 className={`text-[11px] px-2.5 py-1 rounded-md font-medium transition-all duration-150 whitespace-nowrap ${stageFilter === s
-                                    ? 'bg-accent-pink/12 text-accent-pink'
+                                    ? 'bg-accent-pink-alpha text-accent-pink'
                                     : 'text-fg-muted hover:text-fg-secondary hover:bg-bg-hover'
                                     }`}
                             >
@@ -136,7 +136,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                 <tr
                                     key={idx}
                                     onClick={() => handleRowClick(entry)}
-                                    className="border-b border-bg-border/50 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                                    className="border-b border-bg-border-subtle hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                                 >
                                     <td className="py-3 px-5 font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
                                         {entry.topTen && (
