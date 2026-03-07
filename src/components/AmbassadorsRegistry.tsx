@@ -117,10 +117,10 @@ export function AmbassadorsRegistry() {
 
                             <div className="space-y-4 text-sm leading-relaxed text-fg-secondary">
                                 <p>
-                                    The people featured here are active members of Miami’s tech community and are prepared to help others connect and navigate the ecosystem.
+                                    The people featured here are active members of Miami’s tech community and are prepared to help others navigate our ecosystem.
                                 </p>
                                 <p>
-                                    If you’re new to Miami tech, these are individuals you can follow or reach out to as you explore the community and find your footing.
+                                    If you’re new to Miami tech, these are individuals you can follow and reach out to as you explore the community and find your footing.
                                 </p>
                             </div>
 

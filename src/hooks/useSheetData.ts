@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { parseSheetCSV, SHEET_CONFIG, mappers, type CapitalEntry, type SpaceEntry, type CommunityEntry, type AmbassadorEntry } from '../lib/googleSheets';
+import { parseSheetCSV, SHEET_CONFIG, mappers, type CapitalEntry, type SpaceEntry, type CommunityEntry, type AmbassadorEntry, type ContributorEntry } from '../lib/googleSheets';
 
 export function useGoogleSheet<T>(
     gid: string,
@@ -64,6 +64,14 @@ export function useAmbassadorsData() {
         SHEET_CONFIG.TABS.Ambassadors,
         mappers.ambassadors,
         1 // Skip 1 row for Ambassadors tab
+    );
+}
+
+export function useContributorsData() {
+    return useGoogleSheet<ContributorEntry>(
+        SHEET_CONFIG.TABS.Contributors,
+        mappers.contributors,
+        1 // Skip 1 header row
     );
 }
 
