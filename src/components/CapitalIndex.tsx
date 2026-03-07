@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Panel } from './TerminalBlock';
 import { type CapitalEntry } from '../lib/googleSheets';
@@ -15,6 +15,8 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
     const [stageFilter, setStageFilter] = useState<string>('All');
+    const [activeIndex, setActiveIndex] = useState<number>(-1);
+    const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
 
     const filtered = useMemo(() => {
         let result = data;
@@ -44,6 +46,32 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
             `Tell me about ${entry.name}`
         );
     };
+
+    const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (filtered.length === 0) return;
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setActiveIndex(prev => {
+                const next = Math.min(prev + 1, filtered.length - 1);
+                rowRefs.current[next]?.scrollIntoView({ block: 'nearest' });
+                return next;
+            });
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setActiveIndex(prev => {
+                const next = Math.max(prev - 1, 0);
+                rowRefs.current[next]?.scrollIntoView({ block: 'nearest' });
+                return next;
+            });
+        } else if (e.key === 'Enter') {
+            if (activeIndex >= 0 && activeIndex < filtered.length) {
+                handleRowClick(filtered[activeIndex]);
+            }
+        } else if (e.key === 'Escape') {
+            setSearch('');
+            setActiveIndex(-1);
+        }
+    }, [filtered, activeIndex, handleRowClick]);
 
     return (
         <Panel
@@ -90,7 +118,8 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         type="text"
                         placeholder={loading ? 'Search investors...' : `Search ${data.length} investors...`}
                         value={search}
-                        onChange={e => setSearch(e.target.value)}
+                        onChange={e => { setSearch(e.target.value); setActiveIndex(-1); }}
+                        onKeyDown={handleKeyDown}
                         className="w-full bg-transparent border-none text-base text-fg-primary placeholder:text-fg-muted pl-3 pr-2 py-2 outline-none font-sans"
                     />
                     {search && (
@@ -135,10 +164,14 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                             {filtered.map((entry, idx) => (
                                 <tr
                                     key={idx}
-                                    onClick={() => handleRowClick(entry)}
-                                    className="border-b border-bg-border-subtle hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                                    ref={el => { rowRefs.current[idx] = el; }}
+                                    onClick={() => { setActiveIndex(idx); handleRowClick(entry); }}
+                                    className={`border-b border-bg-border-subtle cursor-pointer transition-colors duration-100 group ${activeIndex === idx
+                                        ? 'bg-accent-pink/10'
+                                        : 'hover:bg-bg-hover'
+                                        }`}
                                 >
-                                    <td className="py-3 px-5 font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
+                                    <td className={`py-3 px-5 font-medium transition-colors truncate ${activeIndex === idx ? 'text-accent-pink' : 'text-fg-primary group-hover:text-accent-pink'}`}>
                                         {entry.topTen && (
                                             <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-green mr-2 align-middle" />
                                         )}
