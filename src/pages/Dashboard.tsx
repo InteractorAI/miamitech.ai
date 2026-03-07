@@ -49,6 +49,7 @@ export function Dashboard() {
             </nav>
 
             <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 min-h-0 overflow-auto lg:overflow-hidden">
+                {/* Left column: identity + AI + sponsors */}
                 <div className="shrink-0 lg:col-span-3 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
@@ -56,9 +57,13 @@ export function Dashboard() {
                     <div id="ask-ai" className="border-b border-bg-border scroll-mt-12">
                         <AskAI />
                     </div>
-                    <div className="border-b border-bg-border">
+                    <div className="border-b border-bg-border lg:border-b-0">
                         <Sponsors />
                     </div>
+                </div>
+
+                {/* Middle column: community directories */}
+                <div className="shrink-0 lg:col-span-4 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
                         <SpacesDirectory />
                     </div>
@@ -76,7 +81,8 @@ export function Dashboard() {
                     </div>
                 </div>
 
-                <div id="capital" className="min-h-[60vh] lg:min-h-0 lg:col-span-9 lg:flex-1 flex flex-col lg:overflow-hidden scroll-mt-12">
+                {/* Right column: Capital */}
+                <div id="capital" className="min-h-[60vh] lg:min-h-0 lg:col-span-5 lg:flex-1 flex flex-col lg:overflow-hidden scroll-mt-12">
                     <CapitalIndex data={data} loading={loading} />
                 </div>
             </div>
