@@ -172,13 +172,13 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                         : 'hover:bg-bg-hover'
                                         }`}
                                 >
-                                    <td className={`py-3 px-5 font-medium transition-colors ${activeIndex === idx ? 'text-accent-pink' : 'text-fg-primary group-hover:text-accent-pink'}`}>
+                                    <td className={`py-3 px-5 font-medium transition-colors ${activeIndex === idx ? 'text-accent-pink' : 'text-fg-primary'}`}>
                                         <div className="flex items-center gap-2 min-w-0">
                                             {entry.topTen && (
                                                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-green shrink-0" />
                                             )}
                                             {entry.website && <Favicon url={entry.website} />}
-                                            <span className="truncate">{entry.name}</span>
+                                            <span className="truncate group-hover:text-accent-pink transition-colors">{entry.name}</span>
                                         </div>
                                     </td>
                                     <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">{entry.stage || '—'}</td>
