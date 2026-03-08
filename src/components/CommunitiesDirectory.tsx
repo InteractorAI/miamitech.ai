@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Panel } from './TerminalBlock';
 import { useCommunitiesData } from '../hooks/useSheetData';
 import type { CommunityEntry } from '../lib/googleSheets';
+import { Favicon } from './Favicon';
 
 const PREVIEW_COUNT = 4;
 
@@ -27,7 +28,8 @@ export function CommunitiesDirectory() {
                         onClick={() => handleRowClick(community)}
                         className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                     >
-                        <div className="flex items-baseline gap-2 min-w-0">
+                        <div className="flex items-center gap-2 min-w-0">
+                            {community.url && <Favicon url={community.url} />}
                             <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
                                 {community.name}
                             </span>

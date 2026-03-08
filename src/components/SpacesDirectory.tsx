@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Panel } from './TerminalBlock';
 import { useSpacesData } from '../hooks/useSheetData';
 import type { SpaceEntry } from '../lib/googleSheets';
+import { Favicon } from './Favicon';
 
 const PREVIEW_COUNT = 4;
 
@@ -27,11 +28,14 @@ export function SpacesDirectory() {
                         onClick={() => handleRowClick(space)}
                         className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                     >
-                        <div className="flex items-baseline gap-2 min-w-0">
-                            <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
-                                {space.name}
-                            </span>
-                            <span className="text-xs text-fg-muted truncate">{space.location}</span>
+                        <div className="flex items-center gap-2 min-w-0">
+                            {space.url && <Favicon url={space.url} />}
+                            <div className="flex items-baseline gap-2 min-w-0">
+                                <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
+                                    {space.name}
+                                </span>
+                                <span className="text-xs text-fg-muted truncate">{space.location}</span>
+                            </div>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="text-[11px] text-fg-muted font-medium">{space.type}</span>
