@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Panel } from './TerminalBlock';
 import { useConferencesData } from '../hooks/useSheetData';
 import type { ConferenceEntry } from '../lib/googleSheets';
+import { Favicon } from './Favicon';
 
 const PREVIEW_COUNT = 5;
 
@@ -35,9 +36,12 @@ export function ConferencesDirectory() {
                                 onClick={() => handleRowClick(conference)}
                                 className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                             >
-                                <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
-                                    {conference.name}
-                                </span>
+                                <div className="flex items-center gap-2 min-w-0">
+                                    {conference.website && <Favicon url={conference.website} />}
+                                    <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
+                                        {conference.name}
+                                    </span>
+                                </div>
                                 <div className="flex items-center gap-1.5 shrink-0 ml-3">
                                     {conference.website && (
                                         <a

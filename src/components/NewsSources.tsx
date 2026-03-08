@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Panel } from './TerminalBlock';
+import { Favicon } from './Favicon';
 
 const NEWS_SOURCES = [
     { name: 'Refresh Miami', url: 'https://refreshmiami.com', desc: 'Local tech community' },
@@ -29,7 +30,8 @@ export function NewsSources() {
                         rel="noopener noreferrer"
                         className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
                     >
-                        <span className="text-sm font-medium text-fg-primary group-hover:text-accent-blue transition-colors">
+                        <span className="flex items-center gap-2 text-sm font-medium text-fg-primary group-hover:text-accent-blue transition-colors">
+                            <Favicon url={source.url} />
                             {source.name}
                         </span>
                         <span className="text-[11px] text-fg-muted font-medium">{source.desc}</span>

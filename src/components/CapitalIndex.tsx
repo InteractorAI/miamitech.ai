@@ -2,6 +2,7 @@ import { useState, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Panel } from './TerminalBlock';
 import { type CapitalEntry } from '../lib/googleSheets';
+import { Favicon } from './Favicon';
 
 const STAGES = ['All', 'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Growth'] as const;
 
@@ -171,11 +172,14 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                         : 'hover:bg-bg-hover'
                                         }`}
                                 >
-                                    <td className={`py-3 px-5 font-medium transition-colors truncate ${activeIndex === idx ? 'text-accent-pink' : 'text-fg-primary group-hover:text-accent-pink'}`}>
-                                        {entry.topTen && (
-                                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-green mr-2 align-middle" />
-                                        )}
-                                        {entry.name}
+                                    <td className={`py-3 px-5 font-medium transition-colors ${activeIndex === idx ? 'text-accent-pink' : 'text-fg-primary group-hover:text-accent-pink'}`}>
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            {entry.topTen && (
+                                                <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-green shrink-0" />
+                                            )}
+                                            {entry.website && <Favicon url={entry.website} />}
+                                            <span className="truncate">{entry.name}</span>
+                                        </div>
                                     </td>
                                     <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">{entry.stage || '—'}</td>
                                     <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate">{entry.checkSize || '—'}</td>
