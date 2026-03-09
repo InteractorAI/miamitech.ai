@@ -1,5 +1,4 @@
 import { SysInfo } from '../components/SysInfo';
-import { AskAI } from '../components/AskAI';
 import { CapitalIndex } from '../components/CapitalIndex';
 import { SpacesDirectory } from '../components/SpacesDirectory';
 import { CommunitiesDirectory } from '../components/CommunitiesDirectory';
@@ -10,9 +9,10 @@ import { Credits } from '../components/Credits';
 import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { QuickSearch, QuickSearchHint } from '../components/QuickSearch';
 import { useCapitalData } from '../hooks/useSheetData';
 
-const SECTIONS = ['About', 'Ask anything', 'Spaces', 'Communities', 'Conferences', 'Ambassadors', 'News', 'FAQ', 'Capital'] as const;
+const SECTIONS = ['About', 'Spaces', 'Communities', 'Conferences', 'Ambassadors', 'News', 'FAQ', 'Capital'] as const;
 
 export function Dashboard() {
     const { data, loading } = useCapitalData();
@@ -23,6 +23,9 @@ export function Dashboard() {
 
     return (
         <div className="h-full flex flex-col overflow-hidden">
+            {/* Global quick-search modal (rendered at root level, always mounted) */}
+            <QuickSearch />
+
             <div className="h-1 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green shrink-0" />
             <header className="flex items-center justify-between px-5 py-3 bg-bg-card border-b border-bg-border shrink-0">
                 <h1
@@ -50,16 +53,17 @@ export function Dashboard() {
             </nav>
 
             <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 min-h-0 overflow-auto lg:overflow-hidden">
-                {/* Left column: identity + AI + sponsors */}
+                {/* Left column: identity + quick-search hint + sponsors */}
                 <div className="shrink-0 lg:col-span-3 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
                     </div>
-                    <div id="ask-ai" className="border-b border-bg-border scroll-mt-12">
-                        <AskAI />
-                    </div>
-                    <div className="border-b border-bg-border lg:border-b-0">
+                    <div className="border-b border-bg-border">
                         <Sponsors />
+                    </div>
+                    {/* Desktop-only ⌘J hint — triggers the global QuickSearch modal */}
+                    <div className="hidden lg:block border-b border-bg-border lg:border-b-0">
+                        <QuickSearchHint />
                     </div>
                 </div>
 
