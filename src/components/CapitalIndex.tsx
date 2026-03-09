@@ -121,8 +121,12 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         value={search}
                         onChange={e => { setSearch(e.target.value); setActiveIndex(-1); }}
                         onKeyDown={handleKeyDown}
-                        className="w-full bg-transparent border-none text-base text-fg-primary placeholder:text-fg-muted pl-3 pr-2 py-2 outline-none font-sans"
+                        className="peer w-full bg-transparent border-none text-base text-fg-primary placeholder:text-fg-muted pl-3 pr-2 py-2 outline-none font-sans"
                     />
+                    <div className="hidden md:flex items-center gap-0.5 pr-2 pointer-events-none text-fg-muted opacity-0 peer-focus:opacity-50 transition-opacity duration-200">
+                        <kbd className="inline-flex items-center justify-center px-1.5 py-0.5 h-5 text-[10px] font-sans font-medium bg-bg-card border border-bg-border rounded shadow-[0_1px_0_rgba(255,255,255,0.1)_inset]">↑</kbd>
+                        <kbd className="inline-flex items-center justify-center px-1.5 py-0.5 h-5 text-[10px] font-sans font-medium bg-bg-card border border-bg-border rounded shadow-[0_1px_0_rgba(255,255,255,0.1)_inset]">↓</kbd>
+                    </div>
                     {search && (
                         <button
                             onClick={() => setSearch('')}
@@ -148,13 +152,13 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                     <table className="w-full text-sm table-fixed">
                         <thead className="sticky top-0 z-10 bg-bg-card">
                             <tr className="border-b border-bg-border">
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[35%] md:w-[25%]">Name</th>
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[30%] md:w-[20%]">Stage</th>
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider md:w-[15%]">Check</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-[25%]' : 'w-[50%] sm:w-[40%]'}`}>Name</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-[20%]' : 'w-[30%] sm:w-[25%]'}`}>Stage</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden sm:table-cell ${expanded ? 'w-[15%]' : 'w-[25%]'}`}>Check</th>
                                 {expanded && (
                                     <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[12%] hidden md:table-cell">Type</th>
                                 )}
-                                <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden md:table-cell">Focus</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden ${expanded ? 'md:table-cell' : 'xl:table-cell'}`}>Focus</th>
                                 {expanded && (
                                     <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[14%] hidden lg:table-cell">Location</th>
                                 )}
@@ -182,11 +186,11 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                         </div>
                                     </td>
                                     <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">{entry.stage || '—'}</td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate">{entry.checkSize || '—'}</td>
+                                    <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate hidden sm:table-cell">{entry.checkSize || '—'}</td>
                                     {expanded && (
                                         <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden md:table-cell">{entry.type || '—'}</td>
                                     )}
-                                    <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden md:table-cell">{entry.focus || '—'}</td>
+                                    <td className={`py-3 px-5 text-fg-muted text-[13px] truncate hidden ${expanded ? 'md:table-cell' : 'xl:table-cell'}`}>{entry.focus || '—'}</td>
                                     {expanded && (
                                         <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden lg:table-cell">{entry.location || '—'}</td>
                                     )}
