@@ -2,14 +2,13 @@
 import { useCallback } from 'react';
 
 const SECTIONS = [
-    { id: 'about', label: 'About' },
     { id: 'spaces', label: 'Spaces' },
     { id: 'communities', label: 'Communities' },
+    { id: 'capital', label: 'Capital' },
     { id: 'conferences', label: 'Conferences' },
     { id: 'ambassadors', label: 'Ambassadors' },
     { id: 'news', label: 'News' },
     { id: 'faq', label: 'FAQ' },
-    { id: 'capital', label: 'Capital' },
 ];
 
 export function MobileNav() {
