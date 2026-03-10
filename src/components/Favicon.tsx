@@ -40,10 +40,10 @@ export function Favicon({ url, size = 16, className = '' }: FaviconProps) {
     const [useFallback, setUseFallback] = useState(false);
 
     const domain = getDomain(url);
-    // Google has the best favicon coverage. sz=64 keeps real favicons crisp on retina.
-    // Their generic globe fallback always comes back as 16×16 regardless of sz,
-    // so we can detect it reliably via naturalWidth.
-    const src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+    // Fetch favicon via local proxy to avoid browser 404 console errors.
+    // The proxy will return a 1x1 transparent GIF if Google returns a 404,
+    // which triggers the naturalWidth fallback logic below.
+    const src = `/api/favicon?domain=${domain}`;
 
     if (useFallback) {
         return <FallbackIcon size={size} className={className} />;

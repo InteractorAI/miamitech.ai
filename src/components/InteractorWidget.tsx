@@ -14,10 +14,18 @@ export function InteractorWidget() {
         if (typeof window === 'undefined' || initialized.current) return;
         initialized.current = true;
 
-        // Catch interactor's specific console error natively before it hits UI overlay
         const originalError = console.error;
         console.error = (...args) => {
-            if (args[0] && typeof args[0] === 'string' && args[0].includes('Chat iframe not found')) return;
+            if (args[0]) {
+                const msg = typeof args[0] === 'string' ? args[0] : (args[0].toString ? args[0].toString() : '');
+                if (
+                    msg.includes('Chat iframe not found') ||
+                    msg.includes('No valid user agent string was provided') ||
+                    msg.includes('Target carousel ref')
+                ) {
+                    return;
+                }
+            }
             originalError.apply(console, args);
         };
 
