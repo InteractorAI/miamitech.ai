@@ -21,18 +21,16 @@ export function MobileNav() {
     }, []);
 
     return (
-        <div className="lg:hidden flex overflow-x-auto no-scrollbar py-2 px-5 border-b border-bg-border shrink-0 bg-bg-card/95 backdrop-blur z-20 sticky top-0">
-            <div className="flex gap-2">
-                {SECTIONS.map((s) => (
-                    <button
-                        key={s.id}
-                        onClick={() => scrollTo(s.id)}
-                        className="whitespace-nowrap px-3 py-1.5 rounded-full bg-bg-elevated text-fg-secondary text-[13px] font-medium hover:bg-bg-hover hover:text-fg-primary transition-colors border border-bg-border shadow-sm"
-                    >
-                        {s.label}
-                    </button>
-                ))}
-            </div>
-        </div>
+        <nav className="lg:hidden flex items-center gap-1 px-4 py-2 bg-bg-card/90 backdrop-blur-sm border-b border-bg-border shrink-0 sticky top-0 z-20 overflow-x-auto no-scrollbar">
+            {SECTIONS.map((s) => (
+                <button
+                    key={s.id}
+                    onClick={() => scrollTo(s.id)}
+                    className="text-[11px] px-3 py-1.5 rounded-md font-medium text-fg-muted hover:text-fg-secondary hover:bg-bg-hover transition-all duration-150 whitespace-nowrap"
+                >
+                    {s.label}
+                </button>
+            ))}
+        </nav>
     );
 }
