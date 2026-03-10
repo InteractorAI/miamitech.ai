@@ -1,11 +1,13 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { Panel } from './TerminalBlock';
-import { useAmbassadorsData } from '../hooks/useSheetData';
+import type { AmbassadorEntry } from '../lib/googleSheets';
 
 const PREVIEW_COUNT = 5;
 
-export function AmbassadorsRegistry() {
-    const { data: ambassadors, loading } = useAmbassadorsData();
+export function AmbassadorsRegistry({ initialData = [] }: { initialData?: AmbassadorEntry[] }) {
+    const ambassadors = initialData;
+    const loading = ambassadors.length === 0;
     const [expanded, setExpanded] = useState(false);
     const [showModal, setShowModal] = useState(false);
 

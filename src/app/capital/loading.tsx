@@ -1,17 +1,14 @@
-import { CapitalIndex } from '../components/CapitalIndex';
-import { Link } from 'react-router-dom';
-import { useSheetData } from '../hooks/useSheetData';
-import { ThemeToggle } from '../components/ThemeToggle';
+import { CapitalIndex } from '../../components/CapitalIndex';
+import Link from 'next/link';
+import { ThemeToggle } from '../../components/ThemeToggle';
 
-export function CapitalFocused() {
-    const { data, loading } = useSheetData();
-
+export default function CapitalLoading() {
     return (
         <div className="h-full flex flex-col overflow-hidden">
             {/* Header */}
             <header className="flex items-center justify-between px-5 py-3 bg-bg-card border-b border-bg-border shrink-0">
                 <Link
-                    to="/"
+                    href="/"
                     className="text-xs font-medium text-fg-muted hover:text-fg-primary transition-colors"
                 >
                     ← Home
@@ -24,9 +21,9 @@ export function CapitalFocused() {
                 </div>
             </header>
 
-            {/* Full Capital view */}
+            {/* Full Capital view skeleton */}
             <div className="flex-1 min-h-0">
-                <CapitalIndex data={data} loading={loading} expanded />
+                <CapitalIndex data={[]} loading={true} expanded />
             </div>
         </div>
     );

@@ -1,13 +1,14 @@
+'use client';
 import { useState } from 'react';
 import { Panel } from './TerminalBlock';
-import { useCommunitiesData } from '../hooks/useSheetData';
 import type { CommunityEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 
 const PREVIEW_COUNT = 4;
 
-export function CommunitiesDirectory() {
-    const { data: communities, loading } = useCommunitiesData();
+export function CommunitiesDirectory({ initialData = [] }: { initialData?: CommunityEntry[] }) {
+    const communities = initialData;
+    const loading = communities.length === 0;
     const [expanded, setExpanded] = useState(false);
 
     const visible = expanded ? communities : communities.slice(0, PREVIEW_COUNT);

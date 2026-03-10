@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { parseSheetCSV, SHEET_CONFIG, mappers, type CapitalEntry, type SpaceEntry, type CommunityEntry, type AmbassadorEntry, type ContributorEntry, type ConferenceEntry } from '../lib/googleSheets';
 

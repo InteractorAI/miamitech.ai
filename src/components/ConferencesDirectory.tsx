@@ -1,13 +1,14 @@
+'use client';
 import { useState } from 'react';
 import { Panel } from './TerminalBlock';
-import { useConferencesData } from '../hooks/useSheetData';
 import type { ConferenceEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 
 const PREVIEW_COUNT = 5;
 
-export function ConferencesDirectory() {
-    const { data: conferences, loading } = useConferencesData();
+export function ConferencesDirectory({ initialData = [] }: { initialData?: ConferenceEntry[] }) {
+    const conferences = initialData;
+    const loading = conferences.length === 0;
     const [expanded, setExpanded] = useState(false);
 
     const visible = expanded ? conferences : conferences.slice(0, PREVIEW_COUNT);

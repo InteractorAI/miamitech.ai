@@ -1,3 +1,4 @@
+'use client';
 import { Panel } from './TerminalBlock';
 
 export function SysInfo() {

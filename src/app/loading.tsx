@@ -9,51 +9,29 @@ import { Credits } from '../components/Credits';
 import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
 import { ThemeToggle } from '../components/ThemeToggle';
-import { QuickSearch, QuickSearchHint } from '../components/QuickSearch';
-import { useCapitalData } from '../hooks/useSheetData';
+import { QuickSearchHint } from '../components/QuickSearch';
+import Link from 'next/link';
+import { MobileNav } from '../components/MobileNav';
 
-const SECTIONS = ['About', 'Spaces', 'Communities', 'Conferences', 'Ambassadors', 'News', 'FAQ', 'Capital'] as const;
-
-export function Dashboard() {
-    const { data, loading } = useCapitalData();
-
-    const scrollTo = (id: string) => {
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    };
-
+export default function HomeLoading() {
     return (
-        <div className="h-full flex flex-col overflow-hidden">
-            {/* Global quick-search modal (rendered at root level, always mounted) */}
-            <QuickSearch />
-
-            <div className="h-1 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green shrink-0" />
+        <div className="h-full flex flex-col overflow-hidden opacity-60 pointer-events-none transition-opacity duration-300">
+            {/* Global quick-search modal */}
+            <div className="h-1 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green shrink-0 animate-pulse" />
             <header className="flex items-center justify-between px-5 py-3 bg-bg-card border-b border-bg-border shrink-0">
-                <h1
-                    className="text-2xl font-bold text-fg-primary tracking-tight cursor-pointer"
-                    onClick={() => window.location.reload()}
-                >
+                <Link href="/" className="text-2xl font-bold text-fg-primary tracking-tight cursor-pointer">
                     miamitech<span className="text-accent-pink">.ai</span>
-                </h1>
+                </Link>
                 <div className="flex items-center gap-3">
                     <Credits />
                     <ThemeToggle />
                 </div>
             </header>
 
-            <nav className="lg:hidden flex items-center gap-1 px-4 py-2 bg-bg-card/90 backdrop-blur-sm border-b border-bg-border shrink-0 sticky top-0 z-20 overflow-x-auto">
-                {SECTIONS.map(s => (
-                    <button
-                        key={s}
-                        onClick={() => scrollTo(s.toLowerCase().replace(' ', '-'))}
-                        className="text-[11px] px-3 py-1.5 rounded-md font-medium text-fg-muted hover:text-fg-secondary hover:bg-bg-hover transition-all duration-150 whitespace-nowrap"
-                    >
-                        {s}
-                    </button>
-                ))}
-            </nav>
+            <MobileNav />
 
             <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 min-h-0 overflow-auto lg:overflow-hidden">
-                {/* Left column: identity + quick-search hint + sponsors */}
+                {/* Left column */}
                 <div className="shrink-0 lg:col-span-3 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
@@ -61,25 +39,24 @@ export function Dashboard() {
                     <div className="border-b border-bg-border">
                         <Sponsors />
                     </div>
-                    {/* Desktop-only ⌘J hint — triggers the global QuickSearch modal */}
                     <div className="hidden lg:block border-b border-bg-border lg:border-b-0">
                         <QuickSearchHint />
                     </div>
                 </div>
 
-                {/* Middle column: community directories */}
-                <div className="shrink-0 lg:col-span-4 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
+                {/* Middle column */}
+                <div className="shrink-0 lg:col-span-4 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto animate-pulse">
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
-                        <SpacesDirectory />
+                        <SpacesDirectory initialData={[]} />
                     </div>
                     <div id="communities" className="border-b border-bg-border scroll-mt-12">
-                        <CommunitiesDirectory />
+                        <CommunitiesDirectory initialData={[]} />
                     </div>
                     <div id="conferences" className="border-b border-bg-border scroll-mt-12">
-                        <ConferencesDirectory />
+                        <ConferencesDirectory initialData={[]} />
                     </div>
                     <div id="ambassadors" className="border-b border-bg-border scroll-mt-12">
-                        <AmbassadorsRegistry />
+                        <AmbassadorsRegistry initialData={[]} />
                     </div>
                     <div id="news" className="border-b border-bg-border scroll-mt-12">
                         <NewsSources />
@@ -91,7 +68,7 @@ export function Dashboard() {
 
                 {/* Right column: Capital */}
                 <div id="capital" className="min-h-[60vh] lg:min-h-0 lg:col-span-5 lg:flex-1 flex flex-col lg:overflow-hidden scroll-mt-12">
-                    <CapitalIndex data={data} loading={loading} />
+                    <CapitalIndex data={[]} loading={true} />
                 </div>
             </div>
         </div>

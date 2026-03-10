@@ -1,13 +1,15 @@
+'use client';
 import { useState } from 'react';
 import { Panel } from './TerminalBlock';
-import { useSpacesData } from '../hooks/useSheetData';
+// import { useSpacesData } from '../hooks/useSheetData';
 import type { SpaceEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 
 const PREVIEW_COUNT = 4;
 
-export function SpacesDirectory() {
-    const { data: spaces, loading } = useSpacesData();
+export function SpacesDirectory({ initialData = [] }: { initialData?: SpaceEntry[] }) {
+    const spaces = initialData;
+    const loading = spaces.length === 0;
     const [expanded, setExpanded] = useState(false);
 
     const visible = expanded ? spaces : spaces.slice(0, PREVIEW_COUNT);

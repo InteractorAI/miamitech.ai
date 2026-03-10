@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+'use client';
+import { useEffect, useRef } from 'react';
 
 declare global {
     interface Window {
@@ -6,38 +7,51 @@ declare global {
     }
 }
 
-export const InteractorWidget: React.FC = () => {
+export function InteractorWidget() {
+    const initialized = useRef(false);
+
     useEffect(() => {
-        // Check if script is already loaded
-        if (document.getElementById('interactor-script')) return;
+        if (typeof window === 'undefined' || initialized.current) return;
+        initialized.current = true;
 
-        // Load CSS
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://embed.interactor.ai/assets/index.css';
-        link.crossOrigin = '';
-        document.head.appendChild(link);
-
-        // Load JS
-        const script = document.createElement('script');
-        script.id = 'interactor-script';
-        script.type = 'module';
-        script.src = 'https://embed.interactor.ai/assets/index.js';
-        script.crossOrigin = '';
-
-        script.onload = () => {
-            // Initialize after load
-            if (window.interactor) {
-                window.interactor.initialize('miamitech', {
-                    type: 'mobile',
-                    isOpen: false,
-                    isFabVisible: true
-                });
-            }
+        // Catch interactor's specific console error natively before it hits UI overlay
+        const originalError = console.error;
+        console.error = (...args) => {
+            if (args[0] && typeof args[0] === 'string' && args[0].includes('Chat iframe not found')) return;
+            originalError.apply(console, args);
         };
 
-        document.head.appendChild(script);
+        // Delay injection slightly to ensure React hydration has fully completed
+        const timer = setTimeout(() => {
+            const script = document.createElement('script');
+            script.src = 'https://embed.interactor.ai/assets/index.js';
+            script.type = 'module';
+            script.crossOrigin = 'anonymous';
+
+            script.onload = () => {
+                const check = setInterval(() => {
+                    if (window.interactor) {
+                        clearInterval(check);
+                        try {
+                            window.interactor.initialize('miamitech', {
+                                type: 'mobile',
+                                isOpen: false,
+                                isFabVisible: true
+                            });
+                        } catch (e) { }
+                    }
+                }, 100);
+            };
+
+            document.body.appendChild(script);
+        }, 500);
+
+        return () => {
+            clearTimeout(timer);
+        };
     }, []);
 
-    return null; // Renderless component, just logic
-};
+    return (
+        <link rel="stylesheet" href="https://embed.interactor.ai/assets/index.css" crossOrigin="anonymous" />
+    );
+}

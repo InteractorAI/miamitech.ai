@@ -1,5 +1,6 @@
+'use client';
 import { useState, useMemo, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Link from 'next/link';
 import { Panel } from './TerminalBlock';
 import { type CapitalEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
@@ -13,7 +14,6 @@ interface CapitalIndexProps {
 }
 
 export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexProps) {
-    const navigate = useNavigate();
     const [search, setSearch] = useState('');
     const [stageFilter, setStageFilter] = useState<string>('All');
     const [activeIndex, setActiveIndex] = useState<number>(-1);
@@ -96,13 +96,13 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         ))}
                     </div>
                     {!expanded && (
-                        <button
-                            onClick={() => navigate('/capital')}
-                            className="p-1.5 rounded-md text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border ml-1"
+                        <Link
+                            href="/capital"
+                            className="p-1.5 rounded-md text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border ml-1 inline-flex items-center justify-center"
                             title="Expand"
                         >
                             ↗
-                        </button>
+                        </Link>
                     )}
                 </div>
             }

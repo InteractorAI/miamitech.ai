@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSpacesData } from '../hooks/useSheetData';
 import { useCommunitiesData } from '../hooks/useSheetData';
