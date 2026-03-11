@@ -123,7 +123,7 @@ export function Credits() {
                                             alt="miamitech.ai logo"
                                             width={56}
                                             height={56}
-                                            className="rounded-lg shadow-sm"
+                                            className="rounded-xl shadow-sm overflow-hidden bg-black"
                                             priority
                                             unoptimized
                                         />
