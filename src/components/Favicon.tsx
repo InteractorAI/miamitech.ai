@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface FaviconProps {
     url: string;
@@ -40,10 +40,24 @@ export function Favicon({ url, size = 16, className = '' }: FaviconProps) {
     const [useFallback, setUseFallback] = useState(false);
 
     const domain = getDomain(url);
-    // Fetch favicon via local proxy to avoid browser 404 console errors.
-    // The proxy will return a 1x1 transparent GIF if Google returns a 404,
-    // which triggers the naturalWidth fallback logic below.
-    const src = `/api/favicon?domain=${domain}`;
+    const src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+
+    // Ensure we reset state when URL changes, and manually check dimensions
+    // to catch cases where React's onLoad doesn't fire for cached images.
+    useEffect(() => {
+        setUseFallback(false);
+
+        const img = new Image();
+        img.onload = () => {
+            if (img.naturalWidth <= 16) {
+                setUseFallback(true);
+            }
+        };
+        img.onerror = () => {
+            setUseFallback(true);
+        };
+        img.src = src;
+    }, [src]);
 
     if (useFallback) {
         return <FallbackIcon size={size} className={className} />;
@@ -59,9 +73,7 @@ export function Favicon({ url, size = 16, className = '' }: FaviconProps) {
             style={{ width: size, height: size, imageRendering: 'auto' }}
             onError={() => setUseFallback(true)}
             onLoad={(e) => {
-                // Google's generic globe is always 16×16; real favicons at sz=64 are larger.
-                const img = e.currentTarget;
-                if (img.naturalWidth <= 16 && img.naturalHeight <= 16) {
+                if (e.currentTarget.naturalWidth <= 16) {
                     setUseFallback(true);
                 }
             }}
