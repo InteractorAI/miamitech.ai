@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useContributorsData } from '../hooks/useSheetData';
+import Image from 'next/image';
 
 function XIcon() {
     return (
@@ -20,6 +21,8 @@ function LinkedInIcon() {
 
 export function Credits() {
     const [open, setOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState<'about' | 'contributors'>('about');
+
     const { data: rawContributors, loading } = useContributorsData();
     const contributors = [...rawContributors].sort((a, b) => a.name.localeCompare(b.name));
 
@@ -27,14 +30,41 @@ export function Credits() {
         const handler = (e: KeyboardEvent) => {
             if (e.key === 'Escape') setOpen(false);
         };
+        const openHandler = (e: any) => {
+            setOpen(true);
+            if (e.detail?.tab) {
+                setActiveTab(e.detail.tab);
+            }
+        };
+
         if (open) window.addEventListener('keydown', handler);
-        return () => window.removeEventListener('keydown', handler);
+        window.addEventListener('open-about-modal', openHandler);
+
+        return () => {
+            window.removeEventListener('keydown', handler);
+            window.removeEventListener('open-about-modal', openHandler);
+        };
     }, [open]);
+
+    // Cleanup backward compatibility event name if still used elsewhere
+    useEffect(() => {
+        const legacyHandler = () => {
+            setOpen(true);
+            setActiveTab('contributors');
+        };
+        window.addEventListener('open-contributors', legacyHandler);
+        return () => window.removeEventListener('open-contributors', legacyHandler);
+    }, []);
+
+    const handleOpen = (tab: 'about' | 'contributors' = 'about') => {
+        setActiveTab(tab);
+        setOpen(true);
+    };
 
     return (
         <>
             <button
-                onClick={() => setOpen(true)}
+                onClick={() => handleOpen('contributors')}
                 className="text-[11px] font-medium text-fg-muted hover:text-fg-secondary transition-colors duration-150 px-2 py-1 rounded-md hover:bg-bg-hover"
             >
                 Contributors
@@ -42,101 +72,133 @@ export function Credits() {
 
             {open && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                    className="fixed inset-0 z-[100] flex items-center justify-center p-4"
                     onClick={() => setOpen(false)}
                 >
-                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm animate-fade-in" />
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-md animate-fade-in" />
 
                     <div
-                        className="relative bg-bg-card border border-bg-border rounded-xl shadow-2xl max-w-xs w-full animate-scale-in overflow-hidden"
+                        className="relative bg-bg-card border border-bg-border rounded-xl shadow-2xl max-w-sm w-full animate-scale-in flex flex-col max-h-[85vh] overflow-hidden"
                         onClick={e => e.stopPropagation()}
                     >
-                        <div className="h-1 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green" />
+                        <div className="h-1 shrink-0 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green" />
 
-                        <div className="p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-sm font-semibold text-fg-primary tracking-tight">
-                                    Key Contributors
-                                </h3>
+                        {/* Modal Header */}
+                        <div className="p-4 flex items-center justify-between border-b border-bg-border shrink-0">
+                            <div className="flex gap-1 p-1 bg-bg-hover rounded-lg">
                                 <button
-                                    onClick={() => setOpen(false)}
-                                    className="text-fg-muted hover:text-fg-primary transition-colors text-lg leading-none"
+                                    onClick={() => setActiveTab('about')}
+                                    className={`px-4 py-1.5 text-[11px] font-bold tracking-tight rounded-md transition-all duration-200 ${activeTab === 'about'
+                                        ? 'bg-bg-card text-fg-primary shadow-sm ring-1 ring-bg-border'
+                                        : 'text-fg-muted hover:text-fg-secondary'
+                                        }`}
                                 >
-                                    ×
+                                    About
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('contributors')}
+                                    className={`px-4 py-1.5 text-[11px] font-bold tracking-tight rounded-md transition-all duration-200 ${activeTab === 'contributors'
+                                        ? 'bg-bg-card text-fg-primary shadow-sm ring-1 ring-bg-border'
+                                        : 'text-fg-muted hover:text-fg-secondary'
+                                        }`}
+                                >
+                                    Contributors
                                 </button>
                             </div>
+                            <button
+                                onClick={() => setOpen(false)}
+                                className="text-fg-muted hover:text-fg-primary transition-colors text-lg leading-none p-1"
+                            >
+                                ×
+                            </button>
+                        </div>
 
-                            <div className={`max-h-72 overflow-y-auto -mx-2 ${loading ? 'opacity-50' : ''}`}>
-                                {loading && (
-                                    <div className="py-6 text-center text-xs text-fg-muted">Loading...</div>
-                                )}
-
-                                {!loading && contributors.map((c, i) => (
-                                    <div
-                                        key={i}
-                                        className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-bg-hover transition-colors duration-100 group"
-                                    >
-                                        <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors">
-                                            {c.name}
-                                        </span>
-
-                                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                                            {c.twitter && (
-                                                <a
-                                                    href={c.twitter.startsWith('http') ? c.twitter : `https://x.com/${c.twitter.replace('@', '')}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    onClick={e => e.stopPropagation()}
-                                                    className="p-1.5 text-fg-muted hover:text-accent-blue transition-colors rounded"
-                                                    title="X / Twitter"
-                                                >
-                                                    <XIcon />
-                                                </a>
-                                            )}
-                                            {c.linkedin && (
-                                                <a
-                                                    href={c.linkedin.startsWith('http') ? c.linkedin : `https://linkedin.com/in/${c.linkedin}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    onClick={e => e.stopPropagation()}
-                                                    className="p-1.5 text-fg-muted hover:text-accent-blue transition-colors rounded"
-                                                    title="LinkedIn"
-                                                >
-                                                    <LinkedInIcon />
-                                                </a>
-                                            )}
-                                        </div>
+                        {/* Content Area */}
+                        <div className="flex-1 overflow-y-auto min-h-0">
+                            {activeTab === 'about' ? (
+                                <div className="p-8 flex flex-col items-center text-center animate-fade-in shadow-inner-top">
+                                    <div className="p-4 bg-bg-hover rounded-2xl mb-5 border border-bg-border">
+                                        <Image
+                                            src="/favicon.png"
+                                            alt="miamitech.ai logo"
+                                            width={56}
+                                            height={56}
+                                            className="rounded-lg shadow-sm"
+                                        />
                                     </div>
-                                ))}
+                                    <h2 className="text-xl font-bold text-fg-primary tracking-tight mb-2">
+                                        miamitech<span className="text-accent-pink">.ai</span>
+                                    </h2>
+                                    <p className="text-[10px] font-bold text-accent-blue tracking-[0.2em] uppercase mb-6">
+                                        Community Concierge & Index
+                                    </p>
 
-                                {!loading && (
-                                    <div className="px-3 pt-1 pb-0.5">
-                                        <button
-                                            onClick={() => {
-                                                setOpen(false);
-                                                window.interactor?.message.send('I want to suggest someone who should be listed as a contributor to miamitech.ai');
-                                            }}
-                                            className="text-xs text-fg-muted hover:text-accent-pink transition-colors italic"
-                                        >
-                                            Missing someone? Tell us →
-                                        </button>
+                                    <div className="space-y-4 text-sm text-fg-secondary leading-relaxed max-w-xs transition-all duration-300 font-medium">
+                                        <p>
+                                            MiamiTech.ai is an AI concierge and index for the Miami tech ecosystem. It provides an information-dense view of local resources alongside an AI agent that helps people navigate the ecosystem, backed by humans who can assist when needed.
+                                        </p>
                                     </div>
-                                )}
-                            </div>
+                                </div>
+                            ) : (
+                                <div className="p-6 animate-fade-in shadow-inner-top">
+                                    <div className={`-mx-2 ${loading ? 'opacity-50' : ''}`}>
+                                        {loading && (
+                                            <div className="py-12 text-center text-xs text-fg-muted">Loading contributors...</div>
+                                        )}
 
-                            <div className="mt-4 pt-4 border-t border-bg-border">
-                                <p className="text-[11px] text-fg-muted text-center leading-relaxed">
-                                    Powered by{' '}
-                                    <a
-                                        href="https://interactor.ai"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-fg-secondary hover:text-accent-blue transition-colors"
-                                    >
-                                        Interactor
-                                    </a>
-                                </p>
-                            </div>
+                                        {!loading && contributors.map((c, i) => (
+                                            <div
+                                                key={i}
+                                                className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-bg-hover transition-colors duration-100 group"
+                                            >
+                                                <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors">
+                                                    {c.name}
+                                                </span>
+
+                                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                                                    {c.twitter && (
+                                                        <a
+                                                            href={c.twitter.startsWith('http') ? c.twitter : `https://x.com/${c.twitter.replace('@', '')}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            onClick={e => e.stopPropagation()}
+                                                            className="p-1.5 text-fg-muted hover:text-accent-blue transition-colors rounded"
+                                                            title="X / Twitter"
+                                                        >
+                                                            <XIcon />
+                                                        </a>
+                                                    )}
+                                                    {c.linkedin && (
+                                                        <a
+                                                            href={c.linkedin.startsWith('http') ? c.linkedin : `https://linkedin.com/in/${c.linkedin}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            onClick={e => e.stopPropagation()}
+                                                            className="p-1.5 text-fg-muted hover:text-accent-blue transition-colors rounded"
+                                                            title="LinkedIn"
+                                                        >
+                                                            <LinkedInIcon />
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+
+                                        {!loading && (
+                                            <div className="px-3 pt-6 pb-2 text-center">
+                                                <button
+                                                    onClick={() => {
+                                                        window.interactor?.message.send('I want to suggest someone who should be listed as a contributor to miamitech.ai');
+                                                    }}
+                                                    className="text-xs font-medium text-fg-muted hover:text-accent-pink transition-colors italic border-b border-transparent hover:border-accent-pink"
+                                                >
+                                                    Missing someone? Tell us →
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
