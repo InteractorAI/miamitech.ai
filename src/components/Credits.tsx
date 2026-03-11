@@ -124,6 +124,8 @@ export function Credits() {
                                             width={56}
                                             height={56}
                                             className="rounded-lg shadow-sm"
+                                            priority
+                                            unoptimized
                                         />
                                     </div>
                                     <h2 className="text-xl font-bold text-fg-primary tracking-tight mb-2">
