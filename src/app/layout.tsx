@@ -8,6 +8,11 @@ export const metadata: Metadata = {
     alternates: {
         canonical: 'https://miamitech.ai',
     },
+    icons: {
+        icon: '/favicon.png',
+        shortcut: '/favicon.png',
+        apple: '/favicon.png',
+    },
     openGraph: {
         type: 'website',
         url: 'https://miamitech.ai',
