@@ -1,0 +1,21 @@
+{
+  "name": "miamitech.ai",
+  "short_name": "miamitech",
+  "description": "The AI concierge and index for the Miami tech and startup ecosystem.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0b0e",
+  "theme_color": "#0b0b0e",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

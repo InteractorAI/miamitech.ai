@@ -44,8 +44,10 @@ export default async function Dashboard() {
 
             <div className="h-1 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green shrink-0" />
             <header className="flex items-center justify-between px-5 py-3 bg-bg-card border-b border-bg-border shrink-0">
-                <Link href="/" className="text-2xl font-bold text-fg-primary tracking-tight cursor-pointer">
-                    miamitech<span className="text-accent-pink">.ai</span>
+                <Link href="/" className="cursor-pointer">
+                    <h1 className="text-2xl font-bold text-fg-primary tracking-tight">
+                        miamitech<span className="text-accent-pink">.ai</span>
+                    </h1>
                 </Link>
                 <div className="flex items-center gap-3">
                     <Credits />
