@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { InteractorWidget } from '../components/InteractorWidget';
 
 export const metadata: Metadata = {
-    title: 'miamitech.ai — Community Concierge & Index',
+    title: 'MiamiTech.ai — Community Concierge & Index',
     description: 'The AI concierge and index for the Miami tech and startup ecosystem. Discover investors, coworking spaces, ambassadors, news sources, and more.',
     keywords: ['Miami Tech', 'Miami AI', 'Startup Ecosystem', 'Venture Capital', 'Coworking Spaces', 'Miami Founders', 'Tech Community', 'Miami Tech Investors', 'Miami Tech Ambassadors'],
     authors: [{ name: 'miamitech.ai Team' }],
@@ -30,21 +30,21 @@ export const metadata: Metadata = {
     openGraph: {
         type: 'website',
         url: 'https://miamitech.ai',
-        title: 'miamitech.ai — Community Concierge & Index',
+        title: 'MiamiTech.ai — Community Concierge & Index',
         description: 'The AI concierge and index for the Miami tech and startup ecosystem. Discover investors, coworking spaces, ambassadors, news sources, and more.',
-        siteName: 'miamitech.ai',
+        siteName: 'MiamiTech.ai',
         images: [
             {
                 url: 'https://miamitech.ai/og-image.png',
                 width: 1200,
                 height: 630,
-                alt: 'miamitech.ai — Miami Tech Ecosystem Index',
+                alt: 'MiamiTech.ai — Miami Tech Ecosystem Index',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'miamitech.ai — Community Concierge & Index',
+        title: 'MiamiTech.ai — Community Concierge & Index',
         description: 'The AI concierge and index for the Miami tech and startup ecosystem. Discover investors, coworking spaces, ambassadors, news sources, and more.',
         images: ['https://miamitech.ai/og-image.png'],
     },
