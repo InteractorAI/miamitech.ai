@@ -4,8 +4,20 @@ import { ThemeToggle } from '../../components/ThemeToggle';
 import { SHEET_CONFIG, mappers, parseSheetCSV } from '../../lib/googleSheets';
 
 export const metadata = {
-    title: 'Miami Tech Capital & Investors — miamitech.ai',
+    title: 'Miami Tech Capital & Investors — MiamiTech.ai',
     description: 'A comprehensive index of venture capital, seed funds, and angel investors in the Miami tech ecosystem.',
+    openGraph: {
+        title: 'Miami Tech Capital & Investors — MiamiTech.ai',
+        description: 'A comprehensive index of venture capital, seed funds, and angel investors in the Miami tech ecosystem.',
+        url: 'https://miamitech.ai/capital',
+        images: ['/og-image.png'],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Miami Tech Capital & Investors — MiamiTech.ai',
+        description: 'A comprehensive index of venture capital, seed funds, and angel investors in the Miami tech ecosystem.',
+        images: ['/og-image.png'],
+    },
 };
 
 async function fetchCapitalData() {

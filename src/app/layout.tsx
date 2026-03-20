@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { InteractorWidget } from '../components/InteractorWidget';
 
 export const metadata: Metadata = {
+    metadataBase: new URL('https://miamitech.ai'),
     title: 'MiamiTech.ai — Community Concierge & Index',
     description: 'The AI concierge and index for the Miami tech and startup ecosystem. Discover investors, coworking spaces, ambassadors, news sources, and more.',
     keywords: ['Miami Tech', 'Miami AI', 'Startup Ecosystem', 'Venture Capital', 'Coworking Spaces', 'Miami Founders', 'Tech Community', 'Miami Tech Investors', 'Miami Tech Ambassadors'],
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
         siteName: 'MiamiTech.ai',
         images: [
             {
-                url: 'https://miamitech.ai/og-image.png',
+                url: '/og-image.png',
                 width: 1200,
                 height: 630,
                 alt: 'MiamiTech.ai — Miami Tech Ecosystem Index',
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'MiamiTech.ai — Community Concierge & Index',
         description: 'The AI concierge and index for the Miami tech and startup ecosystem. Discover investors, coworking spaces, ambassadors, news sources, and more.',
-        images: ['https://miamitech.ai/og-image.png'],
+        images: ['/og-image.png'],
     },
 };
 
