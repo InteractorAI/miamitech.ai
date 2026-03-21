@@ -1,6 +1,7 @@
 import '../index.css';
 import type { Metadata } from 'next';
 import { InteractorWidget } from '../components/InteractorWidget';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
     metadataBase: new URL('https://miamitech.ai'),
@@ -88,6 +89,7 @@ export default function RootLayout({
                 <div id="root" className="h-[100dvh]">
                     {children}
                     <InteractorWidget />
+                    <Analytics />
                 </div>
             </body>
         </html>
