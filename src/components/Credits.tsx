@@ -81,7 +81,7 @@ export function Credits() {
                         className="relative bg-bg-card border border-bg-border rounded-xl shadow-2xl max-w-sm w-full animate-scale-in flex flex-col max-h-[85vh] overflow-hidden"
                         onClick={e => e.stopPropagation()}
                     >
-                        <div className="h-1 shrink-0 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green" />
+                        <div className="h-1.5 shrink-0 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green" />
 
                         {/* Modal Header */}
                         <div className="p-4 flex items-center justify-between border-b border-bg-border shrink-0">

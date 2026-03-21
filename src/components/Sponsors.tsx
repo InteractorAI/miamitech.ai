@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { Panel } from './TerminalBlock';
 
 interface Sponsor {
@@ -16,8 +17,29 @@ const SPONSORS: Sponsor[] = [
 ];
 
 export function Sponsors() {
+    const [showModal, setShowModal] = useState(false);
+
+    // Close modal on escape
+    useEffect(() => {
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setShowModal(false);
+        };
+        if (showModal) window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [showModal]);
+
+    const infoIcon = (
+        <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center justify-center w-5 h-5 rounded-full border border-fg-muted/30 text-fg-muted hover:border-fg-secondary hover:text-fg-primary transition-all duration-200 text-[11px] font-semibold leading-none"
+            title="Learn about sponsoring"
+        >
+            ?
+        </button>
+    );
+
     return (
-        <Panel title="Sponsors" noPadding>
+        <Panel title="Sponsors" noPadding action={infoIcon}>
             <div className="flex overflow-x-auto gap-2 p-3 no-scrollbar">
                 {SPONSORS.map((s, i) => (
                     <a
@@ -32,13 +54,76 @@ export function Sponsors() {
                     </a>
                 ))}
                 <button
-                    onClick={() => window.interactor?.message.send("I'm interested in sponsoring miamitech.ai")}
+                    onClick={() => setShowModal(true)}
                     className="shrink-0 w-44 border border-dashed border-bg-border-subtle rounded-lg px-3 py-3 bg-bg-card/30 hover:border-fg-muted/30 hover:bg-bg-hover transition-all duration-300 text-left shadow-sm"
                 >
                     <div className="text-xs font-semibold text-fg-muted leading-tight">Your brand here</div>
                     <div className="text-[11px] text-fg-muted/60 leading-snug mt-1.5">Become a sponsor →</div>
                 </button>
             </div>
+
+            {/* Sponsor Modal */}
+            {showModal && (
+                <div
+                    className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity duration-300"
+                    onClick={() => setShowModal(false)}
+                >
+                    <div
+                        className="relative bg-bg-card border border-bg-border rounded-xl shadow-2xl max-w-sm w-full animate-scale-in overflow-hidden"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div className="h-1.5 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green" />
+
+                        <div className="p-4 flex items-center justify-between border-b border-bg-border shrink-0">
+                            <h3 className="text-[15px] font-bold text-fg-primary tracking-tight px-1">
+                                Support the Miami Tech Ecosystem
+                            </h3>
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="text-fg-muted hover:text-fg-primary transition-colors text-lg leading-none p-1"
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        <div className="p-8">
+                            <div className="space-y-4 text-sm leading-relaxed text-fg-secondary">
+                                <p>
+                                    Your sponsorship of MiamiTech.ai helps us continue to provide this valuable community resource. Benefits include:
+                                </p>
+                                <ul className="space-y-2 mt-4 text-[14px]">
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-accent-green">✓</span>
+                                        <span>Highlight your brand as an ecosystem pillar</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-accent-green">✓</span>
+                                        <span>Get in front of newcomers and visitors</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-accent-green">✓</span>
+                                        <span>Reach founders, investors, and talent</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-accent-green">✓</span>
+                                        <span>Receive shout outs from time to time</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <button
+                                onClick={() => {
+                                    setShowModal(false);
+                                    window.interactor?.message.send("I'm interested in sponsoring miamitech.ai");
+                                }}
+                                className="mt-8 w-full py-2.5 bg-bg-hover hover:bg-bg-border text-fg-primary rounded-lg font-medium transition-colors border border-bg-border"
+                            >
+                                Get Started
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </Panel>
     );
 }

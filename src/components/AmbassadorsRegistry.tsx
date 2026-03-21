@@ -95,7 +95,7 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
             {/* Modal */}
             {showModal && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity duration-300"
+                    className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity duration-300"
                     onClick={() => setShowModal(false)}
                 >
                     <div
@@ -103,20 +103,20 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                         onClick={e => e.stopPropagation()}
                     >
                         <div className="h-1.5 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green" />
+                        
+                        <div className="p-4 flex items-center justify-between border-b border-bg-border shrink-0">
+                            <h3 className="text-[15px] font-bold text-fg-primary tracking-tight px-1">
+                                Miami Tech Ecosystem Ambassadors
+                            </h3>
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="text-fg-muted hover:text-fg-primary transition-colors text-lg leading-none p-1"
+                            >
+                                ×
+                            </button>
+                        </div>
 
                         <div className="p-8">
-                            <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-lg font-bold text-fg-primary tracking-tight">
-                                    Miami Tech Ecosystem Ambassadors
-                                </h3>
-                                <button
-                                    onClick={() => setShowModal(false)}
-                                    className="text-fg-muted hover:text-fg-primary transition-colors text-2xl leading-none"
-                                >
-                                    ×
-                                </button>
-                            </div>
-
                             <div className="space-y-4 text-sm leading-relaxed text-fg-secondary">
                                 <p>
                                     The people featured here are active members of Miami’s tech community and are prepared to help others navigate our ecosystem.
