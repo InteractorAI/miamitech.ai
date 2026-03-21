@@ -39,8 +39,7 @@ export function SpacesDirectory({ initialData = [] }: { initialData?: SpaceEntry
                                 <span className="text-xs text-fg-muted truncate">{space.location}</span>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-[11px] text-fg-muted font-medium">{space.type}</span>
+                        <div className="flex items-center">
                             {space.url && (
                                 <a
                                     href={space.url}

@@ -16,7 +16,6 @@ export interface CapitalEntry {
 export interface SpaceEntry {
     name: string;
     location: string;
-    type: string;
     url: string;
 }
 
@@ -115,8 +114,7 @@ export const mappers = {
     spaces: (cols: string[]): SpaceEntry => ({
         name: cols[0] || '',
         location: cols[1] || '',
-        type: cols[2] || '',
-        url: cols[3] || '',
+        url: cols[2] || '',
     }),
     communities: (cols: string[]): CommunityEntry => ({
         name: cols[0] || '',
