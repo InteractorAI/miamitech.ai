@@ -131,7 +131,7 @@ export function Credits() {
                                     <h2 className="text-xl font-bold text-fg-primary tracking-tight mb-2">
                                         miamitech<span className="text-accent-pink">.ai</span>
                                     </h2>
-                                    <p className="text-[10px] font-bold text-accent-blue tracking-[0.2em] uppercase mb-6">
+                                    <p className="text-[12px] font-bold text-accent-blue tracking-[0.15em] uppercase mb-6">
                                         Community Concierge & Index
                                     </p>
 

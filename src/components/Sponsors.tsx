@@ -76,7 +76,7 @@ export function Sponsors() {
 
                         <div className="p-4 flex items-center justify-between border-b border-bg-border shrink-0">
                             <h3 className="text-[15px] font-bold text-fg-primary tracking-tight px-1">
-                                Support the Miami Tech Ecosystem
+                                Sponsor MiamiTech.ai
                             </h3>
                             <button
                                 onClick={() => setShowModal(false)}
@@ -86,12 +86,13 @@ export function Sponsors() {
                             </button>
                         </div>
 
-                        <div className="p-8">
+                        <div className="px-8 py-4">
                             <div className="space-y-4 text-sm leading-relaxed text-fg-secondary">
-                                <p>
-                                    Your sponsorship of MiamiTech.ai helps us continue to provide this valuable community resource. Benefits include:
-                                </p>
                                 <ul className="space-y-2 mt-4 text-[14px]">
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-accent-green">✓</span>
+                                        <span>Support the Miami tech ecosystem</span>
+                                    </li>
                                     <li className="flex items-start gap-2">
                                         <span className="text-accent-green">✓</span>
                                         <span>Highlight your brand as an ecosystem pillar</span>
@@ -106,7 +107,7 @@ export function Sponsors() {
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="text-accent-green">✓</span>
-                                        <span>Receive shout outs from time to time</span>
+                                        <span>Receive occassional shout outs</span>
                                     </li>
                                 </ul>
                             </div>
@@ -114,9 +115,9 @@ export function Sponsors() {
                             <button
                                 onClick={() => {
                                     setShowModal(false);
-                                    window.interactor?.message.send("I'm interested in sponsoring miamitech.ai");
+                                    window.interactor?.message.send("I'd like to sponsor miamitech.ai ");
                                 }}
-                                className="mt-8 w-full py-2.5 bg-bg-hover hover:bg-bg-border text-fg-primary rounded-lg font-medium transition-colors border border-bg-border"
+                                className="mt-8 w-full py-2.5 bg-bg-hover hover:bg-bg-border text-fg-primary rounded-lg font-medium transition-all border border-bg-border animate-led active:scale-[0.98]"
                             >
                                 Get Started
                             </button>
