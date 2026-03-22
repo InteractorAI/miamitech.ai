@@ -40,8 +40,7 @@ export interface ContributorEntry {
 export interface ConferenceEntry {
     name: string;
     website: string;
-    linkedin: string;
-    twitter: string;
+    notes: string;
 }
 
 export interface NewsEntry {
@@ -141,8 +140,7 @@ export const mappers = {
     conferences: (cols: string[]): ConferenceEntry => ({
         name: cols[0] || '',
         website: cols[1] || '',
-        linkedin: cols[2] || '',
-        twitter: cols[3] || '',
+        notes: cols[2] || '',
     }),
     news: (cols: string[]): NewsEntry => ({
         name: cols[0] || '',
