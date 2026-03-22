@@ -131,7 +131,7 @@ export function Credits() {
                                     <h2 className="text-xl font-bold text-fg-primary tracking-tight mb-2">
                                         miamitech<span className="text-accent-pink">.ai</span>
                                     </h2>
-                                    <p className="text-[12px] font-bold text-accent-blue tracking-[0.15em] uppercase mb-6">
+                                    <p className="text-[12px] font-bold text-accent-green tracking-[0.15em] uppercase mb-6">
                                         Community Concierge & Index
                                     </p>
 
@@ -139,7 +139,22 @@ export function Credits() {
                                         <p>
                                             MiamiTech.ai is an AI concierge and index for the Miami tech ecosystem. It provides an information-dense view of local resources alongside an AI agent that helps people navigate the ecosystem, backed by humans who can assist when needed.
                                         </p>
+
+                                        <div className="pt-4 border-t border-bg-border/50 flex flex-col items-center">
+                                            <a
+                                                href="https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/edit"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-[11px] font-bold text-fg-muted hover:text-accent-blue flex items-center gap-1.5 uppercase tracking-wider transition-all duration-200"
+                                            >
+                                                <span>View Source Data</span>
+                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                </svg>
+                                            </a>
+                                        </div>
                                     </div>
+
                                 </div>
                             ) : (
                                 <div className="p-6 animate-fade-in shadow-inner-top">

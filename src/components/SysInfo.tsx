@@ -28,6 +28,8 @@ export function SysInfo() {
                     </button>
                 </div>
             </div>
+
+
         </Panel>
     );
 }
