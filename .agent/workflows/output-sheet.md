@@ -21,6 +21,7 @@ Fetches every tab from the project's Google Sheet and writes each one to a simpl
 | `data/ambassadors.md` | Ambassadors | `1836408446` | 1 | name, linkedin, twitter |
 | `data/contributors.md` | Contributors | `18134085` | 1 | name, linkedin, twitter |
 | `data/conferences.md` | Conferences | `1124651295` | 1 | name, website, linkedin, twitter |
+| `data/news.md` | News | `156713271` | 1 | name, note, website |
 
 ## Steps
 

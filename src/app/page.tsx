@@ -19,7 +19,7 @@ import { SHEET_CONFIG, mappers, parseSheetCSV } from '../lib/googleSheets';
 async function fetchSheetData<T>(gid: string, mapper: any, skipRows: number): Promise<T[]> {
     try {
         const url = `${SHEET_CONFIG.BASE_URL}&gid=${gid}`;
-        const res = await fetch(url, { next: { revalidate: 60 } });
+        const res = await fetch(url, { next: { revalidate: 0 } });
         const text = await res.text();
         return parseSheetCSV(text, mapper, skipRows);
     } catch (e) {
@@ -29,12 +29,13 @@ async function fetchSheetData<T>(gid: string, mapper: any, skipRows: number): Pr
 }
 
 export default async function Dashboard() {
-    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData] = await Promise.all([
+    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData, newsData] = await Promise.all([
         fetchSheetData<any>(SHEET_CONFIG.TABS.VCs, mappers.capital, 4),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Spaces, mappers.spaces, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Communities, mappers.communities, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Conferences, mappers.conferences, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Ambassadors, mappers.ambassadors, 1),
+        fetchSheetData<any>(SHEET_CONFIG.TABS.News, mappers.news, 1),
     ]);
 
     return (
@@ -86,7 +87,7 @@ export default async function Dashboard() {
                         <AmbassadorsRegistry initialData={ambassadorsData} />
                     </div>
                     <div id="news" className="border-b border-bg-border scroll-mt-12">
-                        <NewsSources />
+                        <NewsSources initialData={newsData} />
                     </div>
                     <div id="faq" className="border-b border-bg-border lg:border-b-0 scroll-mt-12">
                         <FAQ />

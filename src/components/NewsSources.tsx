@@ -2,21 +2,13 @@
 import { useState } from 'react';
 import { Panel } from './TerminalBlock';
 import { Favicon } from './Favicon';
-
-const NEWS_SOURCES = [
-    { name: 'Refresh Miami', url: 'https://refreshmiami.com', desc: 'Local tech community' },
-    { name: 'TechCrunch Miami', url: 'https://techcrunch.com/tag/miami/', desc: 'Startup coverage' },
-    { name: 'The Miami Tech Pod', url: 'https://miamitechpod.com', desc: 'Podcast' },
-    { name: 'eMerge Americas', url: 'https://emergeamericas.com', desc: 'Annual conference' },
-    { name: 'South Florida Business Journal', url: 'https://bizjournals.com/southflorida/news/technology', desc: 'Business news' },
-    { name: 'Miami Herald Tech', url: 'https://miamiherald.com/news/business/', desc: 'Local reporting' },
-    { name: 'Wired Miami', url: 'https://wired.com/tag/miami/', desc: 'Tech culture' },
-];
+import type { NewsEntry } from '../lib/googleSheets';
 
 const PREVIEW_COUNT = 4;
 
-export function NewsSources() {
+export function NewsSources({ initialData = [] }: { initialData?: NewsEntry[] }) {
     const [expanded, setExpanded] = useState(false);
+    const NEWS_SOURCES = initialData;
     const visible = expanded ? NEWS_SOURCES : NEWS_SOURCES.slice(0, PREVIEW_COUNT);
     const remaining = NEWS_SOURCES.length - PREVIEW_COUNT;
 
@@ -35,7 +27,7 @@ export function NewsSources() {
                             <Favicon url={source.url} />
                             {source.name}
                         </span>
-                        <span className="text-[11px] text-fg-muted font-medium">{source.desc}</span>
+                        <span className="text-[11px] text-fg-muted font-medium truncate ml-4">{source.desc}</span>
                     </a>
                 ))}
                 {NEWS_SOURCES.length > PREVIEW_COUNT && (

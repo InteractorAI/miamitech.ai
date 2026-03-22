@@ -185,19 +185,6 @@ export function Credits() {
                                                 </div>
                                             </div>
                                         ))}
-
-                                        {!loading && (
-                                            <div className="px-3 pt-6 pb-2 text-center">
-                                                <button
-                                                    onClick={() => {
-                                                        window.interactor?.message.send('I want to suggest someone who should be listed as a contributor to miamitech.ai');
-                                                    }}
-                                                    className="text-xs font-medium text-fg-muted hover:text-accent-pink transition-colors italic border-b border-transparent hover:border-accent-pink"
-                                                >
-                                                    Missing someone? Tell us →
-                                                </button>
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                             )}
