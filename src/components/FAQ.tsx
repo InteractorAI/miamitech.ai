@@ -1,5 +1,6 @@
 'use client';
 import { Panel } from './TerminalBlock';
+import { track } from '@vercel/analytics';
 
 const FAQS = [
     'How do I get started?',
@@ -12,6 +13,7 @@ const FAQS = [
 
 export function FAQ() {
     const handleClick = (question: string) => {
+        track('faq_clicked', { question });
         window.interactor?.message.send(question);
     };
 

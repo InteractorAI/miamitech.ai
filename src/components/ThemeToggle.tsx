@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { track } from '@vercel/analytics';
 
 export function ThemeToggle() {
     const [isDark, setIsDark] = useState<boolean | null>(null);
@@ -15,10 +16,12 @@ export function ThemeToggle() {
             doc.classList.add('dark');
             doc.style.colorScheme = 'dark';
             localStorage.setItem('theme', 'dark');
+            track('theme_toggled', { theme: 'dark' });
         } else {
             doc.classList.remove('dark');
             doc.style.colorScheme = 'light';
             localStorage.setItem('theme', 'light');
+            track('theme_toggled', { theme: 'light' });
         }
         setIsDark(next);
     };

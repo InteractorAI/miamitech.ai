@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useContributorsData } from '../hooks/useSheetData';
 import Image from 'next/image';
+import { track } from '@vercel/analytics';
 
 function XIcon() {
     return (
@@ -31,10 +32,10 @@ export function Credits() {
             if (e.key === 'Escape') setOpen(false);
         };
         const openHandler = (e: any) => {
+            const entryTab = e.detail?.tab || 'about';
+            track('about_modal_opened', { from: 'event', entry_tab: entryTab });
             setOpen(true);
-            if (e.detail?.tab) {
-                setActiveTab(e.detail.tab);
-            }
+            setActiveTab(entryTab);
         };
 
         if (open) window.addEventListener('keydown', handler);
@@ -57,8 +58,14 @@ export function Credits() {
     }, []);
 
     const handleOpen = (tab: 'about' | 'contributors' = 'about') => {
+        track('about_modal_opened', { from: 'click', entry_tab: tab });
         setActiveTab(tab);
         setOpen(true);
+    };
+
+    const handleTabChange = (tab: 'about' | 'contributors') => {
+        track('about_tab_switched', { to_tab: tab });
+        setActiveTab(tab);
     };
 
     return (
@@ -87,7 +94,7 @@ export function Credits() {
                         <div className="p-4 flex items-center justify-between border-b border-bg-border shrink-0">
                             <div className="flex gap-1 p-1 bg-bg-hover rounded-lg">
                                 <button
-                                    onClick={() => setActiveTab('about')}
+                                    onClick={() => handleTabChange('about')}
                                     className={`px-4 py-1.5 text-[11px] font-bold tracking-tight rounded-md transition-all duration-200 ${activeTab === 'about'
                                         ? 'bg-bg-card text-fg-primary shadow-sm ring-1 ring-bg-border'
                                         : 'text-fg-muted hover:text-fg-secondary'
@@ -96,7 +103,7 @@ export function Credits() {
                                     About
                                 </button>
                                 <button
-                                    onClick={() => setActiveTab('contributors')}
+                                    onClick={() => handleTabChange('contributors')}
                                     className={`px-4 py-1.5 text-[11px] font-bold tracking-tight rounded-md transition-all duration-200 ${activeTab === 'contributors'
                                         ? 'bg-bg-card text-fg-primary shadow-sm ring-1 ring-bg-border'
                                         : 'text-fg-muted hover:text-fg-secondary'
@@ -145,6 +152,7 @@ export function Credits() {
                                                 href="https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/edit"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
+                                                onClick={() => track('view_source_data_clicked')}
                                                 className="text-[11px] font-bold text-fg-muted hover:text-accent-blue flex items-center gap-1.5 uppercase tracking-wider transition-all duration-200"
                                             >
                                                 <span>View Source Data</span>
@@ -178,7 +186,10 @@ export function Credits() {
                                                             href={c.twitter.startsWith('http') ? c.twitter : `https://x.com/${c.twitter.replace('@', '')}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            onClick={e => e.stopPropagation()}
+                                                            onClick={e => {
+                                                                e.stopPropagation();
+                                                                track('contributor_social_clicked', { contributor: c.name, platform: 'x' });
+                                                            }}
                                                             className="p-1.5 text-fg-muted hover:text-accent-blue transition-colors rounded"
                                                             title="X / Twitter"
                                                         >
@@ -190,7 +201,10 @@ export function Credits() {
                                                             href={c.linkedin.startsWith('http') ? c.linkedin : `https://linkedin.com/in/${c.linkedin}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            onClick={e => e.stopPropagation()}
+                                                            onClick={e => {
+                                                                e.stopPropagation();
+                                                                track('contributor_social_clicked', { contributor: c.name, platform: 'linkedin' });
+                                                            }}
                                                             className="p-1.5 text-fg-muted hover:text-accent-blue transition-colors rounded"
                                                             title="LinkedIn"
                                                         >

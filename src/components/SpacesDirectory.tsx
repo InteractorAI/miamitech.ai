@@ -4,6 +4,7 @@ import { Panel } from './TerminalBlock';
 // import { useSpacesData } from '../hooks/useSheetData';
 import type { SpaceEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
+import { track } from '@vercel/analytics';
 
 const PREVIEW_COUNT = 4;
 
@@ -16,6 +17,7 @@ export function SpacesDirectory({ initialData = [] }: { initialData?: SpaceEntry
     const remaining = spaces.length - PREVIEW_COUNT;
 
     const handleRowClick = (space: SpaceEntry) => {
+        track('directory_row_clicked', { category: 'Spaces', title: space.name });
         window.interactor?.message.send(
             `Tell me about ${space.name}`
         );
@@ -45,7 +47,10 @@ export function SpacesDirectory({ initialData = [] }: { initialData?: SpaceEntry
                                     href={space.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        track('directory_link_clicked', { category: 'Spaces', title: space.name, url: space.url || '' });
+                                    }}
                                     className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-0 group-hover:opacity-100"
                                     title="Website"
                                 >

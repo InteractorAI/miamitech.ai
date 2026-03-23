@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Panel } from './TerminalBlock';
 import type { CommunityEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
+import { track } from '@vercel/analytics';
 
 const PREVIEW_COUNT = 4;
 
@@ -15,6 +16,7 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
     const remaining = communities.length - PREVIEW_COUNT;
 
     const handleRowClick = (community: CommunityEntry) => {
+        track('directory_row_clicked', { category: 'Communities', title: community.name });
         window.interactor?.message.send(
             `Tell me about the ${community.name} community`
         );
@@ -41,7 +43,10 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
                                     href={community.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        track('directory_link_clicked', { category: 'Communities', title: community.name, type: 'website', url: community.url || '' });
+                                    }}
                                     className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-0 group-hover:opacity-100"
                                     title="Website"
                                 >
@@ -57,7 +62,10 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
                                     href={community.calendar}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        track('directory_link_clicked', { category: 'Communities', title: community.name, type: 'calendar', url: community.calendar || '' });
+                                    }}
                                     className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-0 group-hover:opacity-100"
                                     title="Event Calendar"
                                 >

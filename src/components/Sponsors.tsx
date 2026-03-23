@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Panel } from './TerminalBlock';
+import { track } from '@vercel/analytics';
 
 interface Sponsor {
     title: string;
@@ -30,7 +31,10 @@ export function Sponsors() {
 
     const infoIcon = (
         <button
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+                track('sponsor_modal_opened', { from: 'info_icon' });
+                setShowModal(true);
+            }}
             className="flex items-center justify-center w-5 h-5 rounded-full border border-fg-muted/30 text-fg-muted hover:border-fg-secondary hover:text-fg-primary transition-all duration-200 text-[11px] font-semibold leading-none"
             title="Learn about sponsoring"
         >
@@ -47,6 +51,7 @@ export function Sponsors() {
                         href={s.url}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => track('sponsor_link_clicked', { sponsor: s.title, url: s.url })}
                         className="group shrink-0 w-44 border border-bg-border-subtle rounded-lg px-3 py-3 bg-gradient-to-b from-bg-elevated/40 to-bg-card/20 hover:border-fg-muted/30 hover:bg-bg-hover transition-all duration-300 shadow-sm"
                     >
                         <div className="text-xs font-semibold text-fg-primary group-hover:text-accent-blue leading-tight transition-colors">{s.title}</div>
@@ -54,7 +59,10 @@ export function Sponsors() {
                     </a>
                 ))}
                 <button
-                    onClick={() => setShowModal(true)}
+                    onClick={() => {
+                        track('sponsor_modal_opened', { from: 'placeholder' });
+                        setShowModal(true);
+                    }}
                     className="shrink-0 w-44 border border-dashed border-bg-border-subtle rounded-lg px-3 py-3 bg-bg-card/30 hover:border-fg-muted/30 hover:bg-bg-hover transition-all duration-300 text-left shadow-sm"
                 >
                     <div className="text-xs font-semibold text-fg-muted leading-tight">Your brand here</div>
@@ -114,6 +122,7 @@ export function Sponsors() {
 
                             <button
                                 onClick={() => {
+                                    track('sponsor_get_started_clicked');
                                     setShowModal(false);
                                     window.interactor?.message.send("I'd like to sponsor miamitech.ai ");
                                 }}

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Panel } from './TerminalBlock';
 import type { ConferenceEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
+import { track } from '@vercel/analytics';
 
 const PREVIEW_COUNT = 5;
 
@@ -15,6 +16,7 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
     const remaining = conferences.length - PREVIEW_COUNT;
 
     const handleRowClick = (conference: ConferenceEntry) => {
+        track('directory_row_clicked', { category: 'Conferences', title: conference.name });
         window.interactor?.message.send(
             `Tell me about the ${conference.name} conference`
         );
@@ -56,7 +58,10 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
                                             href={conference.website}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            onClick={(e) => e.stopPropagation()}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                track('directory_link_clicked', { category: 'Conferences', title: conference.name, url: conference.website || '' });
+                                            }}
                                             className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-0 group-hover:opacity-100"
                                             title="Website"
                                         >

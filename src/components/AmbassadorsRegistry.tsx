@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Panel } from './TerminalBlock';
 import type { AmbassadorEntry } from '../lib/googleSheets';
+import { track } from '@vercel/analytics';
 
 const PREVIEW_COUNT = 5;
 
@@ -15,6 +16,7 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
     const remaining = ambassadors.length - PREVIEW_COUNT;
 
     const handleRowClick = (name: string) => {
+        track('directory_row_clicked', { category: 'Ambassadors', title: name });
         window.interactor?.message.send(`Tell me about ${name}`);
     };
 
@@ -29,7 +31,10 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
 
     const infoIcon = (
         <button
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+                track('ambassador_modal_opened');
+                setShowModal(true);
+            }}
             className="flex items-center justify-center w-5 h-5 rounded-full border border-fg-muted/30 text-fg-muted hover:border-fg-secondary hover:text-fg-primary transition-all duration-200 text-[11px] font-semibold leading-none"
             title="Learn more"
         >
@@ -56,7 +61,10 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                                     href={a.twitter.startsWith('http') ? a.twitter : `https://x.com/${a.twitter.replace('@', '')}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        track('directory_link_clicked', { category: 'Ambassadors', title: a.name, type: 'x', url: a.twitter || '' });
+                                    }}
                                     className="p-1 text-fg-muted hover:text-accent-blue transition-colors"
                                     title="Twitter / X"
                                 >
@@ -70,7 +78,10 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                                     href={a.linkedin.startsWith('http') ? a.linkedin : `https://linkedin.com/in/${a.linkedin}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        track('directory_link_clicked', { category: 'Ambassadors', title: a.name, type: 'linkedin', url: a.linkedin || '' });
+                                    }}
                                     className="p-1 text-fg-muted hover:text-accent-blue transition-colors"
                                     title="LinkedIn"
                                 >

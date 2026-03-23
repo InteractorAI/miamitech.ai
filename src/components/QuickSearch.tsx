@@ -6,6 +6,7 @@ import { useConferencesData } from '../hooks/useSheetData';
 import { useAmbassadorsData } from '../hooks/useSheetData';
 import { useCapitalData } from '../hooks/useSheetData';
 import { Favicon } from './Favicon';
+import { track } from '@vercel/analytics';
 
 interface SearchResult {
     name: string;
@@ -107,13 +108,18 @@ export function QuickSearch() {
             if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
                 e.preventDefault();
                 setOpen(prev => {
-                    if (!prev) setActiveIdx(0);
-                    return !prev;
+                    const next = !prev;
+                    if (next) {
+                        track('search_opened', { from: 'shortcut' });
+                        setActiveIdx(0);
+                    }
+                    return next;
                 });
             }
             if (e.key === 'Escape') close();
         };
         const handleCustomOpen = () => {
+            track('search_opened', { from: 'event' });
             setOpen(true);
             setActiveIdx(0);
         };
@@ -154,6 +160,11 @@ export function QuickSearch() {
     };
 
     const handleRowClick = (result: SearchResult) => {
+        track('search_result_clicked', {
+            title: result.name,
+            category: result.section,
+            url: result.url || ''
+        });
         result.onRowClick();
         close();
     };
@@ -268,6 +279,7 @@ export function QuickSearch() {
 /** Small inline hint badge shown in the left column on desktop */
 export function QuickSearchHint({ onOpen }: { onOpen?: () => void }) {
     const handleClick = () => {
+        track('search_opened', { from: 'hint_badge' });
         if (onOpen) onOpen();
         else window.dispatchEvent(new CustomEvent('openQuickSearch'));
     };
