@@ -39,12 +39,12 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
                             >
                                 <div className="flex items-center gap-2 min-w-0 flex-1">
                                     {conference.website && <Favicon url={conference.website} />}
-                                    <div className="flex items-baseline gap-2 min-w-0">
-                                        <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
+                                    <div className="flex items-baseline gap-2 min-w-0 flex-1">
+                                        <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate shrink-0 max-w-[65%] sm:max-w-[80%]">
                                             {conference.name}
                                         </span>
                                         {conference.notes && (
-                                            <span className="text-xs text-fg-muted truncate">
+                                            <span className="text-xs text-fg-muted truncate min-w-0 opacity-70">
                                                 {conference.notes}
                                             </span>
                                         )}
