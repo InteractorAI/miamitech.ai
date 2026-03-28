@@ -1,8 +1,9 @@
 'use client';
 import { Panel } from './TerminalBlock';
 import { track } from '@vercel/analytics';
+import type { FAQEntry } from '../lib/googleSheets';
 
-const FAQS = [
+const DEFAULT_FAQS = [
     'How do I get started?',
     'Who are the top investors in Miami?',
     'What coworking spaces are available?',
@@ -11,7 +12,11 @@ const FAQS = [
     'How do I connect with founders?',
 ];
 
-export function FAQ() {
+export function FAQ({ initialData = [] }: { initialData?: FAQEntry[] }) {
+    const questions = initialData.length > 0 
+        ? initialData.map(d => d.question) 
+        : DEFAULT_FAQS;
+
     const handleClick = (question: string) => {
         track('faq_clicked', { question });
         window.interactor?.message.send(question);
@@ -20,7 +25,7 @@ export function FAQ() {
     return (
         <Panel title="FAQ" noPadding>
             <div>
-                {FAQS.map((q, i) => (
+                {questions.map((q, i) => (
                     <button
                         key={i}
                         onClick={() => handleClick(q)}

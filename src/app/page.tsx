@@ -29,13 +29,14 @@ async function fetchSheetData<T>(gid: string, mapper: any, skipRows: number): Pr
 }
 
 export default async function Dashboard() {
-    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData, newsData] = await Promise.all([
+    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData, newsData, faqData] = await Promise.all([
         fetchSheetData<any>(SHEET_CONFIG.TABS.VCs, mappers.capital, 4),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Spaces, mappers.spaces, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Communities, mappers.communities, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Conferences, mappers.conferences, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Ambassadors, mappers.ambassadors, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.News, mappers.news, 1),
+        fetchSheetData<any>(SHEET_CONFIG.TABS.FAQs, mappers.faqs, 1),
     ]);
 
     return (
@@ -90,7 +91,7 @@ export default async function Dashboard() {
                         <NewsSources initialData={newsData} />
                     </div>
                     <div id="faq" className="border-b border-bg-border lg:border-b-0 scroll-mt-12">
-                        <FAQ />
+                        <FAQ initialData={faqData} />
                     </div>
                 </div>
 

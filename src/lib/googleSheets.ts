@@ -49,6 +49,10 @@ export interface NewsEntry {
     url: string;
 }
 
+export interface FAQEntry {
+    question: string;
+}
+
 export const SHEET_CONFIG = {
     BASE_URL: 'https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/export?format=csv',
     TABS: {
@@ -59,7 +63,8 @@ export const SHEET_CONFIG = {
         Ambassadors: '1836408446',
         Contributors: '18134085',
         Conferences: '1124651295',
-        News: '156713271'
+        News: '156713271',
+        FAQs: '418679874'
     }
 } as const;
 
@@ -96,9 +101,9 @@ export function parseSheetCSV<T>(csvText: string, mapper: (cols: string[]) => T,
         const cols = parseCSVLine(line);
         return mapper(cols);
     }).filter(e => {
-        // Filter out empty rows (usually checked by name or first column)
+        // Filter out empty rows (usually checked by name, question, or first column)
         const entry = e as any;
-        return entry && entry.name && entry.name !== '';
+        return entry && (entry.name || entry.question) && (entry.name !== '' || entry.question !== '');
     });
 }
 
@@ -146,5 +151,8 @@ export const mappers = {
         name: cols[0] || '',
         desc: cols[1] || '',
         url: cols[2] || '',
+    }),
+    faqs: (cols: string[]): FAQEntry => ({
+        question: cols[0] || '',
     }),
 };
