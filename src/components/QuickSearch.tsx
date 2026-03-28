@@ -80,7 +80,7 @@ function buildResults(
             onRowClick: () => window.interactor?.message.send(`Tell me about ${c.name}`),
         });
     });
-    
+
     accelerators.filter(a => a.name.toLowerCase().includes(q) || a.stage?.toLowerCase().includes(q) || a.note?.toLowerCase().includes(q)).forEach(a => {
         results.push({
             name: a.name,
@@ -210,7 +210,7 @@ export function QuickSearch() {
                         value={query}
                         onChange={e => setQuery(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="Find a resource…"
+                        placeholder="Jump to resource..."
                         className="flex-1 bg-transparent text-fg-primary text-sm focus:outline-none placeholder:text-fg-muted"
                     />
                     <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-fg-muted bg-bg-elevated border border-bg-border rounded">
@@ -222,7 +222,7 @@ export function QuickSearch() {
                 <div className="flex-1 overflow-y-auto">
                     {query.trim() === '' ? (
                         <div className="px-4 py-8 text-center text-sm text-fg-muted">
-                            Type to search across Spaces, Communities, Capital…
+                            Type to search across the entire index...
                         </div>
                     ) : results.length === 0 ? (
                         <div className="px-4 py-8 text-center text-sm text-fg-muted">
@@ -309,13 +309,33 @@ export function QuickSearchHint({ onOpen }: { onOpen?: () => void }) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35" />
                 </svg>
                 <span className="text-sm font-medium text-fg-secondary group-hover:text-fg-primary transition-colors">
-                    Find a resource…
+                    Jump to resource...
                 </span>
             </div>
             <div className="flex items-center gap-1">
                 <kbd className="px-1.5 py-0.5 text-[11px] font-sans font-medium text-fg-muted bg-bg-elevated border border-bg-border rounded">⌘</kbd>
                 <kbd className="px-1.5 py-0.5 text-[11px] font-sans font-medium text-fg-muted bg-bg-elevated border border-bg-border rounded">J</kbd>
             </div>
+        </button>
+    );
+}
+
+/** Compact search button for the header bar */
+export function QuickSearchButton() {
+    return (
+        <button
+            onClick={() => {
+                track('search_opened', { from: 'header_button' });
+                window.dispatchEvent(new CustomEvent('openQuickSearch'));
+            }}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-fg-muted hover:text-fg-secondary bg-bg-hover/50 hover:bg-bg-hover border border-bg-border rounded-lg transition-all duration-150"
+            title="Search (⌘J)"
+        >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <circle cx="11" cy="11" r="8" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35" />
+            </svg>
+            <span className="hidden sm:inline text-[11px]">⌘J</span>
         </button>
     );
 }
