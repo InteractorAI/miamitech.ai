@@ -39,6 +39,29 @@
     --accent-pink-alpha: rgba(224, 64, 251, 0.12);
   }
 
+  html.miami {
+    --bg-primary: 0 0 0;
+    --bg-card: 10 10 12;
+    --bg-elevated: 18 18 20;
+    --bg-hover: 26 26 30;
+    --bg-border: 224 64 251; /* Neon pink borders */
+    --bg-border-subtle: rgba(224, 64, 251, 0.2);
+    --fg-primary: 0 255 255; /* Cyan text */
+    --fg-secondary: 224 64 251; /* Pink secondary text */
+    --fg-muted: rgba(0, 255, 255, 0.5);
+    --scrollbar-thumb: rgba(0, 255, 255, 0.2);
+    --scrollbar-thumb-hover: rgba(0, 255, 255, 0.5);
+    --selection-bg: rgba(0, 255, 255, 0.2);
+    --selection-fg: #00ffff;
+    --accent-pink-alpha: rgba(0, 255, 255, 0.12);
+  }
+
+  html.miami * {
+    font-family: 'Space Mono', monospace !important;
+    text-transform: lowercase;
+    border-radius: 0 !important;
+  }
+
   * {
     @apply box-border;
     margin: 0;

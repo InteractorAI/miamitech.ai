@@ -3,27 +3,36 @@ import { useState, useEffect } from 'react';
 import { track } from '@vercel/analytics';
 
 export function ThemeToggle() {
-    const [isDark, setIsDark] = useState<boolean | null>(null);
+    const [theme, setTheme] = useState<'light' | 'dark' | 'miami' | null>(null);
 
     useEffect(() => {
-        setIsDark(document.documentElement.classList.contains('dark'));
+        if (document.documentElement.classList.contains('miami')) {
+            setTheme('miami');
+        } else if (document.documentElement.classList.contains('dark')) {
+            setTheme('dark');
+        } else {
+            setTheme('light');
+        }
     }, []);
 
     const toggle = () => {
         const doc = document.documentElement;
-        const next = !isDark;
-        if (next) {
-            doc.classList.add('dark');
-            doc.style.colorScheme = 'dark';
-            localStorage.setItem('theme', 'dark');
-            track('theme_toggled', { theme: 'dark' });
-        } else {
-            doc.classList.remove('dark');
-            doc.style.colorScheme = 'light';
-            localStorage.setItem('theme', 'light');
-            track('theme_toggled', { theme: 'light' });
-        }
-        setIsDark(next);
+        let next: 'light' | 'dark' | 'miami';
+        
+        if (theme === 'light') next = 'dark';
+        else if (theme === 'dark') next = 'miami';
+        else next = 'light';
+
+        doc.classList.remove('dark', 'miami');
+        
+        if (next === 'dark') doc.classList.add('dark');
+        if (next === 'miami') doc.classList.add('miami');
+
+        doc.style.colorScheme = next === 'light' ? 'light' : 'dark';
+        localStorage.setItem('theme', next);
+        track('theme_toggled', { theme: next });
+        
+        setTheme(next);
     };
 
     return (
@@ -32,7 +41,7 @@ export function ThemeToggle() {
             className="p-2 rounded-lg bg-bg-elevated hover:bg-bg-hover border border-bg-border text-fg-secondary hover:text-fg-primary transition-all duration-200"
             aria-label="Toggle theme"
         >
-            {isDark === false ? (
+            {theme === 'light' ? (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18" height="18"
@@ -43,6 +52,18 @@ export function ThemeToggle() {
                 >
                     <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
                 </svg>
+            ) : theme === 'miami' ? (
+                /* Fun miami-style icon (Palmtree or similar, maybe glasses) */
+                 <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="18" height="18" 
+                    viewBox="0 0 24 24" fill="none" 
+                    stroke="currentColor" strokeWidth="2" 
+                    strokeLinecap="round" strokeLinejoin="round" 
+                    className="animate-fade-in text-accent-pink"
+                 >
+                    <polygon points="12 2 2 22 12 17 22 22 12 2"/>
+                </svg>
             ) : (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +71,7 @@ export function ThemeToggle() {
                     viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="2"
                     strokeLinecap="round" strokeLinejoin="round"
-                    className={`animate-fade-in ${isDark === null ? 'opacity-0' : ''}`}
+                    className={`animate-fade-in ${theme === null ? 'opacity-0' : ''}`}
                 >
                     <circle cx="12" cy="12" r="4" />
                     <path d="M12 2v2" />

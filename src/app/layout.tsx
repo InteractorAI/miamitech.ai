@@ -76,8 +76,12 @@ export default function RootLayout({
                 if (theme === 'dark') {
                   document.documentElement.classList.add('dark');
                   document.documentElement.style.colorScheme = 'dark';
+                } else if (theme === 'miami') {
+                  document.documentElement.classList.add('miami');
+                  document.documentElement.style.colorScheme = 'dark';
                 } else {
                   document.documentElement.classList.remove('dark');
+                  document.documentElement.classList.remove('miami');
                   document.documentElement.style.colorScheme = 'light';
                 }
               })();
