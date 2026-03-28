@@ -2,6 +2,10 @@
 description: how to ship / deploy this project
 ---
 
+> [!IMPORTANT]
+> NEVER execute this workflow or its steps unless the USER explicitly asks you to "ship" or "deploy" the project.
+
+
 # Deployment
 
 This project uses **Vercel with GitHub auto-deploy**. The `main` branch is connected to Vercel and deploys automatically on every push. Do NOT run `vercel --prod` manually.

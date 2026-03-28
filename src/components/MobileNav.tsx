@@ -5,6 +5,7 @@ const SECTIONS = [
     { id: 'spaces', label: 'Spaces' },
     { id: 'communities', label: 'Communities' },
     { id: 'capital', label: 'Capital' },
+    { id: 'accelerators', label: 'Accelerators' },
     { id: 'conferences', label: 'Conferences' },
     { id: 'ambassadors', label: 'Ambassadors' },
     { id: 'news', label: 'News' },

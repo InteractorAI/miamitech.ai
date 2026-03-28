@@ -81,7 +81,7 @@ function buildResults(
         });
     });
     
-    accelerators.filter(a => a.name.toLowerCase().includes(q) || a.stage?.toLowerCase().includes(q)).forEach(a => {
+    accelerators.filter(a => a.name.toLowerCase().includes(q) || a.stage?.toLowerCase().includes(q) || a.note?.toLowerCase().includes(q)).forEach(a => {
         results.push({
             name: a.name,
             section: 'Accelerators',

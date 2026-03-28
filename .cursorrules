@@ -1,0 +1,4 @@
+# Antigravity Agent Rules
+
+- NEVER ship, deploy, or push to production unless the USER explicitly asks you to.
+- Always check with the user before performing any irreversible actions like deleting files or modifying critical configurations.

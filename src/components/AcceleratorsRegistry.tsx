@@ -48,7 +48,7 @@ export function AcceleratorsRegistry({
                 e.stopPropagation();
                 track('directory_link_clicked', { category: 'Accelerators', title: name, url });
             }}
-            className="p-1 text-fg-muted hover:text-accent-blue transition-colors"
+            className="inline-flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-fg-muted hover:text-accent-blue"
             title="Website"
         >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -71,13 +71,13 @@ export function AcceleratorsRegistry({
                 {expanded ? (
                     <div className="overflow-auto flex-1 min-h-0">
                         <table className="w-full text-sm table-fixed">
-                            <thead>
-                                <tr className="border-b border-bg-border bg-bg-card/50">
-                                    <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[40%]">Name</th>
-                                    <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[20%]">Stage</th>
-                                    <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[15%]">Check Size</th>
-                                    <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[20%]">Note</th>
-                                    <th className="sticky top-0 z-10 bg-bg-card w-10" />
+                            <thead className="sticky top-0 z-10 bg-bg-card">
+                                <tr className="border-b border-bg-border">
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[40%]">Name</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[25%]">Note</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[15%]">Check</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[15%]">Stage</th>
+                                    <th className="w-10" />
                                 </tr>
                             </thead>
                             <tbody>
@@ -87,27 +87,25 @@ export function AcceleratorsRegistry({
                                         onClick={() => handleRowClick(a)}
                                         className="border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                                     >
-                                        <td className="py-3 px-5 truncate">
-                                            <div className="flex items-center gap-2">
+                                        <td className="py-3 px-5 font-medium text-fg-primary">
+                                            <div className="flex items-center gap-2 min-w-0">
                                                 {a.website && <Favicon url={a.website} />}
-                                                <span className="font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
+                                                <span className="truncate group-hover:text-accent-pink transition-colors truncate">
                                                     {a.name}
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="py-3 px-5 text-fg-secondary truncate">
-                                            {a.stage || '—'}
-                                        </td>
-                                        <td className="py-3 px-5 text-fg-secondary truncate">
-                                            {a.checkSize || '—'}
-                                        </td>
                                         <td className="py-3 px-5 text-fg-muted text-[13px] truncate">
                                             {a.note || '—'}
                                         </td>
+                                        <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">
+                                            {a.checkSize || '—'}
+                                        </td>
+                                        <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">
+                                            {a.stage || '—'}
+                                        </td>
                                         <td className="py-3 px-2 text-center w-10">
-                                            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                {a.website && globeIcon(a.website, a.name)}
-                                            </div>
+                                            {a.website && globeIcon(a.website, a.name)}
                                         </td>
                                     </tr>
                                 ))}
@@ -128,7 +126,7 @@ export function AcceleratorsRegistry({
                                         <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
                                             {a.name}
                                         </span>
-                                        <span className="text-xs text-fg-muted truncate">{a.stage}</span>
+                                        <span className="text-xs text-fg-muted truncate">{a.note}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
