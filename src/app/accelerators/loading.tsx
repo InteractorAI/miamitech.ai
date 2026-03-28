@@ -11,7 +11,7 @@ export default function Loading() {
                     ← Home
                 </Link>
                 <h1 className="text-sm font-semibold text-fg-primary tracking-tight">
-                    Accelerators Directory
+                    Accelerators Index
                 </h1>
                 <div className="w-16 flex justify-end">
                     <ThemeToggle />
