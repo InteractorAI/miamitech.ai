@@ -210,7 +210,7 @@ export function QuickSearch() {
                         value={query}
                         onChange={e => setQuery(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="Jump to resource..."
+                        placeholder="Jump to a resource..."
                         className="flex-1 bg-transparent text-fg-primary text-sm focus:outline-none placeholder:text-fg-muted"
                     />
                     <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-fg-muted bg-bg-elevated border border-bg-border rounded">
@@ -309,7 +309,7 @@ export function QuickSearchHint({ onOpen }: { onOpen?: () => void }) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35" />
                 </svg>
                 <span className="text-sm font-medium text-fg-secondary group-hover:text-fg-primary transition-colors">
-                    Jump to resource...
+                    Jump to a resource...
                 </span>
             </div>
             <div className="flex items-center gap-1">
