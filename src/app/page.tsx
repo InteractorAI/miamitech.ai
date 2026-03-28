@@ -89,6 +89,9 @@ export default async function Dashboard() {
                     <div id="ambassadors" className="border-b border-bg-border scroll-mt-12">
                         <AmbassadorsRegistry initialData={ambassadorsData} />
                     </div>
+                    <div id="accelerators" className="border-b border-bg-border scroll-mt-12">
+                        <AcceleratorsRegistry initialData={acceleratorsData} />
+                    </div>
                     <div id="news" className="border-b border-bg-border scroll-mt-12">
                         <NewsSources initialData={newsData} />
                     </div>
@@ -98,13 +101,8 @@ export default async function Dashboard() {
                 </div>
 
                 {/* Right column: Capital */}
-                <div id="capital" className="min-h-[80vh] lg:min-h-0 lg:col-span-5 lg:flex-1 flex flex-col lg:overflow-hidden scroll-mt-12">
-                    <div className="flex-[3] min-h-0 border-b border-bg-border overflow-hidden flex flex-col">
-                        <CapitalIndex data={capitalData} loading={false} />
-                    </div>
-                    <div id="accelerators" className="flex-[2] min-h-0 overflow-hidden flex flex-col scroll-mt-12">
-                        <AcceleratorsRegistry initialData={acceleratorsData} />
-                    </div>
+                <div id="capital" className="min-h-[60vh] lg:min-h-0 lg:col-span-5 lg:flex-1 flex flex-col lg:overflow-hidden scroll-mt-12">
+                    <CapitalIndex data={capitalData} loading={false} />
                 </div>
             </div>
         </div>
