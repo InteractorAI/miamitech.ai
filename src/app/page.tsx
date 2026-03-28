@@ -11,6 +11,7 @@ import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { QuickSearch, QuickSearchHint } from '../components/QuickSearch';
+import { NewcomerRoadmap } from '../components/NewcomerRoadmap';
 import Link from 'next/link';
 import { MobileNav } from '../components/MobileNav';
 
@@ -73,10 +74,14 @@ export default async function Dashboard() {
                     <div className="hidden lg:block border-b border-bg-border lg:border-b-0">
                         <QuickSearchHint />
                     </div>
+                    <div id="roadmap" className="border-b border-bg-border scroll-mt-12">
+                        <NewcomerRoadmap />
+                    </div>
                 </div>
 
                 {/* Middle column */}
                 <div className="shrink-0 lg:col-span-4 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
+
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
                         <SpacesDirectory initialData={spacesData} />
                     </div>
