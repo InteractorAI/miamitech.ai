@@ -39,6 +39,26 @@ export function AcceleratorsRegistry({
         </Link>
     );
 
+    const globeIcon = (url: string, name: string) => (
+        <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+                e.stopPropagation();
+                track('directory_link_clicked', { category: 'Accelerators', title: name, url });
+            }}
+            className="p-1 text-fg-muted hover:text-accent-blue transition-colors"
+            title="Website"
+        >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
+            </svg>
+        </a>
+    );
+
     return (
         <Panel 
             title="Accelerators" 
@@ -48,53 +68,76 @@ export function AcceleratorsRegistry({
             className={expanded ? "h-full" : ""}
         >
             <div className={isActuallyLoading ? 'opacity-50 pointer-events-none' : ''}>
-                <div className="overflow-auto flex-1 min-h-0">
-                    <table className="w-full text-sm table-fixed">
-                        <thead>
-                            <tr className="border-b border-bg-border bg-bg-card/50">
-                                <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[40%]">Name</th>
-                                <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[30%]">Stage</th>
-                                {expanded && (
-                                    <>
-                                        <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[15%]">Check Size</th>
-                                        <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[15%]">Note</th>
-                                    </>
-                                )}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {visible.map((a, i) => (
-                                <tr
-                                    key={i}
-                                    onClick={() => handleRowClick(a)}
-                                    className="border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
-                                >
-                                    <td className="py-3 px-5 truncate">
-                                        <div className="flex items-center gap-2">
-                                            {a.website && <Favicon url={a.website} />}
-                                            <span className="font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
-                                                {a.name}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td className="py-3 px-5 text-fg-secondary truncate">
-                                        {a.stage || '—'}
-                                    </td>
-                                    {expanded && (
-                                        <>
-                                            <td className="py-3 px-5 text-fg-secondary truncate">
-                                                {a.checkSize || '—'}
-                                            </td>
-                                            <td className="py-3 px-5 text-fg-secondary truncate">
-                                                {a.note || '—'}
-                                            </td>
-                                        </>
-                                    )}
+                {expanded ? (
+                    <div className="overflow-auto flex-1 min-h-0">
+                        <table className="w-full text-sm table-fixed">
+                            <thead>
+                                <tr className="border-b border-bg-border bg-bg-card/50">
+                                    <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[40%]">Name</th>
+                                    <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[20%]">Stage</th>
+                                    <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[15%]">Check Size</th>
+                                    <th className="sticky top-0 z-10 bg-bg-card text-left py-2 px-5 text-[10px] font-bold text-fg-muted uppercase tracking-wider w-[20%]">Note</th>
+                                    <th className="sticky top-0 z-10 bg-bg-card w-10" />
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {visible.map((a, i) => (
+                                    <tr
+                                        key={i}
+                                        onClick={() => handleRowClick(a)}
+                                        className="border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                                    >
+                                        <td className="py-3 px-5 truncate">
+                                            <div className="flex items-center gap-2">
+                                                {a.website && <Favicon url={a.website} />}
+                                                <span className="font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
+                                                    {a.name}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-5 text-fg-secondary truncate">
+                                            {a.stage || '—'}
+                                        </td>
+                                        <td className="py-3 px-5 text-fg-secondary truncate">
+                                            {a.checkSize || '—'}
+                                        </td>
+                                        <td className="py-3 px-5 text-fg-muted text-[13px] truncate">
+                                            {a.note || '—'}
+                                        </td>
+                                        <td className="py-3 px-2 text-center w-10">
+                                            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {a.website && globeIcon(a.website, a.name)}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <div>
+                        {visible.map((a, i) => (
+                            <div
+                                key={i}
+                                onClick={() => handleRowClick(a)}
+                                className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                            >
+                                <div className="flex items-center gap-2 min-w-0">
+                                    {a.website && <Favicon url={a.website} />}
+                                    <div className="flex items-baseline gap-2 min-w-0">
+                                        <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
+                                            {a.name}
+                                        </span>
+                                        <span className="text-xs text-fg-muted truncate">{a.stage}</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {a.website && globeIcon(a.website, a.name)}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
                 {!expanded && accelerators.length > PREVIEW_COUNT && (
                     <button
                         onClick={() => setShowAll(!showAll)}
