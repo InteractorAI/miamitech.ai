@@ -53,6 +53,14 @@ export interface FAQEntry {
     question: string;
 }
 
+export interface AcceleratorEntry {
+    name: string;
+    website: string;
+    stage: string;
+    checkSize: string;
+    note: string;
+}
+
 export const SHEET_CONFIG = {
     BASE_URL: 'https://docs.google.com/spreadsheets/d/1hqKbGMHKT3pbgFRLKVWcJ7xgInwe6FLwYaMn1uld_Pg/export?format=csv',
     TABS: {
@@ -64,7 +72,8 @@ export const SHEET_CONFIG = {
         Contributors: '18134085',
         Conferences: '1124651295',
         News: '156713271',
-        FAQs: '418679874'
+        FAQs: '418679874',
+        Accelerators: '1044145407'
     }
 } as const;
 
@@ -154,5 +163,12 @@ export const mappers = {
     }),
     faqs: (cols: string[]): FAQEntry => ({
         question: cols[0] || '',
+    }),
+    accelerators: (cols: string[]): AcceleratorEntry => ({
+        name: cols[0] || '',
+        website: cols[1] || '',
+        stage: cols[2] || '',
+        checkSize: cols[3] || '',
+        note: cols[4] || '',
     }),
 };

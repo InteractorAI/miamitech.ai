@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { parseSheetCSV, SHEET_CONFIG, mappers, type CapitalEntry, type SpaceEntry, type CommunityEntry, type AmbassadorEntry, type ContributorEntry, type ConferenceEntry, type FAQEntry } from '../lib/googleSheets';
+import { parseSheetCSV, SHEET_CONFIG, mappers, type CapitalEntry, type SpaceEntry, type CommunityEntry, type AmbassadorEntry, type ContributorEntry, type ConferenceEntry, type FAQEntry, type AcceleratorEntry } from '../lib/googleSheets';
 
 export function useGoogleSheet<T>(
     gid: string,
@@ -92,5 +92,13 @@ export function useFAQData() {
         SHEET_CONFIG.TABS.FAQs,
         mappers.faqs,
         1 // Skip 1 header row ('FAQ')
+    );
+}
+
+export function useAcceleratorsData() {
+    return useGoogleSheet<AcceleratorEntry>(
+        SHEET_CONFIG.TABS.Accelerators,
+        mappers.accelerators,
+        1 // Skip 1 header row
     );
 }

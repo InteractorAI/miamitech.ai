@@ -5,6 +5,7 @@ import { useCommunitiesData } from '../hooks/useSheetData';
 import { useConferencesData } from '../hooks/useSheetData';
 import { useAmbassadorsData } from '../hooks/useSheetData';
 import { useCapitalData } from '../hooks/useSheetData';
+import { useAcceleratorsData } from '../hooks/useSheetData';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
 
@@ -23,6 +24,7 @@ function buildResults(
     conferences: ReturnType<typeof useConferencesData>['data'],
     ambassadors: ReturnType<typeof useAmbassadorsData>['data'],
     capital: ReturnType<typeof useCapitalData>['data'],
+    accelerators: ReturnType<typeof useAcceleratorsData>['data'],
 ): SearchResult[] {
     if (!query.trim()) return [];
     const q = query.toLowerCase();
@@ -78,6 +80,16 @@ function buildResults(
             onRowClick: () => window.interactor?.message.send(`Tell me about ${c.name}`),
         });
     });
+    
+    accelerators.filter(a => a.name.toLowerCase().includes(q) || a.stage?.toLowerCase().includes(q)).forEach(a => {
+        results.push({
+            name: a.name,
+            section: 'Accelerators',
+            sectionColor: 'text-accent-pink',
+            url: a.website || undefined,
+            onRowClick: () => window.interactor?.message.send(`Tell me about ${a.name}`),
+        });
+    });
 
     return results.slice(0, 12);
 }
@@ -93,8 +105,9 @@ export function QuickSearch() {
     const { data: conferences } = useConferencesData();
     const { data: ambassadors } = useAmbassadorsData();
     const { data: capital } = useCapitalData();
+    const { data: accelerators } = useAcceleratorsData();
 
-    const results = buildResults(query, spaces, communities, conferences, ambassadors, capital);
+    const results = buildResults(query, spaces, communities, conferences, ambassadors, capital, accelerators);
 
     const close = useCallback(() => {
         setOpen(false);

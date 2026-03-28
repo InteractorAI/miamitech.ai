@@ -4,6 +4,7 @@ import { SpacesDirectory } from '../components/SpacesDirectory';
 import { CommunitiesDirectory } from '../components/CommunitiesDirectory';
 import { ConferencesDirectory } from '../components/ConferencesDirectory';
 import { AmbassadorsRegistry } from '../components/AmbassadorsRegistry';
+import { AcceleratorsRegistry } from '../components/AcceleratorsRegistry';
 import { NewsSources } from '../components/NewsSources';
 import { Credits } from '../components/Credits';
 import { FAQ } from '../components/FAQ';
@@ -29,7 +30,7 @@ async function fetchSheetData<T>(gid: string, mapper: any, skipRows: number): Pr
 }
 
 export default async function Dashboard() {
-    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData, newsData, faqData] = await Promise.all([
+    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData, newsData, faqData, acceleratorsData] = await Promise.all([
         fetchSheetData<any>(SHEET_CONFIG.TABS.VCs, mappers.capital, 4),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Spaces, mappers.spaces, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Communities, mappers.communities, 1),
@@ -37,6 +38,7 @@ export default async function Dashboard() {
         fetchSheetData<any>(SHEET_CONFIG.TABS.Ambassadors, mappers.ambassadors, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.News, mappers.news, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.FAQs, mappers.faqs, 1),
+        fetchSheetData<any>(SHEET_CONFIG.TABS.Accelerators, mappers.accelerators, 1),
     ]);
 
     return (
@@ -86,6 +88,9 @@ export default async function Dashboard() {
                     </div>
                     <div id="ambassadors" className="border-b border-bg-border scroll-mt-12">
                         <AmbassadorsRegistry initialData={ambassadorsData} />
+                    </div>
+                    <div id="accelerators" className="border-b border-bg-border scroll-mt-12">
+                        <AcceleratorsRegistry initialData={acceleratorsData} />
                     </div>
                     <div id="news" className="border-b border-bg-border scroll-mt-12">
                         <NewsSources initialData={newsData} />

@@ -23,6 +23,7 @@ Fetches every tab from the project's Google Sheet and writes each one to a simpl
 | `data/conferences.md` | Conferences | `1124651295` | 1 | name, website, linkedin, twitter |
 | `data/news.md` | News | `156713271` | 1 | name, note, website |
 | `data/faqs.md` | FAQs | `418679874` | 1 | question |
+| `data/accelerators.md` | Accelerators | `1044145407` | 1 | name, website, stage, checkSize, note |
 
 ## Steps
 
