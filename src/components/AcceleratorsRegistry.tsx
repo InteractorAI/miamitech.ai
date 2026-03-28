@@ -73,10 +73,10 @@ export function AcceleratorsRegistry({
                         <table className="w-full text-sm table-fixed">
                             <thead className="sticky top-0 z-10 bg-bg-card">
                                 <tr className="border-b border-bg-border">
-                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[40%]">Name</th>
-                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[25%]">Note</th>
-                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[15%]">Check</th>
-                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[15%]">Stage</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[40%] sm:w-[35%] lg:w-[40%]">Name</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[25%] hidden lg:table-cell">Note</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[20%] hidden sm:table-cell">Check</th>
+                                    <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider w-[40%] sm:w-[25%] lg:w-[15%]">Stage</th>
                                     <th className="w-10" />
                                 </tr>
                             </thead>
@@ -95,10 +95,10 @@ export function AcceleratorsRegistry({
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="py-3 px-5 text-fg-muted text-[13px] truncate">
+                                        <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden lg:table-cell">
                                             {a.note || '—'}
                                         </td>
-                                        <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">
+                                        <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden sm:table-cell">
                                             {a.checkSize || '—'}
                                         </td>
                                         <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">
