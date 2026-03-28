@@ -126,7 +126,7 @@ export function AcceleratorsRegistry({
                                         <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
                                             {a.name}
                                         </span>
-                                        <span className="text-xs text-fg-muted truncate">{a.note}</span>
+                                        <span className="text-xs text-fg-muted truncate">{a.stage}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
