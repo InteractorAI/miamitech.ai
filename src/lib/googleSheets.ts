@@ -15,14 +15,21 @@ export interface CapitalEntry {
 
 export interface SpaceEntry {
     name: string;
+    handle: string;
     location: string;
     url: string;
+    calendar: string;
+    aliases: string;
+    notes: string;
 }
 
 export interface CommunityEntry {
     name: string;
+    handle: string;
     url: string;
     calendar: string;
+    aliases: string;
+    notes: string;
 }
 
 export interface AmbassadorEntry {
@@ -39,7 +46,20 @@ export interface ContributorEntry {
 
 export interface ConferenceEntry {
     name: string;
+    handle: string;
     website: string;
+    calendar: string;
+    aliases: string;
+    notes: string;
+}
+
+export interface ResourceEntry {
+    name: string;
+    handle: string;
+    category: string;
+    website: string;
+    calendar: string;
+    aliases: string;
     notes: string;
 }
 
@@ -131,16 +151,29 @@ export const mappers = {
         leads: cols[10] || '',
         notes: cols[11] || '',
     }),
-    spaces: (cols: string[]): SpaceEntry => ({
-        name: cols[0] || '',
-        location: cols[1] || '',
-        url: cols[2] || '',
-    }),
-    communities: (cols: string[]): CommunityEntry => ({
-        name: cols[0] || '',
-        url: cols[1] || '',
-        calendar: cols[2] || '',
-    }),
+    spaces: (cols: string[]): SpaceEntry => {
+        const hasHandle = !isProbablyUrl(cols[1]) && isProbablyUrl(cols[3]);
+        return {
+            name: cols[0] || '',
+            handle: hasHandle ? cols[1] || '' : '',
+            location: hasHandle ? cols[2] || '' : cols[1] || '',
+            url: hasHandle ? cols[3] || '' : cols[2] || '',
+            calendar: hasHandle ? cols[4] || '' : cols[3] || '',
+            aliases: hasHandle ? cols[5] || '' : cols[4] || '',
+            notes: hasHandle ? cols[6] || '' : cols[5] || '',
+        };
+    },
+    communities: (cols: string[]): CommunityEntry => {
+        const hasHandle = !isProbablyUrl(cols[1]) && isProbablyUrl(cols[2]);
+        return {
+            name: cols[0] || '',
+            handle: hasHandle ? cols[1] || '' : '',
+            url: hasHandle ? cols[2] || '' : cols[1] || '',
+            calendar: hasHandle ? cols[3] || '' : cols[2] || '',
+            aliases: hasHandle ? cols[4] || '' : cols[3] || '',
+            notes: hasHandle ? cols[5] || '' : cols[4] || '',
+        };
+    },
     ambassadors: (cols: string[]): AmbassadorEntry => ({
         name: cols[0] || '',
         linkedin: cols[1] || '',
@@ -151,11 +184,29 @@ export const mappers = {
         twitter: cols[2] || '',
         linkedin: cols[1] || '',
     }),
-    conferences: (cols: string[]): ConferenceEntry => ({
-        name: cols[0] || '',
-        website: cols[1] || '',
-        notes: cols[2] || '',
-    }),
+    conferences: (cols: string[]): ConferenceEntry => {
+        const hasHandle = !isProbablyUrl(cols[1]) && isProbablyUrl(cols[2]);
+        return {
+            name: cols[0] || '',
+            handle: hasHandle ? cols[1] || '' : '',
+            website: hasHandle ? cols[2] || '' : cols[1] || '',
+            calendar: hasHandle ? cols[3] || '' : '',
+            aliases: hasHandle ? cols[4] || '' : '',
+            notes: hasHandle ? cols[5] || '' : cols[2] || '',
+        };
+    },
+    resources: (cols: string[]): ResourceEntry => {
+        const hasHandle = !isProbablyUrl(cols[1]) && !isProbablyUrl(cols[2]) && isProbablyUrl(cols[3]);
+        return {
+            name: cols[0] || '',
+            handle: hasHandle ? cols[1] || '' : '',
+            category: hasHandle ? cols[2] || '' : cols[1] || '',
+            website: hasHandle ? cols[3] || '' : cols[2] || '',
+            calendar: hasHandle ? cols[4] || '' : '',
+            aliases: hasHandle ? cols[5] || '' : '',
+            notes: hasHandle ? cols[6] || '' : cols[3] || '',
+        };
+    },
     news: (cols: string[]): NewsEntry => ({
         name: cols[0] || '',
         desc: cols[1] || '',
@@ -172,3 +223,7 @@ export const mappers = {
         note: cols[4] || '',
     }),
 };
+
+function isProbablyUrl(value: string | undefined): boolean {
+    return /^https?:\/\//i.test((value || '').trim()) || /^[a-z0-9.-]+\.[a-z]{2,}/i.test((value || '').trim());
+}

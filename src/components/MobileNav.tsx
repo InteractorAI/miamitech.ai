@@ -2,6 +2,7 @@
 import { useCallback } from 'react';
 
 const SECTIONS = [
+    { id: 'events', label: 'Events' },
     { id: 'spaces', label: 'Spaces' },
     { id: 'communities', label: 'Communities' },
     { id: 'capital', label: 'Capital' },

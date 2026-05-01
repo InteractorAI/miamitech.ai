@@ -6,6 +6,7 @@ import { ConferencesDirectory } from '../components/ConferencesDirectory';
 import { AmbassadorsRegistry } from '../components/AmbassadorsRegistry';
 import { AcceleratorsRegistry } from '../components/AcceleratorsRegistry';
 import { NewsSources } from '../components/NewsSources';
+import { EventsFeed } from '../components/EventsFeed';
 import { Credits } from '../components/Credits';
 import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
@@ -16,6 +17,9 @@ import { MobileNav } from '../components/MobileNav';
 
 // Server-side data fetching
 import { SHEET_CONFIG, mappers, parseSheetCSV } from '../lib/googleSheets';
+import { getUpcomingEvents } from '../lib/events/query';
+
+export const dynamic = 'force-dynamic';
 
 async function fetchSheetData<T>(gid: string, mapper: any, skipRows: number): Promise<T[]> {
     try {
@@ -30,7 +34,7 @@ async function fetchSheetData<T>(gid: string, mapper: any, skipRows: number): Pr
 }
 
 export default async function Dashboard() {
-    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData, newsData, faqData, acceleratorsData] = await Promise.all([
+    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData, newsData, faqData, acceleratorsData, eventsData] = await Promise.all([
         fetchSheetData<any>(SHEET_CONFIG.TABS.VCs, mappers.capital, 4),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Spaces, mappers.spaces, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Communities, mappers.communities, 1),
@@ -39,6 +43,7 @@ export default async function Dashboard() {
         fetchSheetData<any>(SHEET_CONFIG.TABS.News, mappers.news, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.FAQs, mappers.faqs, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Accelerators, mappers.accelerators, 1),
+        getUpcomingEvents(8),
     ]);
 
     return (
@@ -69,6 +74,9 @@ export default async function Dashboard() {
                     </div>
                     <div className="border-b border-bg-border">
                         <Sponsors />
+                    </div>
+                    <div id="events" className="border-b border-bg-border scroll-mt-12">
+                        <EventsFeed events={eventsData} />
                     </div>
                     <div className="hidden lg:block border-b border-bg-border lg:border-b-0">
                         <QuickSearchHint />
