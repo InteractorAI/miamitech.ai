@@ -10,11 +10,17 @@ import { Panel } from './TerminalBlock';
 const PREVIEW_COUNT = 5;
 
 function formatEventTime(value: string): string {
-    return new Intl.DateTimeFormat('en-US', {
+    const parts = new Intl.DateTimeFormat('en-US', {
         hour: 'numeric',
         minute: '2-digit',
         timeZone: 'America/New_York',
-    }).format(new Date(value));
+    }).formatToParts(new Date(value));
+
+    const hour = parts.find((part) => part.type === 'hour')?.value || '';
+    const minute = parts.find((part) => part.type === 'minute')?.value || '';
+    const dayPeriod = parts.find((part) => part.type === 'dayPeriod')?.value.toLowerCase() || '';
+
+    return `${hour}${minute && minute !== '00' ? `:${minute}` : ''}${dayPeriod}`;
 }
 
 function getDateLabel(value: string): string {
@@ -73,8 +79,21 @@ function getVenueName(event: EventFeedItem): string {
     return event.event_entities?.find((item) => item.relationship === 'venue')?.entities?.name || '';
 }
 
+function cleanEventLocation(value: string | null): string {
+    const location = (value || '').trim();
+
+    return location
+        .replace(/\s*,?\s*(?:FL|Florida)\s*,?\s*\d{5}(?:-\d{4})?/gi, '')
+        .replace(/\s*,?\s*(?:FL|Florida)\b/gi, '')
+        .replace(/\s*,?\s*(?:USA|United States(?: of America)?)\b/gi, '')
+        .replace(/\s*,\s*\d{5}(?:-\d{4})?\s*$/g, '')
+        .replace(/\s*,\s*$/g, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+}
+
 function getPrimaryAssociation(event: EventFeedItem): string {
-    return [getVenueName(event), event.location_text].filter(Boolean).join(' · ');
+    return [getVenueName(event), cleanEventLocation(event.location_text)].filter(Boolean).join(' · ');
 }
 
 function cleanDescription(value: string | null): string {
