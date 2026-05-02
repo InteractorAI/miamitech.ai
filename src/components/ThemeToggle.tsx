@@ -48,7 +48,7 @@ export function ThemeToggle() {
     return (
         <button
             onClick={toggle}
-            className="p-2 rounded-lg bg-bg-elevated hover:bg-bg-hover border border-bg-border text-fg-secondary hover:text-fg-primary transition-all duration-200"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-bg-elevated/70 text-fg-secondary hover:bg-bg-hover hover:text-fg-primary transition-colors duration-150"
             aria-label="Toggle theme"
             title={`Theme: ${theme ?? 'loading'}`}
         >
