@@ -6,6 +6,7 @@ import type { AcceleratorEntry } from '../lib/googleSheets';
 import { track } from '@vercel/analytics';
 import { Favicon } from './Favicon';
 import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { ExpandIcon } from './ExpandIcon';
 import { InteractorAskIcon } from './InteractorAskIcon';
 
 const PREVIEW_COUNT = 5;
@@ -41,10 +42,11 @@ export function AcceleratorsRegistry({
     const action = !expanded && (
         <Link
             href="/accelerators"
-            className="p-1.5 rounded-md text-fg-muted hover:text-accent-pink hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border inline-flex items-center justify-center"
+            className="w-8 h-8 rounded-lg text-fg-muted hover:text-accent-pink hover:bg-bg-hover transition-colors duration-150 shrink-0 border border-bg-border inline-flex items-center justify-center"
             title="Expand"
+            aria-label="Expand accelerators"
         >
-            ↗
+            <ExpandIcon />
         </Link>
     );
 
