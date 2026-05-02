@@ -139,7 +139,7 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                                     The people featured here are active members of Miami’s tech community and are prepared to help others navigate our ecosystem.
                                 </p>
                                 <p>
-                                    If you’re new to Miami tech, these are individuals you can follow and reach out to as you explore the community and find your footing.
+                                    If you’re new to Miami tech, these are individuals you can follow and reach out to as you find your footing in the community.
                                 </p>
                                 <p>
                                     Want to be an ambassador?{' '}
