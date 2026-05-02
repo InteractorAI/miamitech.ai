@@ -84,6 +84,8 @@ function normalizeExternalUrl(value: string): string {
     return `https://${url}`;
 }
 
+type SheetRow = Record<string, string>;
+
 function parseCSVLine(line: string): string[] {
     const result: string[] = [];
     let current = '';
@@ -109,13 +111,37 @@ function parseCSVLine(line: string): string[] {
     return result;
 }
 
-export function parseSheetCSV<T>(csvText: string, mapper: (cols: string[]) => T, skipRows: number = 0): T[] {
+function normalizeHeader(value: string): string {
+    return value.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function makeSheetRow(headers: string[], cols: string[]): SheetRow {
+    return headers.reduce<SheetRow>((row, header, index) => {
+        const key = normalizeHeader(header);
+        if (key) row[key] = cols[index] || '';
+        return row;
+    }, {});
+}
+
+function getColumn(row: SheetRow | undefined, cols: string[], names: string[], fallbackIndex: number): string {
+    for (const name of names) {
+        const value = row?.[normalizeHeader(name)];
+        if (value !== undefined) return value;
+    }
+
+    if (fallbackIndex < 0) return '';
+
+    return cols[fallbackIndex] || '';
+}
+
+export function parseSheetCSV<T>(csvText: string, mapper: (cols: string[], row?: SheetRow) => T, skipRows: number = 0): T[] {
     const lines = csvText.split(/\r?\n/);
+    const headers = skipRows > 0 ? parseCSVLine(lines[skipRows - 1] || '') : [];
     const dataLines = lines.slice(skipRows).filter(l => l.trim() !== '');
 
     return dataLines.map(line => {
         const cols = parseCSVLine(line);
-        return mapper(cols);
+        return mapper(cols, makeSheetRow(headers, cols));
     }).filter(e => {
         // Filter out empty rows (usually checked by name, question, or first column)
         const entry = e as any;
@@ -124,58 +150,58 @@ export function parseSheetCSV<T>(csvText: string, mapper: (cols: string[]) => T,
 }
 
 export const mappers = {
-    capital: (cols: string[]): CapitalEntry => ({
-        name: cols[0] || '',
-        topTen: (cols[1] || '').toLowerCase() === 'yes',
-        website: normalizeExternalUrl(cols[2] || ''),
-        checkSize: cols[3] || '',
-        contact: cols[4] || '',
-        location: cols[5] || '',
-        description: cols[6] || '',
-        type: cols[7] || '',
-        stage: cols[8] || '',
-        focus: cols[9] || '',
-        leads: cols[10] || '',
-        notes: cols[11] || '',
+    capital: (cols: string[], row?: SheetRow): CapitalEntry => ({
+        name: getColumn(row, cols, ['Name'], 0),
+        topTen: getColumn(row, cols, ['Top 10', 'Top Ten'], 1).toLowerCase() === 'yes',
+        website: normalizeExternalUrl(getColumn(row, cols, ['Website', 'URL'], 2)),
+        checkSize: getColumn(row, cols, ['Check Size', 'Check'], 3),
+        contact: getColumn(row, cols, ['Contact'], 4),
+        location: getColumn(row, cols, ['Location'], 5),
+        description: getColumn(row, cols, ['Description'], 6),
+        type: getColumn(row, cols, ['Type'], 7),
+        stage: getColumn(row, cols, ['Stage'], 8),
+        focus: getColumn(row, cols, ['Focus'], 9),
+        leads: getColumn(row, cols, ['Leads'], 10),
+        notes: getColumn(row, cols, ['Notes', 'Note'], 11),
     }),
-    spaces: (cols: string[]): SpaceEntry => ({
-        name: cols[0] || '',
-        location: cols[1] || '',
-        url: normalizeExternalUrl(cols[2] || ''),
+    spaces: (cols: string[], row?: SheetRow): SpaceEntry => ({
+        name: getColumn(row, cols, ['Name'], 0),
+        location: getColumn(row, cols, ['Location'], 1),
+        url: normalizeExternalUrl(getColumn(row, cols, ['Website', 'URL'], 2)),
     }),
-    communities: (cols: string[]): CommunityEntry => ({
-        name: cols[0] || '',
-        url: normalizeExternalUrl(cols[1] || ''),
-        calendar: normalizeExternalUrl(cols[2] || ''),
+    communities: (cols: string[], row?: SheetRow): CommunityEntry => ({
+        name: getColumn(row, cols, ['Name'], 0),
+        url: normalizeExternalUrl(getColumn(row, cols, ['Website', 'URL'], 1)),
+        calendar: normalizeExternalUrl(getColumn(row, cols, ['Event calendar', 'Calendar'], 2)),
     }),
-    ambassadors: (cols: string[]): AmbassadorEntry => ({
-        name: cols[0] || '',
-        linkedin: cols[1] || '',
-        twitter: cols[2] || '',
+    ambassadors: (cols: string[], row?: SheetRow): AmbassadorEntry => ({
+        name: getColumn(row, cols, ['Name'], 0),
+        linkedin: getColumn(row, cols, ['LinkedIn', 'Linkedin'], 1),
+        twitter: getColumn(row, cols, ['Twitter', 'X'], 2),
     }),
-    contributors: (cols: string[]): ContributorEntry => ({
-        name: cols[0] || '',
-        twitter: cols[2] || '',
-        linkedin: cols[1] || '',
+    contributors: (cols: string[], row?: SheetRow): ContributorEntry => ({
+        name: getColumn(row, cols, ['Name'], 0),
+        twitter: getColumn(row, cols, ['Twitter', 'X'], 2),
+        linkedin: getColumn(row, cols, ['LinkedIn', 'Linkedin'], 1),
     }),
-    conferences: (cols: string[]): ConferenceEntry => ({
-        name: cols[0] || '',
-        website: normalizeExternalUrl(cols[1] || ''),
-        notes: cols[2] || '',
+    conferences: (cols: string[], row?: SheetRow): ConferenceEntry => ({
+        name: getColumn(row, cols, ['Name'], 0),
+        website: normalizeExternalUrl(getColumn(row, cols, ['Website', 'URL'], 1)),
+        notes: getColumn(row, cols, ['Notes', 'Note'], 2),
     }),
-    news: (cols: string[]): NewsEntry => ({
-        name: cols[0] || '',
-        desc: cols[1] || '',
-        url: normalizeExternalUrl(cols[2] || ''),
+    news: (cols: string[], row?: SheetRow): NewsEntry => ({
+        name: getColumn(row, cols, ['Name'], 0),
+        desc: getColumn(row, cols, ['Description', 'Desc', 'Notes', 'Note'], 1),
+        url: normalizeExternalUrl(getColumn(row, cols, ['URL', 'Website'], 2)),
     }),
-    faqs: (cols: string[]): FAQEntry => ({
-        question: cols[0] || '',
+    faqs: (cols: string[], row?: SheetRow): FAQEntry => ({
+        question: getColumn(row, cols, ['Question'], 0),
     }),
-    accelerators: (cols: string[]): AcceleratorEntry => ({
-        name: cols[0] || '',
-        website: normalizeExternalUrl(cols[1] || ''),
-        stage: cols[2] || '',
-        checkSize: cols[3] || '',
-        note: cols[4] || '',
+    accelerators: (cols: string[], row?: SheetRow): AcceleratorEntry => ({
+        name: getColumn(row, cols, ['Name'], 0),
+        website: normalizeExternalUrl(getColumn(row, cols, ['Website', 'URL'], 1)),
+        stage: getColumn(row, cols, ['Stage'], 2),
+        checkSize: getColumn(row, cols, ['Check Size', 'Check'], 3),
+        note: getColumn(row, cols, ['Note', 'Notes'], 4),
     }),
 };
