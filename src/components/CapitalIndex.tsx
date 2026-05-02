@@ -161,13 +161,13 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                     <table className="w-full text-sm table-fixed">
                         <thead className="sticky top-0 z-10 bg-bg-card">
                             <tr className="border-b border-bg-border">
-                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-[40%] md:w-[35%] lg:w-[25%]' : 'w-auto'}`}>Name</th>
-                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-[30%] md:w-[20%] lg:w-[15%]' : 'w-[35%] sm:w-[25%]'}`}>Stage</th>
-                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden sm:table-cell ${expanded ? 'w-[30%] md:w-[25%] lg:w-[15%]' : 'w-[30%]'}`}>Check</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-auto lg:w-[25%]' : 'w-auto'}`}>Name</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden lg:table-cell ${expanded ? 'lg:w-[15%]' : 'w-[25%]'}`}>Stage</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden lg:table-cell ${expanded ? 'lg:w-[15%]' : 'w-[30%]'}`}>Check</th>
                                 {expanded && (
                                     <>
-                                        <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden md:table-cell lg:w-[15%]">Type</th>
-                                        <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden lg:table-cell w-[20%]">Focus</th>
+                                        <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden xl:table-cell lg:w-[15%]">Type</th>
+                                        <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden xl:table-cell w-[20%]">Focus</th>
                                         <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden xl:table-cell w-[10%]">Location</th>
                                     </>
                                 )}
@@ -194,12 +194,12 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                             <span className="truncate group-hover:text-accent-pink transition-colors">{entry.name}</span>
                                         </div>
                                     </td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">{entry.stage || '—'}</td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate hidden sm:table-cell">{entry.checkSize || '—'}</td>
+                                    <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden lg:table-cell">{entry.stage || '—'}</td>
+                                    <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate hidden lg:table-cell">{entry.checkSize || '—'}</td>
                                     {expanded && (
                                         <>
-                                            <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden md:table-cell">{entry.type || '—'}</td>
-                                            <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden lg:table-cell">{entry.focus || '—'}</td>
+                                            <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden xl:table-cell">{entry.type || '—'}</td>
+                                            <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden xl:table-cell">{entry.focus || '—'}</td>
                                             <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden xl:table-cell">{entry.location || '—'}</td>
                                         </>
                                     )}
