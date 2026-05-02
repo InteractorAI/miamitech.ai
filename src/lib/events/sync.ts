@@ -29,6 +29,8 @@ export async function syncSheetEntities(supabase: SupabaseClient) {
         if (!savedEntity) continue;
         entityCount++;
 
+        const now = new Date().toISOString();
+
         if (entity.eventCalendarUrl) {
             const { error: sourceError } = await supabase
                 .from('event_sources')
@@ -37,11 +39,27 @@ export async function syncSheetEntities(supabase: SupabaseClient) {
                     source_url: entity.eventCalendarUrl,
                     source_platform: detectSourcePlatform(entity.eventCalendarUrl),
                     active: true,
-                    updated_at: new Date().toISOString(),
+                    updated_at: now,
                 }, { onConflict: 'entity_id,source_url' });
 
             if (sourceError) throw sourceError;
             sourceCount++;
+
+            const { error: staleSourceError } = await supabase
+                .from('event_sources')
+                .update({ active: false, updated_at: now })
+                .eq('entity_id', savedEntity.id)
+                .neq('source_url', entity.eventCalendarUrl);
+
+            if (staleSourceError) throw staleSourceError;
+        } else {
+            const { error: staleSourceError } = await supabase
+                .from('event_sources')
+                .update({ active: false, updated_at: now })
+                .eq('entity_id', savedEntity.id)
+                .eq('active', true);
+
+            if (staleSourceError) throw staleSourceError;
         }
 
         const aliases = [entity.name, ...entity.aliases].filter(Boolean);
