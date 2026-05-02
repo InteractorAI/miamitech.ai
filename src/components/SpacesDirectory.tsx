@@ -5,6 +5,8 @@ import { Panel } from './TerminalBlock';
 import type { SpaceEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
+import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { InteractorAskIcon } from './InteractorAskIcon';
 
 const PREVIEW_COUNT = 4;
 
@@ -17,10 +19,15 @@ export function SpacesDirectory({ initialData = [] }: { initialData?: SpaceEntry
     const remaining = spaces.length - PREVIEW_COUNT;
 
     const handleRowClick = (space: SpaceEntry) => {
+        if (usesExplicitTouchActions()) return;
         track('directory_row_clicked', { category: 'Spaces', title: space.name });
-        window.interactor?.message.send(
-            `Tell me about ${space.name}`
-        );
+        askInteractor(`Tell me about ${space.name}`);
+    };
+
+    const handleAskClick = (e: React.MouseEvent, space: SpaceEntry) => {
+        e.stopPropagation();
+        track('directory_row_clicked', { category: 'Spaces', title: space.name, from: 'ask_button' });
+        askInteractor(`Tell me about ${space.name}`);
     };
 
     return (
@@ -41,7 +48,15 @@ export function SpacesDirectory({ initialData = [] }: { initialData?: SpaceEntry
                                 <span className="text-xs text-fg-muted truncate">{space.location}</span>
                             </div>
                         </div>
-                        <div className="flex items-center">
+                        <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
+                            <button
+                                onClick={(e) => handleAskClick(e, space)}
+                                className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"
+                                aria-label={`Ask about ${space.name}`}
+                                title="Ask Interactor"
+                            >
+                                <InteractorAskIcon />
+                            </button>
                             {space.url && (
                                 <a
                                     href={space.url}
@@ -51,10 +66,10 @@ export function SpacesDirectory({ initialData = [] }: { initialData?: SpaceEntry
                                         e.stopPropagation();
                                         track('directory_link_clicked', { category: 'Spaces', title: space.name, url: space.url || '' });
                                     }}
-                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-0 group-hover:opacity-100"
+                                    className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-fg-muted hover:text-accent-blue transition-colors"
                                     title="Website"
                                 >
-                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />

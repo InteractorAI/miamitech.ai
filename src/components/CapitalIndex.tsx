@@ -5,6 +5,8 @@ import { Panel } from './TerminalBlock';
 import { type CapitalEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
+import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { InteractorAskIcon } from './InteractorAskIcon';
 
 const STAGES = ['All', 'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Growth'] as const;
 const PREVIEW_COUNT = 12;
@@ -49,10 +51,15 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
     const remaining = filtered.length - PREVIEW_COUNT;
 
     const handleRowClick = (entry: CapitalEntry) => {
+        if (usesExplicitTouchActions()) return;
         track('vc_row_clicked', { vc_name: entry.name });
-        window.interactor?.message.send(
-            `Tell me about ${entry.name}`
-        );
+        askInteractor(`Tell me about ${entry.name}`);
+    };
+
+    const handleAskClick = (e: React.MouseEvent, entry: CapitalEntry) => {
+        e.stopPropagation();
+        track('vc_row_clicked', { vc_name: entry.name, from: 'ask_button' });
+        askInteractor(`Tell me about ${entry.name}`);
     };
 
     const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -105,7 +112,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                     {!expanded && (
                         <Link
                             href="/capital"
-                            className="p-1.5 rounded-md text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border ml-1 inline-flex items-center justify-center"
+                            className="p-1.5 rounded-md text-fg-muted hover:text-accent-pink hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border ml-1 inline-flex items-center justify-center"
                             title="Expand"
                         >
                             ↗
@@ -159,17 +166,17 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                     <table className="w-full text-sm table-fixed">
                         <thead className="sticky top-0 z-10 bg-bg-card">
                             <tr className="border-b border-bg-border">
-                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-[40%] md:w-[35%] lg:w-[25%]' : 'w-auto'}`}>Name</th>
-                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-[30%] md:w-[20%] lg:w-[15%]' : 'w-[35%] sm:w-[25%]'}`}>Stage</th>
-                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden sm:table-cell ${expanded ? 'w-[30%] md:w-[25%] lg:w-[15%]' : 'w-[30%]'}`}>Check</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-auto lg:w-[25%]' : 'w-auto'}`}>Name</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden lg:table-cell ${expanded ? 'lg:w-[15%]' : 'w-[25%]'}`}>Stage</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden lg:table-cell ${expanded ? 'lg:w-[15%]' : 'w-[30%]'}`}>Check</th>
                                 {expanded && (
                                     <>
-                                        <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden md:table-cell lg:w-[15%]">Type</th>
-                                        <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden lg:table-cell w-[20%]">Focus</th>
+                                        <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden xl:table-cell lg:w-[15%]">Type</th>
+                                        <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden xl:table-cell w-[20%]">Focus</th>
                                         <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden xl:table-cell w-[10%]">Location</th>
                                     </>
                                 )}
-                                <th className="w-10" />
+                                <th className="w-24 lg:w-16" />
                             </tr>
                         </thead>
                         <tbody>
@@ -192,34 +199,44 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                             <span className="truncate group-hover:text-accent-pink transition-colors">{entry.name}</span>
                                         </div>
                                     </td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">{entry.stage || '—'}</td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate hidden sm:table-cell">{entry.checkSize || '—'}</td>
+                                    <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden lg:table-cell">{entry.stage || '—'}</td>
+                                    <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate hidden lg:table-cell">{entry.checkSize || '—'}</td>
                                     {expanded && (
                                         <>
-                                            <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden md:table-cell">{entry.type || '—'}</td>
-                                            <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden lg:table-cell">{entry.focus || '—'}</td>
+                                            <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden xl:table-cell">{entry.type || '—'}</td>
+                                            <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden xl:table-cell">{entry.focus || '—'}</td>
                                             <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden xl:table-cell">{entry.location || '—'}</td>
                                         </>
                                     )}
-                                    <td className="py-3 px-2 text-center w-10">
-                                        {entry.website && (
-                                            <a
-                                                href={entry.website}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                    track('vc_link_clicked', { vc_name: entry.name, url: entry.website || '' });
-                                                }}
-                                                className="inline-flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-fg-muted hover:text-accent-blue"
+                                    <td className="py-3 px-2 text-center w-24 lg:w-16">
+                                        <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
+                                            <button
+                                                onClick={(e) => handleAskClick(e, entry)}
+                                                className="min-h-9 min-w-9 lg:min-h-7 lg:min-w-7 p-2 lg:p-1 inline-flex shrink-0 items-center justify-center text-accent-pink active:scale-[0.98]"
+                                                aria-label={`Ask about ${entry.name}`}
+                                                title="Ask Interactor"
                                             >
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
-                                                </svg>
-                                            </a>
-                                        )}
+                                                <InteractorAskIcon />
+                                            </button>
+                                            {entry.website && (
+                                                <a
+                                                    href={entry.website}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    onClick={e => {
+                                                        e.stopPropagation();
+                                                        track('vc_link_clicked', { vc_name: entry.name, url: entry.website || '' });
+                                                    }}
+                                                    className="inline-flex min-h-9 min-w-9 lg:min-h-7 lg:min-w-7 shrink-0 items-center justify-center p-2 lg:p-1 text-fg-muted hover:text-accent-blue"
+                                                >
+                                                    <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
+                                                    </svg>
+                                                </a>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

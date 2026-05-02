@@ -8,6 +8,7 @@ import { useCapitalData } from '../hooks/useSheetData';
 import { useAcceleratorsData } from '../hooks/useSheetData';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
+import { askInteractor } from '../lib/interactor';
 
 interface SearchResult {
     name: string;
@@ -37,7 +38,7 @@ function buildResults(
             section: 'Spaces',
             sectionColor: 'text-accent-blue',
             url: s.url || undefined,
-            onRowClick: () => window.interactor?.message.send(`Tell me about ${s.name}`),
+            onRowClick: () => askInteractor(`Tell me about ${s.name}`),
         });
     });
 
@@ -47,7 +48,7 @@ function buildResults(
             section: 'Communities',
             sectionColor: 'text-accent-green',
             url: c.url || undefined,
-            onRowClick: () => window.interactor?.message.send(`Tell me about the ${c.name} community`),
+            onRowClick: () => askInteractor(`Tell me about the ${c.name} community`),
         });
     });
 
@@ -57,7 +58,7 @@ function buildResults(
             section: 'Conferences',
             sectionColor: 'text-accent-pink',
             url: c.website || undefined,
-            onRowClick: () => window.interactor?.message.send(`Tell me about ${c.name}`),
+            onRowClick: () => askInteractor(`Tell me about ${c.name}`),
         });
     });
 
@@ -67,7 +68,7 @@ function buildResults(
             section: 'Ambassadors',
             sectionColor: 'text-yellow-400',
             url: a.linkedin || a.twitter || undefined,
-            onRowClick: () => window.interactor?.message.send(`Tell me about ${a.name}`),
+            onRowClick: () => askInteractor(`Tell me about ${a.name}`),
         });
     });
 
@@ -77,7 +78,7 @@ function buildResults(
             section: 'Capital',
             sectionColor: 'text-purple-400',
             url: c.website || undefined,
-            onRowClick: () => window.interactor?.message.send(`Tell me about ${c.name}`),
+            onRowClick: () => askInteractor(`Tell me about ${c.name}`),
         });
     });
 
@@ -87,7 +88,7 @@ function buildResults(
             section: 'Accelerators',
             sectionColor: 'text-accent-pink',
             url: a.website || undefined,
-            onRowClick: () => window.interactor?.message.send(`Tell me about ${a.name}`),
+            onRowClick: () => askInteractor(`Tell me about ${a.name}`),
         });
     });
 
@@ -304,11 +305,11 @@ export function QuickSearchHint({ onOpen }: { onOpen?: () => void }) {
             title="Quick search (⌘J)"
         >
             <div className="flex items-center gap-3">
-                <svg className="w-4 h-4 text-fg-muted group-hover:text-accent-blue transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-4 h-4 text-fg-muted group-hover:text-accent-pink transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <circle cx="11" cy="11" r="8" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35" />
                 </svg>
-                <span className="text-sm font-medium text-fg-secondary group-hover:text-fg-primary transition-colors">
+                <span className="text-sm font-medium text-fg-secondary group-hover:text-accent-pink transition-colors">
                     Jump to a resource...
                 </span>
             </div>

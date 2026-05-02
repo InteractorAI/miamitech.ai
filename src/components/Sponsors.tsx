@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Panel } from './TerminalBlock';
 import { track } from '@vercel/analytics';
+import { askInteractor } from '../lib/interactor';
 
 interface Sponsor {
     title: string;
@@ -124,9 +125,9 @@ export function Sponsors() {
                                 onClick={() => {
                                     track('sponsor_get_started_clicked');
                                     setShowModal(false);
-                                    window.interactor?.message.send("I'd like to sponsor miamitech.ai ");
+                                    askInteractor("I'd like to sponsor miamitech.ai ");
                                 }}
-                                className="mt-8 w-full py-2.5 bg-bg-hover hover:bg-bg-border text-fg-primary rounded-lg font-medium transition-all border border-bg-border animate-led active:scale-[0.98]"
+                                className="mt-8 w-full py-2.5 bg-bg-hover hover:bg-bg-border text-fg-primary hover:text-accent-pink rounded-lg font-medium transition-all border border-bg-border hover:border-accent-pink/40 animate-led active:scale-[0.98]"
                             >
                                 Get Started
                             </button>

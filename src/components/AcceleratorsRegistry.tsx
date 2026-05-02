@@ -5,6 +5,8 @@ import { Panel } from './TerminalBlock';
 import type { AcceleratorEntry } from '../lib/googleSheets';
 import { track } from '@vercel/analytics';
 import { Favicon } from './Favicon';
+import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { InteractorAskIcon } from './InteractorAskIcon';
 
 const PREVIEW_COUNT = 5;
 
@@ -25,14 +27,21 @@ export function AcceleratorsRegistry({
     const remaining = accelerators.length - PREVIEW_COUNT;
 
     const handleRowClick = (entry: AcceleratorEntry) => {
+        if (usesExplicitTouchActions()) return;
         track('directory_row_clicked', { category: 'Accelerators', title: entry.name });
-        window.interactor?.message.send(`Tell me about ${entry.name}`);
+        askInteractor(`Tell me about ${entry.name}`);
+    };
+
+    const handleAskClick = (e: React.MouseEvent, entry: AcceleratorEntry) => {
+        e.stopPropagation();
+        track('directory_row_clicked', { category: 'Accelerators', title: entry.name, from: 'ask_button' });
+        askInteractor(`Tell me about ${entry.name}`);
     };
 
     const action = !expanded && (
         <Link
             href="/accelerators"
-            className="p-1.5 rounded-md text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border inline-flex items-center justify-center"
+            className="p-1.5 rounded-md text-fg-muted hover:text-accent-pink hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border inline-flex items-center justify-center"
             title="Expand"
         >
             ↗
@@ -48,10 +57,10 @@ export function AcceleratorsRegistry({
                 e.stopPropagation();
                 track('directory_link_clicked', { category: 'Accelerators', title: name, url });
             }}
-            className="inline-flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-fg-muted hover:text-accent-blue"
+            className="inline-flex items-center justify-center min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-0 text-fg-muted hover:text-accent-blue"
             title="Website"
         >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
@@ -104,8 +113,18 @@ export function AcceleratorsRegistry({
                                         <td className="py-3 px-5 text-fg-secondary text-[13px] truncate">
                                             {a.stage || '—'}
                                         </td>
-                                        <td className="py-3 px-2 text-center w-10">
-                                            {a.website && globeIcon(a.website, a.name)}
+                                        <td className="py-3 px-2 text-center w-24 lg:w-10">
+                                            <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
+                                                <button
+                                                    onClick={(e) => handleAskClick(e, a)}
+                                                    className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"
+                                                    aria-label={`Ask about ${a.name}`}
+                                                    title="Ask Interactor"
+                                                >
+                                                    <InteractorAskIcon />
+                                                </button>
+                                                {a.website && globeIcon(a.website, a.name)}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -129,7 +148,15 @@ export function AcceleratorsRegistry({
                                         <span className="text-xs text-fg-muted truncate">{a.stage}</span>
                                     </div>
                                 </div>
-                                <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                                    <button
+                                        onClick={(e) => handleAskClick(e, a)}
+                                        className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"
+                                        aria-label={`Ask about ${a.name}`}
+                                        title="Ask Interactor"
+                                    >
+                                        <InteractorAskIcon />
+                                    </button>
                                     {a.website && globeIcon(a.website, a.name)}
                                 </div>
                             </div>

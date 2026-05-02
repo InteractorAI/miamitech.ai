@@ -22,12 +22,12 @@ export function MobileNav() {
     }, []);
 
     return (
-        <nav className="lg:hidden flex items-center gap-1 px-4 py-2 bg-bg-card/90 backdrop-blur-sm border-b border-bg-border shrink-0 sticky top-0 z-20 overflow-x-auto no-scrollbar">
+        <nav className="lg:hidden flex items-center gap-1.5 px-4 py-2.5 bg-bg-card/95 backdrop-blur-sm border-b border-bg-border shrink-0 sticky top-0 z-20 overflow-x-auto no-scrollbar">
             {SECTIONS.map((s) => (
                 <button
                     key={s.id}
                     onClick={() => scrollTo(s.id)}
-                    className="text-[11px] px-3 py-1.5 rounded-md font-medium text-fg-muted hover:text-fg-secondary hover:bg-bg-hover transition-all duration-150 whitespace-nowrap"
+                    className="text-[12px] px-3.5 py-2 rounded-lg font-medium text-fg-secondary hover:text-fg-primary hover:bg-bg-hover active:bg-bg-hover transition-colors duration-150 whitespace-nowrap"
                 >
                     {s.label}
                 </button>

@@ -1,6 +1,7 @@
 'use client';
 import { Panel } from './TerminalBlock';
 import { track } from '@vercel/analytics';
+import { askInteractor } from '../lib/interactor';
 
 export function SysInfo() {
     const handleLearnMore = () => {
@@ -10,7 +11,7 @@ export function SysInfo() {
 
     const handleContribute = () => {
         track('contribute_clicked');
-        window.interactor?.message.send('How can I contribute to miamitech.ai?');
+        askInteractor('How can I contribute to miamitech.ai?');
     };
 
     return (
@@ -23,13 +24,13 @@ export function SysInfo() {
                 <div className="flex gap-2">
                     <button
                         onClick={handleLearnMore}
-                        className="flex-1 text-[11px] font-medium text-fg-secondary border border-bg-border hover:bg-bg-hover hover:text-fg-primary py-2 rounded-md transition-all duration-200"
+                        className="flex-1 text-[11px] font-medium text-fg-secondary border border-bg-border hover:bg-bg-hover hover:text-accent-pink py-2 rounded-md transition-all duration-200"
                     >
                         Learn More
                     </button>
                     <button
                         onClick={handleContribute}
-                        className="flex-1 text-[11px] font-medium text-fg-secondary border border-bg-border hover:bg-bg-hover hover:text-fg-primary py-2 rounded-md transition-all duration-200"
+                        className="flex-1 text-[11px] font-medium text-fg-secondary border border-bg-border hover:bg-bg-hover hover:text-accent-pink py-2 rounded-md transition-all duration-200"
                     >
                         Contribute
                     </button>

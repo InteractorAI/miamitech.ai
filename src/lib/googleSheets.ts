@@ -97,6 +97,13 @@ export const SHEET_CONFIG = {
     }
 } as const;
 
+function normalizeExternalUrl(value: string): string {
+    const url = value.trim();
+    if (!url) return '';
+    if (/^(https?:|mailto:|tel:|#|\/)/i.test(url)) return url;
+    return `https://${url}`;
+}
+
 function parseCSVLine(line: string): string[] {
     const result: string[] = [];
     let current = '';
@@ -140,7 +147,7 @@ export const mappers = {
     capital: (cols: string[]): CapitalEntry => ({
         name: cols[0] || '',
         topTen: (cols[1] || '').toLowerCase() === 'yes',
-        website: cols[2] || '',
+        website: normalizeExternalUrl(cols[2] || ''),
         checkSize: cols[3] || '',
         contact: cols[4] || '',
         location: cols[5] || '',
@@ -157,8 +164,8 @@ export const mappers = {
             name: cols[0] || '',
             handle: hasHandle ? cols[1] || '' : '',
             location: hasHandle ? cols[2] || '' : cols[1] || '',
-            url: hasHandle ? cols[3] || '' : cols[2] || '',
-            calendar: hasHandle ? cols[4] || '' : cols[3] || '',
+            url: normalizeExternalUrl(hasHandle ? cols[3] || '' : cols[2] || ''),
+            calendar: normalizeExternalUrl(hasHandle ? cols[4] || '' : cols[3] || ''),
             aliases: hasHandle ? cols[5] || '' : cols[4] || '',
             notes: hasHandle ? cols[6] || '' : cols[5] || '',
         };
@@ -168,8 +175,8 @@ export const mappers = {
         return {
             name: cols[0] || '',
             handle: hasHandle ? cols[1] || '' : '',
-            url: hasHandle ? cols[2] || '' : cols[1] || '',
-            calendar: hasHandle ? cols[3] || '' : cols[2] || '',
+            url: normalizeExternalUrl(hasHandle ? cols[2] || '' : cols[1] || ''),
+            calendar: normalizeExternalUrl(hasHandle ? cols[3] || '' : cols[2] || ''),
             aliases: hasHandle ? cols[4] || '' : cols[3] || '',
             notes: hasHandle ? cols[5] || '' : cols[4] || '',
         };
@@ -189,8 +196,8 @@ export const mappers = {
         return {
             name: cols[0] || '',
             handle: hasHandle ? cols[1] || '' : '',
-            website: hasHandle ? cols[2] || '' : cols[1] || '',
-            calendar: hasHandle ? cols[3] || '' : '',
+            website: normalizeExternalUrl(hasHandle ? cols[2] || '' : cols[1] || ''),
+            calendar: normalizeExternalUrl(hasHandle ? cols[3] || '' : ''),
             aliases: hasHandle ? cols[4] || '' : '',
             notes: hasHandle ? cols[5] || '' : cols[2] || '',
         };
@@ -201,8 +208,8 @@ export const mappers = {
             name: cols[0] || '',
             handle: hasHandle ? cols[1] || '' : '',
             category: hasHandle ? cols[2] || '' : cols[1] || '',
-            website: hasHandle ? cols[3] || '' : cols[2] || '',
-            calendar: hasHandle ? cols[4] || '' : '',
+            website: normalizeExternalUrl(hasHandle ? cols[3] || '' : cols[2] || ''),
+            calendar: normalizeExternalUrl(hasHandle ? cols[4] || '' : ''),
             aliases: hasHandle ? cols[5] || '' : '',
             notes: hasHandle ? cols[6] || '' : cols[3] || '',
         };
@@ -210,14 +217,14 @@ export const mappers = {
     news: (cols: string[]): NewsEntry => ({
         name: cols[0] || '',
         desc: cols[1] || '',
-        url: cols[2] || '',
+        url: normalizeExternalUrl(cols[2] || ''),
     }),
     faqs: (cols: string[]): FAQEntry => ({
         question: cols[0] || '',
     }),
     accelerators: (cols: string[]): AcceleratorEntry => ({
         name: cols[0] || '',
-        website: cols[1] || '',
+        website: normalizeExternalUrl(cols[1] || ''),
         stage: cols[2] || '',
         checkSize: cols[3] || '',
         note: cols[4] || '',
