@@ -158,7 +158,7 @@ export function EventsFeed({
                             >
                                 <div className={`${expanded ? 'grid-cols-[4.75rem_minmax(0,1fr)]' : 'grid-cols-[4.25rem_minmax(0,1fr)]'} grid gap-3 items-start`}>
                                     <div
-                                        className={`${expanded ? 'h-14 w-14' : 'h-12 w-12'} rounded-lg border border-bg-border bg-bg-elevated flex flex-col items-center justify-center text-center shrink-0`}
+                                        className={`${expanded ? 'h-14 w-14' : 'h-12 w-12'} rounded-lg bg-bg-elevated/70 flex flex-col items-center justify-center text-center shrink-0`}
                                         aria-label={getDateLabel(event.starts_at)}
                                     >
                                         <div className={`${dateTile.top.length > 5 ? 'text-[9px]' : 'text-[10px]'} font-semibold text-accent-green uppercase leading-none tracking-wide`}>
