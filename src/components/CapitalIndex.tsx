@@ -6,6 +6,7 @@ import { type CapitalEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
 import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { ExpandIcon } from './ExpandIcon';
 import { InteractorAskIcon } from './InteractorAskIcon';
 
 const STAGES = ['All', 'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Growth'] as const;
@@ -107,10 +108,11 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                     {!expanded && (
                         <Link
                             href="/capital"
-                            className="p-1.5 rounded-md text-fg-muted hover:text-accent-pink hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border ml-1 inline-flex items-center justify-center"
+                            className="w-8 h-8 rounded-lg text-fg-muted hover:text-accent-pink hover:bg-bg-hover transition-colors duration-150 shrink-0 border border-bg-border ml-1 inline-flex items-center justify-center"
                             title="Expand"
+                            aria-label="Expand capital"
                         >
-                            ↗
+                            <ExpandIcon />
                         </Link>
                     )}
                 </div>

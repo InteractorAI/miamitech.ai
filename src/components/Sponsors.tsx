@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Panel } from './TerminalBlock';
 import { track } from '@vercel/analytics';
 import { askInteractor } from '../lib/interactor';
+import { QuestionIcon } from './QuestionIcon';
 
 interface Sponsor {
     title: string;
@@ -36,10 +37,11 @@ export function Sponsors() {
                 track('sponsor_modal_opened', { from: 'info_icon' });
                 setShowModal(true);
             }}
-            className="flex items-center justify-center w-5 h-5 rounded-full border border-fg-muted/30 text-fg-muted hover:border-fg-secondary hover:text-fg-primary transition-all duration-200 text-[11px] font-semibold leading-none"
+            className="flex items-center justify-center w-8 h-8 rounded-lg border border-bg-border text-fg-muted hover:bg-bg-hover hover:text-fg-primary transition-colors duration-150"
             title="Learn about sponsoring"
+            aria-label="Learn about sponsoring"
         >
-            ?
+            <QuestionIcon />
         </button>
     );
 

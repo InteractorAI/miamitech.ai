@@ -4,6 +4,7 @@ import { track } from '@vercel/analytics';
 import type { FAQEntry } from '../lib/googleSheets';
 import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
 import { InteractorAskIcon } from './InteractorAskIcon';
+import { QuestionIcon } from './QuestionIcon';
 
 const DEFAULT_FAQS = [
     'How do I get started?',
@@ -48,7 +49,7 @@ export function FAQ({ initialData = [] }: { initialData?: FAQEntry[] }) {
                         tabIndex={0}
                         className="w-full text-left flex items-center gap-2 px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                     >
-                        <span className="text-fg-muted text-xs shrink-0">?</span>
+                        <QuestionIcon className="w-4 h-4 text-fg-muted shrink-0" />
                         <span className="text-sm text-fg-primary group-hover:text-accent-pink transition-colors flex-1">
                             {q}
                         </span>

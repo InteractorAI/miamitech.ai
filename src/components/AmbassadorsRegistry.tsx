@@ -5,6 +5,7 @@ import type { AmbassadorEntry } from '../lib/googleSheets';
 import { track } from '@vercel/analytics';
 import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
 import { InteractorAskIcon } from './InteractorAskIcon';
+import { QuestionIcon } from './QuestionIcon';
 
 const PREVIEW_COUNT = 5;
 
@@ -50,10 +51,11 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                 track('ambassador_modal_opened');
                 setShowModal(true);
             }}
-            className="flex items-center justify-center w-5 h-5 rounded-full border border-fg-muted/30 text-fg-muted hover:border-fg-secondary hover:text-fg-primary transition-all duration-200 text-[11px] font-semibold leading-none"
+            className="flex items-center justify-center w-8 h-8 rounded-lg border border-bg-border text-fg-muted hover:bg-bg-hover hover:text-fg-primary transition-colors duration-150"
             title="Learn more"
+            aria-label="Learn more about ambassadors"
         >
-            ?
+            <QuestionIcon />
         </button>
     );
 
