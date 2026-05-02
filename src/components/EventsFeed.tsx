@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { track } from '@vercel/analytics';
 import type { EventFeedItem } from '../lib/events/types';
+import { ExpandIcon } from './ExpandIcon';
 import { Panel } from './TerminalBlock';
 
 const PREVIEW_COUNT = 5;
@@ -107,10 +108,11 @@ export function EventsFeed({
             action={!expanded && (
                 <Link
                     href="/events"
-                    className="p-1.5 rounded-md text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border inline-flex items-center justify-center"
+                    className="w-8 h-8 rounded-lg text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-colors duration-150 shrink-0 border border-bg-border inline-flex items-center justify-center"
                     title="Expand"
+                    aria-label="Expand events"
                 >
-                    ↗
+                    <ExpandIcon />
                 </Link>
             )}
         >
@@ -182,7 +184,7 @@ export function EventsFeed({
                 {!expanded && events.length > PREVIEW_COUNT && (
                     <button
                         onClick={() => setShowAll(!showAll)}
-                        className="w-full px-5 py-2.5 text-[11px] font-medium text-fg-muted hover:text-fg-primary transition-colors duration-150 text-center border-t border-bg-border-subtle"
+                        className="w-full px-5 py-2.5 text-[11px] font-medium text-fg-muted hover:text-fg-primary transition-colors duration-150 text-center"
                     >
                         {showAll ? '↑ Show less' : `↓ ${remaining} more`}
                     </button>
