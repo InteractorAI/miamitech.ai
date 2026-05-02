@@ -69,7 +69,7 @@ export default async function Dashboard() {
 
             <HomeScrollContainer>
                 {/* Left column */}
-                <div className="shrink-0 lg:col-span-3 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
+                <div className="shrink-0 lg:col-auto lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
                     </div>
@@ -82,7 +82,7 @@ export default async function Dashboard() {
                 </div>
 
                 {/* Middle column */}
-                <div className="shrink-0 lg:col-span-4 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
+                <div className="shrink-0 lg:col-auto lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
                         <SpacesDirectory initialData={spacesData} />
                     </div>
@@ -107,7 +107,7 @@ export default async function Dashboard() {
                 </div>
 
                 {/* Right column: Events + Capital */}
-                <div className="min-h-[60vh] lg:min-h-0 lg:col-span-5 lg:flex lg:flex-col lg:overflow-auto">
+                <div className="min-h-[60vh] lg:min-h-0 lg:col-auto lg:flex lg:flex-col lg:overflow-auto">
                     <div id="events" className="border-b border-bg-border scroll-mt-12">
                         <EventsFeed events={eventsData} />
                     </div>
