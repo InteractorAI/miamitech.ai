@@ -1,9 +1,13 @@
 import { getSupabaseReadClient } from '../supabaseServer';
 import type { EventFeedItem } from './types';
 
-export async function getUpcomingEvents(limit = 10): Promise<EventFeedItem[]> {
+export async function getUpcomingEvents(limit = 10, windowDays = 21): Promise<EventFeedItem[]> {
     const supabase = getSupabaseReadClient();
     if (!supabase) return [];
+
+    const now = new Date();
+    const windowEnd = new Date(now);
+    windowEnd.setDate(windowEnd.getDate() + windowDays);
 
     const { data, error } = await supabase
         .from('events')
@@ -28,7 +32,8 @@ export async function getUpcomingEvents(limit = 10): Promise<EventFeedItem[]> {
         `)
         .eq('hidden', false)
         .in('status', ['active', 'postponed'])
-        .gte('starts_at', new Date().toISOString())
+        .gte('starts_at', now.toISOString())
+        .lt('starts_at', windowEnd.toISOString())
         .order('pinned', { ascending: false })
         .order('starts_at', { ascending: true })
         .limit(limit);

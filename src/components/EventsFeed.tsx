@@ -8,28 +8,57 @@ import { Panel } from './TerminalBlock';
 
 const PREVIEW_COUNT = 5;
 
-function formatEventDate(value: string): string {
+function formatEventTime(value: string): string {
     return new Intl.DateTimeFormat('en-US', {
-        month: 'short',
-        day: 'numeric',
         hour: 'numeric',
         minute: '2-digit',
         timeZone: 'America/New_York',
     }).format(new Date(value));
 }
 
-function getEventDay(value: string): { month: string; day: string } {
+function getDateLabel(value: string): string {
     const date = new Date(value);
-    return {
-        month: new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'America/New_York' }).format(date),
-        day: new Intl.DateTimeFormat('en-US', { day: 'numeric', timeZone: 'America/New_York' }).format(date),
-    };
+    const todayKey = getDateKey(new Date());
+    const eventKey = getDateKey(date);
+
+    if (eventKey === todayKey) return 'Today';
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    if (eventKey === getDateKey(tomorrow)) return 'Tomorrow';
+
+    const daysAway = Math.round((dateKeyToUtc(eventKey) - dateKeyToUtc(todayKey)) / 86400000);
+    if (daysAway > 1 && daysAway < 7) {
+        return new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'America/New_York' }).format(date);
+    }
+
+    return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'America/New_York' }).format(date);
+}
+
+function getDateKey(value: Date): string {
+    return new Intl.DateTimeFormat('en-CA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        timeZone: 'America/New_York',
+    }).format(value);
+}
+
+function dateKeyToUtc(value: string): number {
+    const [year, month, day] = value.split('-').map(Number);
+    return Date.UTC(year, month - 1, day);
+}
+
+function getSourceName(event: EventFeedItem): string {
+    return event.event_entities?.find((item) => item.relationship === 'source')?.entities?.name || '';
+}
+
+function getVenueName(event: EventFeedItem): string {
+    return event.event_entities?.find((item) => item.relationship === 'venue')?.entities?.name || '';
 }
 
 function getPrimaryAssociation(event: EventFeedItem): string {
-    const source = event.event_entities?.find((item) => item.relationship === 'source')?.entities;
-    const venue = event.event_entities?.find((item) => item.relationship === 'venue')?.entities;
-    return [source?.name, venue?.name].filter(Boolean).join(' · ');
+    return [getVenueName(event), event.location_text].filter(Boolean).join(' · ');
 }
 
 function cleanDescription(value: string | null): string {
@@ -57,7 +86,7 @@ export function EventsFeed({
     return (
         <Panel
             title="Events"
-            subtitle={events.length ? `${events.length} upcoming` : 'upcoming'}
+            subtitle={events.length ? `${events.length} upcoming · next 3 weeks` : 'next 3 weeks'}
             noPadding
             className={expanded ? 'h-full' : ''}
             action={!expanded && (
@@ -77,9 +106,9 @@ export function EventsFeed({
                     </div>
                 ) : (
                     visible.map((event) => {
-                        const association = getPrimaryAssociation(event);
+                        const sourceName = getSourceName(event);
+                        const eventMeta = [sourceName, formatEventTime(event.starts_at), getPrimaryAssociation(event)].filter(Boolean).join(' · ');
                         const teaser = cleanDescription(event.description);
-                        const day = getEventDay(event.starts_at);
 
                         return (
                             <a
@@ -88,53 +117,34 @@ export function EventsFeed({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={() => track('event_clicked', { title: event.title, url: event.canonical_url })}
-                                className="block px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
+                                className="block px-5 py-2.5 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
                             >
-                                <div className="flex items-start gap-3">
-                                    <div className={`${expanded ? 'w-24 h-16' : 'w-16 h-14'} shrink-0 overflow-hidden rounded-md bg-bg-elevated border border-bg-border-subtle`}>
-                                        {event.image_url ? (
-                                            <img
-                                                src={event.image_url}
-                                                alt=""
-                                                className="w-full h-full object-cover"
-                                                loading="lazy"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex flex-col items-center justify-center text-center">
-                                                <span className="text-[10px] font-semibold text-accent-blue uppercase leading-none">{day.month}</span>
-                                                <span className="text-lg font-semibold text-fg-primary leading-tight">{day.day}</span>
-                                            </div>
-                                        )}
+                                <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] sm:grid-cols-[5rem_minmax(0,1fr)] gap-3 items-start">
+                                    <div className="text-[11px] font-semibold text-accent-green uppercase tracking-wide pt-0.5">
+                                        {getDateLabel(event.starts_at)}
                                     </div>
-                                    <div className="min-w-0 flex-1">
-                                        <div className="flex items-start justify-between gap-3">
-                                            <div className="min-w-0">
-                                                <div className="text-[11px] font-medium text-accent-blue uppercase tracking-wide">
-                                                    {formatEventDate(event.starts_at)}
-                                                </div>
-                                                <div className="mt-1 text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
-                                                    {event.title}
-                                                </div>
+                                    <div className="min-w-0">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <div className="text-sm font-medium text-fg-primary group-hover:text-accent-blue transition-colors truncate">
+                                                {event.title}
                                             </div>
                                             {event.pinned && (
                                                 <span className="text-[10px] font-semibold text-accent-green shrink-0">PINNED</span>
                                             )}
                                         </div>
-                                        {teaser && (
+                                        <div className="mt-0.5 text-xs text-fg-muted truncate">
+                                            {eventMeta}
+                                        </div>
+                                        {expanded && teaser && (
                                             <div
                                                 className="mt-1 text-xs leading-5 text-fg-secondary overflow-hidden"
                                                 style={{
                                                     display: '-webkit-box',
-                                                    WebkitLineClamp: expanded ? 2 : 1,
+                                                    WebkitLineClamp: 2,
                                                     WebkitBoxOrient: 'vertical',
                                                 }}
                                             >
                                                 {teaser}
-                                            </div>
-                                        )}
-                                        {(event.location_text || association) && (
-                                            <div className="mt-1 text-xs text-fg-muted truncate">
-                                                {[event.location_text, association].filter(Boolean).join(' · ')}
                                             </div>
                                         )}
                                     </div>
@@ -146,7 +156,7 @@ export function EventsFeed({
                 {!expanded && events.length > PREVIEW_COUNT && (
                     <button
                         onClick={() => setShowAll(!showAll)}
-                        className="w-full px-5 py-2.5 text-[11px] font-medium text-fg-muted hover:text-accent-pink transition-colors duration-150 text-center border-t border-bg-border-subtle"
+                        className="w-full px-5 py-2.5 text-[11px] font-medium text-fg-muted hover:text-fg-primary transition-colors duration-150 text-center border-t border-bg-border-subtle"
                     >
                         {showAll ? '↑ Show less' : `↓ ${remaining} more`}
                     </button>

@@ -2,9 +2,9 @@
 import { useCallback } from 'react';
 
 const SECTIONS = [
-    { id: 'events', label: 'Events' },
     { id: 'spaces', label: 'Spaces' },
     { id: 'communities', label: 'Communities' },
+    { id: 'events', label: 'Events' },
     { id: 'capital', label: 'Capital' },
     { id: 'accelerators', label: 'Accelerators' },
     { id: 'conferences', label: 'Conferences' },
