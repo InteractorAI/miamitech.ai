@@ -63,6 +63,13 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
         askInteractor(`Tell me about ${entry.name}`);
     };
 
+    const handleRowKeyDown = (e: React.KeyboardEvent<HTMLTableRowElement>, idx: number, entry: CapitalEntry) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        setActiveIndex(idx);
+        handleRowClick(entry);
+    };
+
     const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
         if (visible.length === 0) return;
         if (e.key === 'ArrowDown') {
@@ -187,7 +194,10 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                     key={idx}
                                     ref={el => { rowRefs.current[idx] = el; }}
                                     onClick={() => { setActiveIndex(idx); handleRowClick(entry); }}
-                                    className={`border-b border-bg-border-subtle cursor-pointer transition-colors duration-100 group ${activeIndex === idx
+                                    onKeyDown={(e) => handleRowKeyDown(e, idx, entry)}
+                                    role="button"
+                                    tabIndex={0}
+                                    className={`focus-row border-b border-bg-border-subtle cursor-pointer transition-colors duration-100 group ${activeIndex === idx
                                         ? 'bg-accent-pink/10'
                                         : 'hover:bg-bg-hover'
                                         }`}
@@ -211,7 +221,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                         </>
                                     )}
                                     <td className="py-3 px-2 text-center w-24 lg:w-16">
-                                        <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
+                                        <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity duration-150">
                                             <button
                                                 onClick={(e) => handleAskClick(e, entry)}
                                                 className="min-h-9 min-w-9 lg:min-h-7 lg:min-w-7 p-2 lg:p-1 inline-flex shrink-0 items-center justify-center text-accent-pink active:scale-[0.98]"

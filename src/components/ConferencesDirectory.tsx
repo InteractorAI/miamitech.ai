@@ -29,6 +29,12 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
         askInteractor(`Tell me about the ${conference.name} conference`);
     };
 
+    const handleRowKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, conference: ConferenceEntry) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        handleRowClick(conference);
+    };
+
     return (
         <Panel title="Conferences" subtitle={loading ? '...' : `${conferences.length}`} noPadding>
             <div className={loading ? 'opacity-50 pointer-events-none' : ''}>
@@ -44,7 +50,10 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
                             <div
                                 key={idx}
                                 onClick={() => handleRowClick(conference)}
-                                className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                                onKeyDown={(e) => handleRowKeyDown(e, conference)}
+                                role="button"
+                                tabIndex={0}
+                                className="focus-row flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                             >
                                 <div className="flex items-center gap-2 min-w-0 flex-1">
                                     {conference.website && <Favicon url={conference.website} />}
@@ -59,7 +68,7 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
                                         )}
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
+                                <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity duration-150">
                                     <button
                                         onClick={(e) => handleAskClick(e, conference)}
                                         className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"

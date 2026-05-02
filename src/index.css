@@ -131,6 +131,32 @@
     color: #d4008f;
   }
 
+  button:focus,
+  a:focus,
+  input:focus,
+  [role="button"]:focus {
+    outline: 0;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 1px solid rgb(var(--bg-border));
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px var(--accent-pink-alpha);
+  }
+
+  .focus-row:focus-visible,
+  .focus-row:has(:focus-visible) {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid #448aff;
+    outline-offset: -2px;
+    background: rgb(var(--bg-hover));
+    box-shadow: inset 0 0 0 1px rgba(68, 138, 255, 0.38), 0 0 0 3px rgba(68, 138, 255, 0.14);
+  }
+
   html.contrast .text-accent-blue,
   html.contrast-light .text-accent-blue {
     color: #00e5ff;
@@ -143,20 +169,32 @@
   html.contrast button,
   html.contrast a,
   html.contrast input,
+  html.contrast [role="button"],
   html.contrast-light button,
   html.contrast-light a,
-  html.contrast-light input {
+  html.contrast-light input,
+  html.contrast-light [role="button"] {
     outline-offset: 3px;
   }
 
   html.contrast button:focus-visible,
   html.contrast a:focus-visible,
   html.contrast input:focus-visible,
+  html.contrast [role="button"]:focus-visible,
   html.contrast-light button:focus-visible,
   html.contrast-light a:focus-visible,
-  html.contrast-light input:focus-visible {
+  html.contrast-light input:focus-visible,
+  html.contrast-light [role="button"]:focus-visible {
     outline: 2px solid #00e5ff;
     box-shadow: 0 0 0 5px rgba(0, 229, 255, 0.22);
+  }
+
+  html.contrast .focus-row:focus-visible,
+  html.contrast .focus-row:has(:focus-visible),
+  html.contrast-light .focus-row:focus-visible,
+  html.contrast-light .focus-row:has(:focus-visible) {
+    outline: 2px solid #00e5ff;
+    box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.7), 0 0 0 5px rgba(0, 229, 255, 0.22);
   }
 
   html.contrast input.quick-search-input:focus-visible,

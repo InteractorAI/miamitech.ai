@@ -154,7 +154,7 @@ export function EventsFeed({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={() => track('event_clicked', { title: event.title, url: event.canonical_url })}
-                                className={`block px-5 ${expanded ? 'py-3' : 'py-2.5'} border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group`}
+                                className={`focus-row block px-5 ${expanded ? 'py-3' : 'py-2.5'} border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group`}
                             >
                                 <div className={`${expanded ? 'grid-cols-[4.75rem_minmax(0,1fr)]' : 'grid-cols-[4.25rem_minmax(0,1fr)]'} grid gap-3 items-start`}>
                                     <div
