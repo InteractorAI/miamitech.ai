@@ -7,12 +7,29 @@ declare global {
     }
 }
 
+type InteractorTheme = 'light' | 'dark';
+
+function getInteractorTheme(): InteractorTheme {
+    const root = document.documentElement;
+    if (
+        root.classList.contains('dark') ||
+        root.classList.contains('miami') ||
+        root.classList.contains('contrast')
+    ) {
+        return 'dark';
+    }
+    return 'light';
+}
+
 export function InteractorWidget() {
     const initialized = useRef(false);
+    const activeTheme = useRef<InteractorTheme | null>(null);
 
     useEffect(() => {
         if (typeof window === 'undefined' || initialized.current) return;
         initialized.current = true;
+        let check: ReturnType<typeof setInterval> | null = null;
+        let observer: MutationObserver | null = null;
 
         const originalError = console.error;
         console.error = (...args) => {
@@ -29,33 +46,64 @@ export function InteractorWidget() {
             originalError.apply(console, args);
         };
 
+        const initialize = () => {
+            if (!window.interactor) return;
+            const theme = getInteractorTheme();
+            if (activeTheme.current === theme) return;
+
+            try {
+                window.interactor.initialize('miamitech', {
+                    type: 'mobile',
+                    theme,
+                    isOpen: false,
+                    isFabVisible: true
+                });
+                activeTheme.current = theme;
+            } catch (e) { }
+        };
+
+        const waitForInteractor = () => {
+            check = setInterval(() => {
+                if (window.interactor) {
+                    if (check) clearInterval(check);
+                    initialize();
+                }
+            }, 100);
+        };
+
         // Delay injection slightly to ensure React hydration has fully completed
         const timer = setTimeout(() => {
-            const script = document.createElement('script');
+            const existingScript = document.querySelector<HTMLScriptElement>('script[data-interactor-embed="miamitech"]');
+            const script = existingScript ?? document.createElement('script');
             script.src = 'https://embed.interactor.ai/assets/index.js';
             script.type = 'module';
             script.crossOrigin = 'anonymous';
+            script.dataset.interactorEmbed = 'miamitech';
 
             script.onload = () => {
-                const check = setInterval(() => {
-                    if (window.interactor) {
-                        clearInterval(check);
-                        try {
-                            window.interactor.initialize('miamitech', {
-                                type: 'mobile',
-                                isOpen: false,
-                                isFabVisible: true
-                            });
-                        } catch (e) { }
-                    }
-                }, 100);
+                waitForInteractor();
             };
 
-            document.body.appendChild(script);
+            if (existingScript && window.interactor) {
+                initialize();
+            } else if (existingScript) {
+                waitForInteractor();
+            } else if (!existingScript) {
+                document.body.appendChild(script);
+            }
         }, 500);
+
+        observer = new MutationObserver(initialize);
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
 
         return () => {
             clearTimeout(timer);
+            if (check) clearInterval(check);
+            observer?.disconnect();
+            console.error = originalError;
         };
     }, []);
 

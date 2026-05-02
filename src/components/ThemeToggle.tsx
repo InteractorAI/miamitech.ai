@@ -38,7 +38,7 @@ export function ThemeToggle() {
         if (next === 'contrast') doc.classList.add('contrast');
         if (next === 'contrast-light') doc.classList.add('contrast-light');
 
-        doc.style.colorScheme = next === 'light' ? 'light' : 'dark';
+        doc.style.colorScheme = next === 'light' || next === 'contrast-light' ? 'light' : 'dark';
         localStorage.setItem('theme', next);
         track('theme_toggled', { theme: next });
         
