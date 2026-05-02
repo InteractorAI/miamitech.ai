@@ -160,7 +160,9 @@
   }
 
   html.contrast input.quick-search-input:focus-visible,
-  html.contrast-light input.quick-search-input:focus-visible {
+  html.contrast-light input.quick-search-input:focus-visible,
+  html.contrast input.capital-search-input:focus-visible,
+  html.contrast-light input.capital-search-input:focus-visible {
     outline: 0;
     box-shadow: none;
   }

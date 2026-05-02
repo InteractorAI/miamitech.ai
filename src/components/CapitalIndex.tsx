@@ -137,7 +137,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         value={search}
                         onChange={e => { setSearch(e.target.value); setActiveIndex(-1); }}
                         onKeyDown={handleKeyDown}
-                        className="peer w-full bg-transparent border-none text-base text-fg-primary placeholder:text-fg-muted pl-3 pr-2 py-2 outline-none font-sans"
+                        className="capital-search-input peer w-full bg-transparent border-none text-base text-fg-primary placeholder:text-fg-muted pl-3 pr-2 py-2 outline-none font-sans"
                     />
                     <div className="hidden md:flex items-center gap-0.5 pr-2 pointer-events-none text-fg-muted opacity-0 peer-focus:opacity-50 transition-opacity duration-200">
                         <kbd className="inline-flex items-center justify-center px-1.5 py-0.5 h-5 text-[10px] font-sans font-medium bg-bg-card border border-bg-border rounded shadow-[0_1px_0_rgba(255,255,255,0.1)_inset]">↑</kbd>
