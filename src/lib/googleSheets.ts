@@ -77,6 +77,13 @@ export const SHEET_CONFIG = {
     }
 } as const;
 
+function normalizeExternalUrl(value: string): string {
+    const url = value.trim();
+    if (!url) return '';
+    if (/^(https?:|mailto:|tel:|#|\/)/i.test(url)) return url;
+    return `https://${url}`;
+}
+
 function parseCSVLine(line: string): string[] {
     const result: string[] = [];
     let current = '';
@@ -120,7 +127,7 @@ export const mappers = {
     capital: (cols: string[]): CapitalEntry => ({
         name: cols[0] || '',
         topTen: (cols[1] || '').toLowerCase() === 'yes',
-        website: cols[2] || '',
+        website: normalizeExternalUrl(cols[2] || ''),
         checkSize: cols[3] || '',
         contact: cols[4] || '',
         location: cols[5] || '',
@@ -134,12 +141,12 @@ export const mappers = {
     spaces: (cols: string[]): SpaceEntry => ({
         name: cols[0] || '',
         location: cols[1] || '',
-        url: cols[2] || '',
+        url: normalizeExternalUrl(cols[2] || ''),
     }),
     communities: (cols: string[]): CommunityEntry => ({
         name: cols[0] || '',
-        url: cols[1] || '',
-        calendar: cols[2] || '',
+        url: normalizeExternalUrl(cols[1] || ''),
+        calendar: normalizeExternalUrl(cols[2] || ''),
     }),
     ambassadors: (cols: string[]): AmbassadorEntry => ({
         name: cols[0] || '',
@@ -153,20 +160,20 @@ export const mappers = {
     }),
     conferences: (cols: string[]): ConferenceEntry => ({
         name: cols[0] || '',
-        website: cols[1] || '',
+        website: normalizeExternalUrl(cols[1] || ''),
         notes: cols[2] || '',
     }),
     news: (cols: string[]): NewsEntry => ({
         name: cols[0] || '',
         desc: cols[1] || '',
-        url: cols[2] || '',
+        url: normalizeExternalUrl(cols[2] || ''),
     }),
     faqs: (cols: string[]): FAQEntry => ({
         question: cols[0] || '',
     }),
     accelerators: (cols: string[]): AcceleratorEntry => ({
         name: cols[0] || '',
-        website: cols[1] || '',
+        website: normalizeExternalUrl(cols[1] || ''),
         stage: cols[2] || '',
         checkSize: cols[3] || '',
         note: cols[4] || '',

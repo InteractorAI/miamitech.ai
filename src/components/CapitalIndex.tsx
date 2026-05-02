@@ -100,7 +100,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                     {!expanded && (
                         <Link
                             href="/capital"
-                            className="p-1.5 rounded-md text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border ml-1 inline-flex items-center justify-center"
+                            className="p-1.5 rounded-md text-fg-muted hover:text-accent-pink hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border ml-1 inline-flex items-center justify-center"
                             title="Expand"
                         >
                             ↗
@@ -206,7 +206,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                                     e.stopPropagation();
                                                     track('vc_link_clicked', { vc_name: entry.name, url: entry.website || '' });
                                                 }}
-                                                className="inline-flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-fg-muted hover:text-accent-blue"
+                                                className="inline-flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150 text-fg-muted hover:text-accent-blue"
                                             >
                                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />

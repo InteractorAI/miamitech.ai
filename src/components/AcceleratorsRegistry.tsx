@@ -32,7 +32,7 @@ export function AcceleratorsRegistry({
     const action = !expanded && (
         <Link
             href="/accelerators"
-            className="p-1.5 rounded-md text-fg-muted hover:text-fg-primary hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border inline-flex items-center justify-center"
+            className="p-1.5 rounded-md text-fg-muted hover:text-accent-pink hover:bg-bg-hover transition-all duration-150 shrink-0 text-base leading-none border border-bg-border inline-flex items-center justify-center"
             title="Expand"
         >
             ↗
@@ -48,7 +48,7 @@ export function AcceleratorsRegistry({
                 e.stopPropagation();
                 track('directory_link_clicked', { category: 'Accelerators', title: name, url });
             }}
-            className="inline-flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-fg-muted hover:text-accent-blue"
+            className="inline-flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150 text-fg-muted hover:text-accent-blue"
             title="Website"
         >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -129,7 +129,7 @@ export function AcceleratorsRegistry({
                                         <span className="text-xs text-fg-muted truncate">{a.stage}</span>
                                     </div>
                                 </div>
-                                <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="flex items-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                                     {a.website && globeIcon(a.website, a.name)}
                                 </div>
                             </div>

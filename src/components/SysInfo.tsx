@@ -23,13 +23,13 @@ export function SysInfo() {
                 <div className="flex gap-2">
                     <button
                         onClick={handleLearnMore}
-                        className="flex-1 text-[11px] font-medium text-fg-secondary border border-bg-border hover:bg-bg-hover hover:text-fg-primary py-2 rounded-md transition-all duration-200"
+                        className="flex-1 text-[11px] font-medium text-fg-secondary border border-bg-border hover:bg-bg-hover hover:text-accent-pink py-2 rounded-md transition-all duration-200"
                     >
                         Learn More
                     </button>
                     <button
                         onClick={handleContribute}
-                        className="flex-1 text-[11px] font-medium text-fg-secondary border border-bg-border hover:bg-bg-hover hover:text-fg-primary py-2 rounded-md transition-all duration-200"
+                        className="flex-1 text-[11px] font-medium text-fg-secondary border border-bg-border hover:bg-bg-hover hover:text-accent-pink py-2 rounded-md transition-all duration-200"
                     >
                         Contribute
                     </button>

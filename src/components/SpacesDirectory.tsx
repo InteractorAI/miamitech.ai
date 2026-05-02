@@ -51,7 +51,7 @@ export function SpacesDirectory({ initialData = [] }: { initialData?: SpaceEntry
                                         e.stopPropagation();
                                         track('directory_link_clicked', { category: 'Spaces', title: space.name, url: space.url || '' });
                                     }}
-                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-0 group-hover:opacity-100"
+                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
                                     title="Website"
                                 >
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

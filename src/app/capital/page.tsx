@@ -41,7 +41,7 @@ export default async function CapitalFocused() {
             <header className="flex items-center justify-between px-5 py-3 bg-bg-card border-b border-bg-border shrink-0">
                 <Link
                     href="/"
-                    className="text-xs font-medium text-fg-muted hover:text-fg-primary transition-colors"
+                    className="text-xs font-medium text-fg-muted hover:text-accent-pink transition-colors"
                 >
                     ← Home
                 </Link>

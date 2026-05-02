@@ -47,7 +47,7 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
                                         e.stopPropagation();
                                         track('directory_link_clicked', { category: 'Communities', title: community.name, type: 'website', url: community.url || '' });
                                     }}
-                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-0 group-hover:opacity-100"
+                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
                                     title="Website"
                                 >
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -66,7 +66,7 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
                                         e.stopPropagation();
                                         track('directory_link_clicked', { category: 'Communities', title: community.name, type: 'calendar', url: community.calendar || '' });
                                     }}
-                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-0 group-hover:opacity-100"
+                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
                                     title="Event Calendar"
                                 >
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

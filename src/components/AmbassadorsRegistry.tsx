@@ -61,7 +61,7 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                             {a.name}
                         </span>
 
-                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                             {a.twitter && (
                                 <a
                                     href={a.twitter.startsWith('http') ? a.twitter : `https://x.com/${a.twitter.replace('@', '')}`}
@@ -145,7 +145,7 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                                     Want to be an ambassador?{' '}
                                     <button
                                         onClick={handleAmbassadorApply}
-                                        className="font-medium text-fg-primary underline decoration-fg-muted/40 underline-offset-4 hover:text-accent-blue hover:decoration-accent-blue transition-colors"
+                                        className="font-medium text-fg-primary underline decoration-fg-muted/40 underline-offset-4 hover:text-accent-pink hover:decoration-accent-pink transition-colors"
                                     >
                                         Let us know
                                     </button>

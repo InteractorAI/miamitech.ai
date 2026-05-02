@@ -23,7 +23,7 @@ export function AskAI() {
                     {/* Subtle persistent gradient border */}
                     <div className="absolute -inset-[1px] bg-gradient-to-r from-accent-pink/20 via-accent-blue/20 to-accent-green/20 rounded-lg blur-[1px]" />
 
-                    <div className="relative flex items-center bg-bg-primary/50 backdrop-blur-sm rounded-lg border border-bg-border focus-within:border-accent-blue/20 transition-all duration-300">
+                    <div className="relative flex items-center bg-bg-primary/50 backdrop-blur-sm rounded-lg border border-bg-border focus-within:border-accent-pink/30 transition-all duration-300">
                         <input
                             type="text"
                             value={query}
@@ -34,7 +34,7 @@ export function AskAI() {
                         <button
                             type="submit"
                             disabled={!query.trim()}
-                            className="pr-4 text-fg-muted hover:text-accent-blue disabled:opacity-10 transition-colors duration-200 group"
+                            className="pr-4 text-fg-muted hover:text-accent-pink disabled:opacity-10 transition-colors duration-200 group"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

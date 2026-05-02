@@ -62,7 +62,7 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
                                                 e.stopPropagation();
                                                 track('directory_link_clicked', { category: 'Conferences', title: conference.name, url: conference.website || '' });
                                             }}
-                                            className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-0 group-hover:opacity-100"
+                                            className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
                                             title="Website"
                                         >
                                             {/* Globe */}
