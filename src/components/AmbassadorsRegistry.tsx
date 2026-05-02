@@ -4,6 +4,7 @@ import { Panel } from './TerminalBlock';
 import type { AmbassadorEntry } from '../lib/googleSheets';
 import { track } from '@vercel/analytics';
 import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { CloseIcon } from './CloseIcon';
 import { InteractorAskIcon } from './InteractorAskIcon';
 import { QuestionIcon } from './QuestionIcon';
 
@@ -146,9 +147,10 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                             </h3>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="text-fg-muted hover:text-fg-primary transition-colors text-lg leading-none p-1"
+                                className="flex items-center justify-center w-8 h-8 rounded-lg border border-bg-border text-fg-muted hover:bg-bg-hover hover:text-fg-primary transition-colors duration-150"
+                                aria-label="Close"
                             >
-                                ×
+                                <CloseIcon />
                             </button>
                         </div>
 
