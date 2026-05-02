@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Panel } from './TerminalBlock';
+import { askInteractor } from '../lib/interactor';
 
 export function AskAI() {
     const [query, setQuery] = useState('');
@@ -7,7 +8,7 @@ export function AskAI() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (query.trim()) {
-            window.interactor?.message.send(query);
+            askInteractor(query);
             setQuery('');
         }
     };

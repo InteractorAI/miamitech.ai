@@ -4,6 +4,8 @@ import { Panel } from './TerminalBlock';
 import type { CommunityEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
+import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { InteractorAskIcon } from './InteractorAskIcon';
 
 const PREVIEW_COUNT = 4;
 
@@ -16,10 +18,15 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
     const remaining = communities.length - PREVIEW_COUNT;
 
     const handleRowClick = (community: CommunityEntry) => {
+        if (usesExplicitTouchActions()) return;
         track('directory_row_clicked', { category: 'Communities', title: community.name });
-        window.interactor?.message.send(
-            `Tell me about the ${community.name} community`
-        );
+        askInteractor(`Tell me about the ${community.name} community`);
+    };
+
+    const handleAskClick = (e: React.MouseEvent, community: CommunityEntry) => {
+        e.stopPropagation();
+        track('directory_row_clicked', { category: 'Communities', title: community.name, from: 'ask_button' });
+        askInteractor(`Tell me about the ${community.name} community`);
     };
 
     return (
@@ -37,7 +44,15 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
                                 {community.name}
                             </span>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
+                            <button
+                                onClick={(e) => handleAskClick(e, community)}
+                                className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"
+                                aria-label={`Ask about ${community.name}`}
+                                title="Ask Interactor"
+                            >
+                                <InteractorAskIcon />
+                            </button>
                             {community.url && (
                                 <a
                                     href={community.url}
@@ -47,10 +62,10 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
                                         e.stopPropagation();
                                         track('directory_link_clicked', { category: 'Communities', title: community.name, type: 'website', url: community.url || '' });
                                     }}
-                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
+                                    className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-fg-muted hover:text-accent-blue transition-colors"
                                     title="Website"
                                 >
-                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
@@ -66,10 +81,10 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
                                         e.stopPropagation();
                                         track('directory_link_clicked', { category: 'Communities', title: community.name, type: 'calendar', url: community.calendar || '' });
                                     }}
-                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
+                                    className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-fg-muted hover:text-accent-blue transition-colors"
                                     title="Event Calendar"
                                 >
-                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                                     </svg>
                                 </a>

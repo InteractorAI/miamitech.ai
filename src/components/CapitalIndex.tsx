@@ -5,6 +5,8 @@ import { Panel } from './TerminalBlock';
 import { type CapitalEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
+import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { InteractorAskIcon } from './InteractorAskIcon';
 
 const STAGES = ['All', 'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Growth'] as const;
 
@@ -44,10 +46,15 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
     }, [data, search, stageFilter]);
 
     const handleRowClick = (entry: CapitalEntry) => {
+        if (usesExplicitTouchActions()) return;
         track('vc_row_clicked', { vc_name: entry.name });
-        window.interactor?.message.send(
-            `Tell me about ${entry.name}`
-        );
+        askInteractor(`Tell me about ${entry.name}`);
+    };
+
+    const handleAskClick = (e: React.MouseEvent, entry: CapitalEntry) => {
+        e.stopPropagation();
+        track('vc_row_clicked', { vc_name: entry.name, from: 'ask_button' });
+        askInteractor(`Tell me about ${entry.name}`);
     };
 
     const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -164,7 +171,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                         <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden xl:table-cell w-[10%]">Location</th>
                                     </>
                                 )}
-                                <th className="w-10" />
+                                <th className="w-24 lg:w-16" />
                             </tr>
                         </thead>
                         <tbody>
@@ -196,25 +203,35 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                             <td className="py-3 px-5 text-fg-muted text-[13px] truncate hidden xl:table-cell">{entry.location || '—'}</td>
                                         </>
                                     )}
-                                    <td className="py-3 px-2 text-center w-10">
-                                        {entry.website && (
-                                            <a
-                                                href={entry.website}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                    track('vc_link_clicked', { vc_name: entry.name, url: entry.website || '' });
-                                                }}
-                                                className="inline-flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150 text-fg-muted hover:text-accent-blue"
+                                    <td className="py-3 px-2 text-center w-24 lg:w-16">
+                                        <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
+                                            <button
+                                                onClick={(e) => handleAskClick(e, entry)}
+                                                className="min-h-9 min-w-9 lg:min-h-7 lg:min-w-7 p-2 lg:p-1 inline-flex shrink-0 items-center justify-center text-accent-pink active:scale-[0.98]"
+                                                aria-label={`Ask about ${entry.name}`}
+                                                title="Ask Interactor"
                                             >
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
-                                                </svg>
-                                            </a>
-                                        )}
+                                                <InteractorAskIcon />
+                                            </button>
+                                            {entry.website && (
+                                                <a
+                                                    href={entry.website}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    onClick={e => {
+                                                        e.stopPropagation();
+                                                        track('vc_link_clicked', { vc_name: entry.name, url: entry.website || '' });
+                                                    }}
+                                                    className="inline-flex min-h-9 min-w-9 lg:min-h-7 lg:min-w-7 shrink-0 items-center justify-center p-2 lg:p-1 text-fg-muted hover:text-accent-blue"
+                                                >
+                                                    <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
+                                                    </svg>
+                                                </a>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

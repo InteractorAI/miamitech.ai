@@ -1,6 +1,7 @@
 'use client';
 import { Panel } from './TerminalBlock';
 import { track } from '@vercel/analytics';
+import { askInteractor } from '../lib/interactor';
 
 export function SysInfo() {
     const handleLearnMore = () => {
@@ -10,7 +11,7 @@ export function SysInfo() {
 
     const handleContribute = () => {
         track('contribute_clicked');
-        window.interactor?.message.send('How can I contribute to miamitech.ai?');
+        askInteractor('How can I contribute to miamitech.ai?');
     };
 
     return (

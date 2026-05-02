@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { Panel } from './TerminalBlock';
 import type { AmbassadorEntry } from '../lib/googleSheets';
 import { track } from '@vercel/analytics';
+import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { InteractorAskIcon } from './InteractorAskIcon';
 
 const PREVIEW_COUNT = 5;
 
@@ -16,14 +18,21 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
     const remaining = ambassadors.length - PREVIEW_COUNT;
 
     const handleRowClick = (name: string) => {
+        if (usesExplicitTouchActions()) return;
         track('directory_row_clicked', { category: 'Ambassadors', title: name });
-        window.interactor?.message.send(`Tell me about ${name}`);
+        askInteractor(`Tell me about ${name}`);
+    };
+
+    const handleAskClick = (e: React.MouseEvent, name: string) => {
+        e.stopPropagation();
+        track('directory_row_clicked', { category: 'Ambassadors', title: name, from: 'ask_button' });
+        askInteractor(`Tell me about ${name}`);
     };
 
     const handleAmbassadorApply = () => {
         track('ambassador_apply_clicked');
         setShowModal(false);
-        window.interactor?.message.send("I'd like to be a Miami Tech Ecosystem Ambassador");
+        askInteractor("I'd like to be a Miami Tech Ecosystem Ambassador");
     };
 
     // Close modal on escape
@@ -61,7 +70,15 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                             {a.name}
                         </span>
 
-                        <div className="flex items-center gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                            <button
+                                onClick={(e) => handleAskClick(e, a.name)}
+                                className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"
+                                aria-label={`Ask about ${a.name}`}
+                                title="Ask Interactor"
+                            >
+                                <InteractorAskIcon />
+                            </button>
                             {a.twitter && (
                                 <a
                                     href={a.twitter.startsWith('http') ? a.twitter : `https://x.com/${a.twitter.replace('@', '')}`}
@@ -71,10 +88,10 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                                         e.stopPropagation();
                                         track('directory_link_clicked', { category: 'Ambassadors', title: a.name, type: 'x', url: a.twitter || '' });
                                     }}
-                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors"
+                                    className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-fg-muted hover:text-accent-blue transition-colors"
                                     title="Twitter / X"
                                 >
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.085 4.126H5.117z" />
                                     </svg>
                                 </a>
@@ -88,10 +105,10 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                                         e.stopPropagation();
                                         track('directory_link_clicked', { category: 'Ambassadors', title: a.name, type: 'linkedin', url: a.linkedin || '' });
                                     }}
-                                    className="p-1 text-fg-muted hover:text-accent-blue transition-colors"
+                                    className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-fg-muted hover:text-accent-blue transition-colors"
                                     title="LinkedIn"
                                 >
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                                     </svg>
                                 </a>

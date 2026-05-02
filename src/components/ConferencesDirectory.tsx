@@ -4,6 +4,8 @@ import { Panel } from './TerminalBlock';
 import type { ConferenceEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
+import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { InteractorAskIcon } from './InteractorAskIcon';
 
 const PREVIEW_COUNT = 5;
 
@@ -16,10 +18,15 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
     const remaining = conferences.length - PREVIEW_COUNT;
 
     const handleRowClick = (conference: ConferenceEntry) => {
+        if (usesExplicitTouchActions()) return;
         track('directory_row_clicked', { category: 'Conferences', title: conference.name });
-        window.interactor?.message.send(
-            `Tell me about the ${conference.name} conference`
-        );
+        askInteractor(`Tell me about the ${conference.name} conference`);
+    };
+
+    const handleAskClick = (e: React.MouseEvent, conference: ConferenceEntry) => {
+        e.stopPropagation();
+        track('directory_row_clicked', { category: 'Conferences', title: conference.name, from: 'ask_button' });
+        askInteractor(`Tell me about the ${conference.name} conference`);
     };
 
     return (
@@ -52,7 +59,15 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
                                         )}
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-1.5 shrink-0 ml-3">
+                                <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
+                                    <button
+                                        onClick={(e) => handleAskClick(e, conference)}
+                                        className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"
+                                        aria-label={`Ask about ${conference.name}`}
+                                        title="Ask Interactor"
+                                    >
+                                        <InteractorAskIcon />
+                                    </button>
                                     {conference.website && (
                                         <a
                                             href={conference.website}
@@ -62,11 +77,11 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
                                                 e.stopPropagation();
                                                 track('directory_link_clicked', { category: 'Conferences', title: conference.name, url: conference.website || '' });
                                             }}
-                                            className="p-1 text-fg-muted hover:text-accent-blue transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
+                                            className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-fg-muted hover:text-accent-blue transition-colors"
                                             title="Website"
                                         >
                                             {/* Globe */}
-                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />

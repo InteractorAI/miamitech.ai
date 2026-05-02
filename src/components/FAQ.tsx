@@ -2,6 +2,8 @@
 import { Panel } from './TerminalBlock';
 import { track } from '@vercel/analytics';
 import type { FAQEntry } from '../lib/googleSheets';
+import { askInteractor } from '../lib/interactor';
+import { InteractorAskIcon } from './InteractorAskIcon';
 
 const DEFAULT_FAQS = [
     'How do I get started?',
@@ -19,7 +21,7 @@ export function FAQ({ initialData = [] }: { initialData?: FAQEntry[] }) {
 
     const handleClick = (question: string) => {
         track('faq_clicked', { question });
-        window.interactor?.message.send(question);
+        askInteractor(question);
     };
 
     return (
@@ -32,8 +34,11 @@ export function FAQ({ initialData = [] }: { initialData?: FAQEntry[] }) {
                         className="w-full text-left flex items-center gap-2 px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                     >
                         <span className="text-fg-muted text-xs shrink-0">?</span>
-                        <span className="text-sm text-fg-primary group-hover:text-accent-pink transition-colors">
+                        <span className="text-sm text-fg-primary group-hover:text-accent-pink transition-colors flex-1">
                             {q}
+                        </span>
+                        <span className="ml-auto shrink-0 inline-flex min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 items-center justify-center p-2 lg:p-1 text-accent-pink" title="Ask Interactor">
+                            <InteractorAskIcon />
                         </span>
                     </button>
                 ))}
