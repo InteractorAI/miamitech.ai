@@ -5,6 +5,7 @@ import { CommunitiesDirectory } from '../components/CommunitiesDirectory';
 import { ConferencesDirectory } from '../components/ConferencesDirectory';
 import { AmbassadorsRegistry } from '../components/AmbassadorsRegistry';
 import { NewsSources } from '../components/NewsSources';
+import { EventsFeed } from '../components/EventsFeed';
 import { Credits } from '../components/Credits';
 import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
@@ -66,9 +67,14 @@ export default function HomeLoading() {
                     </div>
                 </div>
 
-                {/* Right column: Capital */}
-                <div id="capital" className="min-h-[60vh] lg:min-h-0 lg:col-span-5 lg:flex-1 flex flex-col lg:overflow-hidden scroll-mt-12">
-                    <CapitalIndex data={[]} loading={true} />
+                {/* Right column: Events + Capital */}
+                <div className="min-h-[60vh] lg:min-h-0 lg:col-span-5 lg:flex lg:flex-col lg:overflow-auto animate-pulse">
+                    <div id="events" className="border-b border-bg-border scroll-mt-12">
+                        <EventsFeed events={[]} />
+                    </div>
+                    <div id="capital" className="scroll-mt-12">
+                        <CapitalIndex data={[]} loading={true} />
+                    </div>
                 </div>
             </div>
         </div>

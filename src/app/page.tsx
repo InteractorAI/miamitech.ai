@@ -43,7 +43,7 @@ export default async function Dashboard() {
         fetchSheetData<any>(SHEET_CONFIG.TABS.News, mappers.news, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.FAQs, mappers.faqs, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Accelerators, mappers.accelerators, 1),
-        getUpcomingEvents(8),
+        getUpcomingEvents(40),
     ]);
 
     return (
@@ -75,9 +75,6 @@ export default async function Dashboard() {
                     <div className="border-b border-bg-border">
                         <Sponsors />
                     </div>
-                    <div id="events" className="border-b border-bg-border scroll-mt-12">
-                        <EventsFeed events={eventsData} />
-                    </div>
                     <div className="hidden lg:block border-b border-bg-border lg:border-b-0">
                         <QuickSearchHint />
                     </div>
@@ -108,9 +105,14 @@ export default async function Dashboard() {
                     </div>
                 </div>
 
-                {/* Right column: Capital */}
-                <div id="capital" className="min-h-[60vh] lg:min-h-0 lg:col-span-5 lg:flex-1 flex flex-col lg:overflow-hidden scroll-mt-12">
-                    <CapitalIndex data={capitalData} loading={false} />
+                {/* Right column: Events + Capital */}
+                <div className="min-h-[60vh] lg:min-h-0 lg:col-span-5 lg:flex lg:flex-col lg:overflow-auto">
+                    <div id="events" className="border-b border-bg-border scroll-mt-12">
+                        <EventsFeed events={eventsData} />
+                    </div>
+                    <div id="capital" className="scroll-mt-12">
+                        <CapitalIndex data={capitalData} loading={false} />
+                    </div>
                 </div>
             </div>
         </div>

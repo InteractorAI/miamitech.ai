@@ -34,7 +34,11 @@ export function normalizeText(value: string): string {
 
 export function detectSourcePlatform(url: string): SourcePlatform {
     const normalized = url.toLowerCase();
-    if (normalized.startsWith('webcal://') || /\.(ics|ical)(\?|$)/i.test(normalized)) return 'ical';
+    if (
+        normalized.startsWith('webcal://') ||
+        /\.(ics|ical)(\?|$)/i.test(normalized) ||
+        /[?&](ical|icalendar)=1(\D|$)/i.test(normalized)
+    ) return 'ical';
     if (normalized.includes('luma.com') || normalized.includes('lu.ma')) return 'luma';
     if (/\.(rss|xml|atom)(\?|$)/i.test(normalized) || normalized.includes('feed')) return 'rss';
     return 'unknown';

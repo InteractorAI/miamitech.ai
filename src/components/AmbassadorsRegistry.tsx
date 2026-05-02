@@ -20,6 +20,12 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
         window.interactor?.message.send(`Tell me about ${name}`);
     };
 
+    const handleAmbassadorApply = () => {
+        track('ambassador_apply_clicked');
+        setShowModal(false);
+        window.interactor?.message.send("I'd like to be a Miami Tech Ecosystem Ambassador");
+    };
+
     // Close modal on escape
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
@@ -133,7 +139,17 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                                     The people featured here are active members of Miami’s tech community and are prepared to help others navigate our ecosystem.
                                 </p>
                                 <p>
-                                    If you’re new to Miami tech, these are individuals you can follow and reach out to as you explore the community and find your footing.
+                                    If you’re new to Miami tech, these are individuals you can follow and reach out to as you find your footing in the community.
+                                </p>
+                                <p>
+                                    Want to be an ambassador?{' '}
+                                    <button
+                                        onClick={handleAmbassadorApply}
+                                        className="font-medium text-fg-primary underline decoration-fg-muted/40 underline-offset-4 hover:text-accent-blue hover:decoration-accent-blue transition-colors"
+                                    >
+                                        Let us know
+                                    </button>
+                                    .
                                 </p>
                             </div>
 

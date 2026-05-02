@@ -7,6 +7,7 @@ import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
 
 const STAGES = ['All', 'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Growth'] as const;
+const PREVIEW_COUNT = 12;
 
 interface CapitalIndexProps {
     data: CapitalEntry[];
@@ -18,6 +19,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
     const [search, setSearch] = useState('');
     const [stageFilter, setStageFilter] = useState<string>('All');
     const [activeIndex, setActiveIndex] = useState<number>(-1);
+    const [showAll, setShowAll] = useState(false);
     const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
 
     const filtered = useMemo(() => {
@@ -43,6 +45,9 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
         return result;
     }, [data, search, stageFilter]);
 
+    const visible = expanded || showAll ? filtered : filtered.slice(0, PREVIEW_COUNT);
+    const remaining = filtered.length - PREVIEW_COUNT;
+
     const handleRowClick = (entry: CapitalEntry) => {
         track('vc_row_clicked', { vc_name: entry.name });
         window.interactor?.message.send(
@@ -51,11 +56,11 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
     };
 
     const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (filtered.length === 0) return;
+        if (visible.length === 0) return;
         if (e.key === 'ArrowDown') {
             e.preventDefault();
             setActiveIndex(prev => {
-                const next = Math.min(prev + 1, filtered.length - 1);
+                const next = Math.min(prev + 1, visible.length - 1);
                 rowRefs.current[next]?.scrollIntoView({ block: 'nearest' });
                 return next;
             });
@@ -67,19 +72,19 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                 return next;
             });
         } else if (e.key === 'Enter') {
-            if (activeIndex >= 0 && activeIndex < filtered.length) {
-                handleRowClick(filtered[activeIndex]);
+            if (activeIndex >= 0 && activeIndex < visible.length) {
+                handleRowClick(visible[activeIndex]);
             }
         } else if (e.key === 'Escape') {
             setSearch('');
             setActiveIndex(-1);
         }
-    }, [filtered, activeIndex, handleRowClick]);
+    }, [visible, activeIndex, handleRowClick]);
 
     return (
         <Panel
             title="Capital"
-            className="h-full"
+            className={expanded ? 'h-full' : ''}
             noPadding
             action={
                 <div className="flex items-center gap-2 min-w-0">
@@ -150,7 +155,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                     ))}
                 </div>
             ) : (
-                <div className="overflow-auto flex-1 min-h-0">
+                <div className={expanded ? 'overflow-auto flex-1 min-h-0' : ''}>
                     <table className="w-full text-sm table-fixed">
                         <thead className="sticky top-0 z-10 bg-bg-card">
                             <tr className="border-b border-bg-border">
@@ -168,7 +173,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                             </tr>
                         </thead>
                         <tbody>
-                            {filtered.map((entry, idx) => (
+                            {visible.map((entry, idx) => (
                                 <tr
                                     key={idx}
                                     ref={el => { rowRefs.current[idx] = el; }}
@@ -227,6 +232,14 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                             )}
                         </tbody>
                     </table>
+                    {!expanded && filtered.length > PREVIEW_COUNT && (
+                        <button
+                            onClick={() => setShowAll(!showAll)}
+                            className="w-full px-5 py-2.5 text-[11px] font-medium text-fg-muted hover:text-accent-pink transition-colors duration-150 text-center border-t border-bg-border-subtle"
+                        >
+                            {showAll ? '↑ Show less' : `↓ ${remaining} more`}
+                        </button>
+                    )}
                 </div>
             )}
         </Panel>
