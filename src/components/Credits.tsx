@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useContributorsData } from '../hooks/useSheetData';
 import Image from 'next/image';
 import { track } from '@vercel/analytics';
+import { CloseIcon } from './CloseIcon';
 
 function XIcon() {
     return (
@@ -114,9 +115,10 @@ export function Credits() {
                             </div>
                             <button
                                 onClick={() => setOpen(false)}
-                                className="text-fg-muted hover:text-fg-primary transition-colors text-lg leading-none p-1"
+                                className="flex items-center justify-center w-8 h-8 rounded-lg border border-bg-border text-fg-muted hover:bg-bg-hover hover:text-fg-primary transition-colors duration-150"
+                                aria-label="Close"
                             >
-                                ×
+                                <CloseIcon />
                             </button>
                         </div>
 
