@@ -10,6 +10,14 @@ const MIN_MIDDLE_WIDTH = 360;
 const MAX_MIDDLE_WIDTH = 760;
 const MIN_RIGHT_WIDTH = 520;
 
+function clampMiddleWidth(width: number, containerWidth: number) {
+    const responsiveMax = containerWidth > 0
+        ? containerWidth - DEFAULT_SIDEBAR_WIDTH - MIN_RIGHT_WIDTH
+        : MAX_MIDDLE_WIDTH;
+    const availableMax = Math.max(MIN_MIDDLE_WIDTH, Math.min(MAX_MIDDLE_WIDTH, responsiveMax));
+    return Math.min(availableMax, Math.max(MIN_MIDDLE_WIDTH, width));
+}
+
 export function HomeScrollContainer({ children }: { children: ReactNode }) {
     const ref = useRef<HTMLDivElement>(null);
     const isRestoring = useRef(false);
@@ -25,8 +33,34 @@ export function HomeScrollContainer({ children }: { children: ReactNode }) {
         const parsedMiddle = Number(savedMiddle);
 
         if (Number.isFinite(parsedMiddle)) {
-            setMiddleWidth(Math.min(MAX_MIDDLE_WIDTH, Math.max(MIN_MIDDLE_WIDTH, parsedMiddle)));
+            setMiddleWidth(clampMiddleWidth(parsedMiddle, getContainerWidth()));
         }
+    }, []);
+
+    useEffect(() => {
+        const container = ref.current;
+        if (!container) return;
+
+        const clampToContainer = () => {
+            setMiddleWidth((currentWidth) => {
+                const nextWidth = clampMiddleWidth(currentWidth, getContainerWidth());
+                if (Math.round(nextWidth) !== Math.round(currentWidth)) {
+                    sessionStorage.setItem(MIDDLE_WIDTH_KEY, String(Math.round(nextWidth)));
+                }
+                return nextWidth;
+            });
+        };
+
+        clampToContainer();
+
+        const observer = new ResizeObserver(clampToContainer);
+        observer.observe(container);
+        window.addEventListener('resize', clampToContainer);
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('resize', clampToContainer);
+        };
     }, []);
 
     useEffect(() => {
@@ -78,8 +112,7 @@ export function HomeScrollContainer({ children }: { children: ReactNode }) {
     }
 
     function setMiddleWidthValue(width: number) {
-        const availableMax = Math.max(MIN_MIDDLE_WIDTH, Math.min(MAX_MIDDLE_WIDTH, getContainerWidth() - DEFAULT_SIDEBAR_WIDTH - MIN_RIGHT_WIDTH));
-        const nextWidth = Math.min(availableMax, Math.max(MIN_MIDDLE_WIDTH, width));
+        const nextWidth = clampMiddleWidth(width, getContainerWidth());
         setMiddleWidth(nextWidth);
         sessionStorage.setItem(MIDDLE_WIDTH_KEY, String(Math.round(nextWidth)));
     }
@@ -131,7 +164,7 @@ export function HomeScrollContainer({ children }: { children: ReactNode }) {
                 if (isRestoring.current) return;
                 sessionStorage.setItem(SCROLL_KEY, String(e.currentTarget.scrollTop));
             }}
-            className={`relative flex-1 flex flex-col min-h-0 overflow-auto lg:grid lg:[grid-template-columns:var(--left-sidebar-width)_var(--middle-column-width)_minmax(0,1fr)] lg:overflow-hidden ${isDraggingMiddle ? 'sidebar-trip-active' : ''}`}
+            className={`relative flex-1 flex flex-col min-h-0 overflow-auto xl:grid xl:[grid-template-columns:var(--left-sidebar-width)_var(--middle-column-width)_minmax(0,1fr)] xl:overflow-hidden ${isDraggingMiddle ? 'sidebar-trip-active' : ''}`}
         >
             {children}
             <button
@@ -151,7 +184,7 @@ export function HomeScrollContainer({ children }: { children: ReactNode }) {
                 onPointerUp={handlePointerUp}
                 onPointerCancel={handlePointerUp}
                 onKeyDown={handleKeyDown}
-                className="sidebar-trip-handle group hidden lg:block"
+                className="sidebar-trip-handle group hidden xl:block"
             >
                 <span className="sidebar-trip-core" />
             </button>
