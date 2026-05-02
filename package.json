@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
     "build": "node scripts/build.mjs",
+    "ingest:events": "node scripts/ingest-events.mjs local",
+    "ingest:events:staging": "node scripts/ingest-events.mjs staging",
+    "ingest:events:prod": "node scripts/ingest-events.mjs production",
     "start": "next start",
     "lint": "next lint"
   },
