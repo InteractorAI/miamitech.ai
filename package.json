@@ -9,6 +9,9 @@
     "ingest:events": "node scripts/ingest-events.mjs local",
     "ingest:events:staging": "node scripts/ingest-events.mjs staging",
     "ingest:events:prod": "node scripts/ingest-events.mjs production",
+    "preview:event-distribution": "node scripts/preview-event-distribution.mjs local",
+    "preview:event-distribution:staging": "node scripts/preview-event-distribution.mjs staging",
+    "preview:event-distribution:prod": "node scripts/preview-event-distribution.mjs production",
     "start": "next start",
     "lint": "next lint"
   },

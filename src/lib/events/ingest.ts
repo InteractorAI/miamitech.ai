@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { fetchEventsForSource } from './adapters';
+import { enqueueEventDistributionJobs } from './distribution';
 import type { EventSource, NormalizedEvent } from './types';
 import { makeEventDedupeKey, normalizeText } from './utils';
 
@@ -55,7 +56,10 @@ export async function ingestEventSources(supabase: SupabaseClient) {
         }
     }
 
-    return results;
+    return {
+        ...results,
+        distribution: await enqueueEventDistributionJobs(supabase),
+    };
 }
 
 async function upsertEvent(supabase: SupabaseClient, event: NormalizedEvent): Promise<string> {

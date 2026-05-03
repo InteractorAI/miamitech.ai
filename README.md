@@ -128,6 +128,9 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 CRON_SECRET=
+EVENT_DISTRIBUTION_SECRET=
+OPENAI_API_KEY=
+EVENT_COPY_MODEL=gpt-5.4-mini
 ```
 
 The ingestion script reads `CRON_SECRET` or `EVENT_INGEST_SECRET` from the current environment or `.env.local`. Optional target-specific secrets are also supported:
@@ -144,6 +147,41 @@ The ingestion script also supports a custom target URL:
 ```bash
 EVENT_INGEST_URL=https://example.com npm run ingest:events
 ```
+
+### Event Distribution Preview
+
+Event ingestion now seeds internal distribution jobs for outbound event reminders. The first distribution version only renders reviewable previews; it does not connect to Buffer, X, or an email provider.
+
+When `OPENAI_API_KEY` is configured, event reminder previews use `EVENT_COPY_MODEL` to generate more human X copy from verified event facts. The deterministic renderer remains the fallback and still controls URL inclusion, length limits, eligibility, and dedupe behavior.
+
+Preview generated event reminder and weekly digest copy with:
+
+```bash
+npm run preview:event-distribution
+```
+
+Targets are also available for staging and production:
+
+```bash
+npm run preview:event-distribution:staging
+npm run preview:event-distribution:prod
+```
+
+The preview script reads `EVENT_DISTRIBUTION_SECRET`, `EVENT_INGEST_SECRET`, or `CRON_SECRET` from the environment or `.env.local`. It supports:
+
+```bash
+npm run preview:event-distribution -- --window-days=21 --limit=100
+npm run preview:event-distribution -- --no-enqueue
+npm run preview:event-distribution -- --no-digest
+```
+
+Review and curate upcoming event distribution at:
+
+```text
+/admin/events
+```
+
+The curation API is protected by `EVENT_DISTRIBUTION_SECRET`, `EVENT_INGEST_SECRET`, or `CRON_SECRET`. The admin page stores the entered secret in local browser storage and uses it only for requests to `/api/admin/events`.
 
 ## Common Commands
 
