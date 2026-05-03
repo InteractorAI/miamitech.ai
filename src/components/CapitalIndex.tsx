@@ -10,6 +10,7 @@ import { ExpandIcon } from './ExpandIcon';
 import { InteractorAskIcon } from './InteractorAskIcon';
 
 const STAGES = ['All', 'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Growth'] as const;
+const PREVIEW_COUNT = 12;
 
 interface CapitalIndexProps {
     data: CapitalEntry[];
@@ -21,6 +22,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
     const [search, setSearch] = useState('');
     const [stageFilter, setStageFilter] = useState<string>('All');
     const [activeIndex, setActiveIndex] = useState<number>(-1);
+    const [showAll, setShowAll] = useState(false);
     const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
 
     const filtered = useMemo(() => {
@@ -46,6 +48,9 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
         return result;
     }, [data, search, stageFilter]);
 
+    const visible = expanded || showAll ? filtered : filtered.slice(0, PREVIEW_COUNT);
+    const remaining = filtered.length - PREVIEW_COUNT;
+
     const handleRowClick = (entry: CapitalEntry) => {
         if (usesExplicitTouchActions()) return;
         track('vc_row_clicked', { vc_name: entry.name });
@@ -58,12 +63,19 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
         askInteractor(`Tell me about ${entry.name}`);
     };
 
+    const handleRowKeyDown = (e: React.KeyboardEvent<HTMLTableRowElement>, idx: number, entry: CapitalEntry) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        setActiveIndex(idx);
+        handleRowClick(entry);
+    };
+
     const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (filtered.length === 0) return;
+        if (visible.length === 0) return;
         if (e.key === 'ArrowDown') {
             e.preventDefault();
             setActiveIndex(prev => {
-                const next = Math.min(prev + 1, filtered.length - 1);
+                const next = Math.min(prev + 1, visible.length - 1);
                 rowRefs.current[next]?.scrollIntoView({ block: 'nearest' });
                 return next;
             });
@@ -75,19 +87,19 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                 return next;
             });
         } else if (e.key === 'Enter') {
-            if (activeIndex >= 0 && activeIndex < filtered.length) {
-                handleRowClick(filtered[activeIndex]);
+            if (activeIndex >= 0 && activeIndex < visible.length) {
+                handleRowClick(visible[activeIndex]);
             }
         } else if (e.key === 'Escape') {
             setSearch('');
             setActiveIndex(-1);
         }
-    }, [filtered, activeIndex, handleRowClick]);
+    }, [visible, activeIndex, handleRowClick]);
 
     return (
         <Panel
             title="Capital"
-            className="h-full"
+            className={expanded ? 'h-full' : ''}
             noPadding
             action={
                 <div className="flex items-center gap-2 min-w-0">
@@ -96,8 +108,8 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                             <button
                                 key={s}
                                 onClick={() => setStageFilter(s)}
-                                className={`text-[11px] px-2.5 py-1 rounded-md font-medium transition-all duration-150 whitespace-nowrap ${stageFilter === s
-                                    ? 'bg-accent-pink-alpha text-accent-pink'
+                                className={`text-[11px] px-2.5 py-1 rounded-md transition-all duration-150 whitespace-nowrap ${stageFilter === s
+                                    ? 'bg-bg-hover/30 text-fg-primary'
                                     : 'text-fg-muted hover:text-fg-secondary hover:bg-bg-hover'
                                     }`}
                             >
@@ -119,10 +131,10 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
             }
         >
             {/* Search */}
-            <div className="px-5 py-3 border-b border-bg-border shrink-0">
-                <div className="flex items-center bg-bg-elevated rounded-lg focus-within:ring-1 focus-within:ring-accent-pink/30 transition-shadow">
+            <div className={`${expanded ? 'px-5 py-3' : 'px-5 py-2.5'} border-b border-bg-border shrink-0`}>
+                <div className="flex items-center rounded-md bg-bg-hover/45 focus-within:bg-bg-hover/70 transition-colors">
                     <div className="pl-3 flex items-center justify-center pointer-events-none">
-                        <svg className="w-4 h-4 text-fg-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <svg className="w-3.5 h-3.5 text-fg-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
@@ -132,7 +144,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         value={search}
                         onChange={e => { setSearch(e.target.value); setActiveIndex(-1); }}
                         onKeyDown={handleKeyDown}
-                        className="peer w-full bg-transparent border-none text-base text-fg-primary placeholder:text-fg-muted pl-3 pr-2 py-2 outline-none font-sans"
+                        className={`capital-search-input peer w-full bg-transparent border-none text-fg-primary placeholder:text-fg-muted/80 pl-2.5 pr-2 outline-none font-sans ${expanded ? 'text-sm py-2' : 'text-[13px] py-1.5'}`}
                     />
                     <div className="hidden md:flex items-center gap-0.5 pr-2 pointer-events-none text-fg-muted opacity-0 peer-focus:opacity-50 transition-opacity duration-200">
                         <kbd className="inline-flex items-center justify-center px-1.5 py-0.5 h-5 text-[10px] font-sans font-medium bg-bg-card border border-bg-border rounded shadow-[0_1px_0_rgba(255,255,255,0.1)_inset]">↑</kbd>
@@ -159,13 +171,13 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                     ))}
                 </div>
             ) : (
-                <div className="overflow-auto flex-1 min-h-0">
+                <div className={expanded ? 'overflow-auto flex-1 min-h-0' : ''}>
                     <table className="w-full text-sm table-fixed">
                         <thead className="sticky top-0 z-10 bg-bg-card">
                             <tr className="border-b border-bg-border">
                                 <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-auto lg:w-[25%]' : 'w-auto'}`}>Name</th>
-                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden lg:table-cell ${expanded ? 'lg:w-[15%]' : 'w-[25%]'}`}>Stage</th>
-                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden lg:table-cell ${expanded ? 'lg:w-[15%]' : 'w-[30%]'}`}>Check</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'hidden lg:table-cell lg:w-[15%]' : 'hidden xl:table-cell w-[25%]'}`}>Stage</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'hidden lg:table-cell lg:w-[15%]' : 'hidden xl:table-cell w-[30%]'}`}>Check</th>
                                 {expanded && (
                                     <>
                                         <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden xl:table-cell lg:w-[15%]">Type</th>
@@ -177,12 +189,15 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                             </tr>
                         </thead>
                         <tbody>
-                            {filtered.map((entry, idx) => (
+                            {visible.map((entry, idx) => (
                                 <tr
                                     key={idx}
                                     ref={el => { rowRefs.current[idx] = el; }}
                                     onClick={() => { setActiveIndex(idx); handleRowClick(entry); }}
-                                    className={`border-b border-bg-border-subtle cursor-pointer transition-colors duration-100 group ${activeIndex === idx
+                                    onKeyDown={(e) => handleRowKeyDown(e, idx, entry)}
+                                    role="button"
+                                    tabIndex={0}
+                                    className={`focus-row border-b border-bg-border-subtle cursor-pointer transition-colors duration-100 group ${activeIndex === idx
                                         ? 'bg-accent-pink/10'
                                         : 'hover:bg-bg-hover'
                                         }`}
@@ -196,8 +211,8 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                             <span className="truncate group-hover:text-accent-pink transition-colors">{entry.name}</span>
                                         </div>
                                     </td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden lg:table-cell">{entry.stage || '—'}</td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate hidden lg:table-cell">{entry.checkSize || '—'}</td>
+                                    <td className={`py-3 px-5 text-fg-secondary text-[13px] truncate ${expanded ? 'hidden lg:table-cell' : 'hidden xl:table-cell'}`}>{entry.stage || '—'}</td>
+                                    <td className={`py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate ${expanded ? 'hidden lg:table-cell' : 'hidden xl:table-cell'}`}>{entry.checkSize || '—'}</td>
                                     {expanded && (
                                         <>
                                             <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden xl:table-cell">{entry.type || '—'}</td>
@@ -206,7 +221,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                         </>
                                     )}
                                     <td className="py-3 px-2 text-center w-24 lg:w-16">
-                                        <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
+                                        <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity duration-150">
                                             <button
                                                 onClick={(e) => handleAskClick(e, entry)}
                                                 className="min-h-9 min-w-9 lg:min-h-7 lg:min-w-7 p-2 lg:p-1 inline-flex shrink-0 items-center justify-center text-accent-pink active:scale-[0.98]"
@@ -246,6 +261,14 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                             )}
                         </tbody>
                     </table>
+                    {!expanded && filtered.length > PREVIEW_COUNT && (
+                        <button
+                            onClick={() => setShowAll(!showAll)}
+                            className="w-full px-5 py-2.5 text-[11px] font-medium text-fg-muted hover:text-accent-pink transition-colors duration-150 text-center border-t border-bg-border-subtle"
+                        >
+                            {showAll ? '↑ Show less' : `↓ ${remaining} more`}
+                        </button>
+                    )}
                 </div>
             )}
         </Panel>

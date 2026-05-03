@@ -15,14 +15,30 @@ export interface CapitalEntry {
 
 export interface SpaceEntry {
     name: string;
+    handle: string;
     location: string;
     url: string;
+    calendar: string;
+    aliases: string;
+    notes: string;
+}
+
+export interface CoffeeShopEntry {
+    name: string;
+    area: string;
+    wifi: string;
+    note: string;
+    url: string;
+    website: string;
 }
 
 export interface CommunityEntry {
     name: string;
+    handle: string;
     url: string;
     calendar: string;
+    aliases: string;
+    notes: string;
 }
 
 export interface AmbassadorEntry {
@@ -39,7 +55,20 @@ export interface ContributorEntry {
 
 export interface ConferenceEntry {
     name: string;
+    handle: string;
     website: string;
+    calendar: string;
+    aliases: string;
+    notes: string;
+}
+
+export interface ResourceEntry {
+    name: string;
+    handle: string;
+    category: string;
+    website: string;
+    calendar: string;
+    aliases: string;
     notes: string;
 }
 
@@ -68,6 +97,7 @@ export const SHEET_CONFIG = {
         Spaces: '1501823864',
         Communities: '585764250',
         Resources: '358470130',
+        CoffeeShops: '982435771',
         Ambassadors: '1836408446',
         Contributors: '18134085',
         Conferences: '1124651295',
@@ -164,16 +194,39 @@ export const mappers = {
         leads: getColumn(row, cols, ['Leads'], 10),
         notes: getColumn(row, cols, ['Notes', 'Note'], 11),
     }),
-    spaces: (cols: string[], row?: SheetRow): SpaceEntry => ({
+    spaces: (cols: string[], row?: SheetRow): SpaceEntry => {
+        const hasHeader = Boolean(row?.name);
+        const hasHandle = !isProbablyUrl(cols[1]) && isProbablyUrl(cols[3]);
+        return {
+            name: hasHeader ? getColumn(row, cols, ['Name'], 0) : cols[0] || '',
+            handle: hasHeader ? getColumn(row, cols, ['Handle'], -1) : hasHandle ? cols[1] || '' : '',
+            location: hasHeader ? getColumn(row, cols, ['Location'], 2) : hasHandle ? cols[2] || '' : cols[1] || '',
+            url: normalizeExternalUrl(hasHeader ? getColumn(row, cols, ['Website', 'URL'], 3) : hasHandle ? cols[3] || '' : cols[2] || ''),
+            calendar: normalizeExternalUrl(hasHeader ? getColumn(row, cols, ['Event calendar', 'Calendar'], 4) : hasHandle ? cols[4] || '' : cols[3] || ''),
+            aliases: hasHeader ? getColumn(row, cols, ['Aliases', 'Alias'], 5) : hasHandle ? cols[5] || '' : cols[4] || '',
+            notes: hasHeader ? getColumn(row, cols, ['Notes', 'Note'], 6) : hasHandle ? cols[6] || '' : cols[5] || '',
+        };
+    },
+    coffeeShops: (cols: string[], row?: SheetRow): CoffeeShopEntry => ({
         name: getColumn(row, cols, ['Name'], 0),
-        location: getColumn(row, cols, ['Location'], 1),
-        url: normalizeExternalUrl(getColumn(row, cols, ['Website', 'URL'], 2)),
+        area: getColumn(row, cols, ['Area', 'Location'], 1),
+        wifi: getColumn(row, cols, ['Wi-Fi', 'Wifi'], 2),
+        note: getColumn(row, cols, ['Note', 'Notes'], 3),
+        url: normalizeExternalUrl(getColumn(row, cols, ['URL'], 4)),
+        website: normalizeExternalUrl(getColumn(row, cols, ['Website'], 5)),
     }),
-    communities: (cols: string[], row?: SheetRow): CommunityEntry => ({
-        name: getColumn(row, cols, ['Name'], 0),
-        url: normalizeExternalUrl(getColumn(row, cols, ['Website', 'URL'], 1)),
-        calendar: normalizeExternalUrl(getColumn(row, cols, ['Event calendar', 'Calendar'], 2)),
-    }),
+    communities: (cols: string[], row?: SheetRow): CommunityEntry => {
+        const hasHeader = Boolean(row?.name);
+        const hasHandle = !isProbablyUrl(cols[1]) && isProbablyUrl(cols[2]);
+        return {
+            name: hasHeader ? getColumn(row, cols, ['Name'], 0) : cols[0] || '',
+            handle: hasHeader ? getColumn(row, cols, ['Handle'], -1) : hasHandle ? cols[1] || '' : '',
+            url: normalizeExternalUrl(hasHeader ? getColumn(row, cols, ['Website', 'URL'], hasHandle ? 2 : 1) : hasHandle ? cols[2] || '' : cols[1] || ''),
+            calendar: normalizeExternalUrl(hasHeader ? getColumn(row, cols, ['Event calendar', 'Calendar'], hasHandle ? 3 : 2) : hasHandle ? cols[3] || '' : cols[2] || ''),
+            aliases: hasHeader ? getColumn(row, cols, ['Aliases', 'Alias'], -1) : hasHandle ? cols[4] || '' : cols[3] || '',
+            notes: hasHeader ? getColumn(row, cols, ['Notes', 'Note'], -1) : hasHandle ? cols[5] || '' : cols[4] || '',
+        };
+    },
     ambassadors: (cols: string[], row?: SheetRow): AmbassadorEntry => ({
         name: getColumn(row, cols, ['Name'], 0),
         linkedin: getColumn(row, cols, ['LinkedIn', 'Linkedin'], 1),
@@ -184,11 +237,31 @@ export const mappers = {
         twitter: getColumn(row, cols, ['Twitter', 'X'], 2),
         linkedin: getColumn(row, cols, ['LinkedIn', 'Linkedin'], 1),
     }),
-    conferences: (cols: string[], row?: SheetRow): ConferenceEntry => ({
-        name: getColumn(row, cols, ['Name'], 0),
-        website: normalizeExternalUrl(getColumn(row, cols, ['Website', 'URL'], 1)),
-        notes: getColumn(row, cols, ['Notes', 'Note'], 2),
-    }),
+    conferences: (cols: string[], row?: SheetRow): ConferenceEntry => {
+        const hasHeader = Boolean(row?.name);
+        const hasHandle = !isProbablyUrl(cols[1]) && isProbablyUrl(cols[2]);
+        return {
+            name: hasHeader ? getColumn(row, cols, ['Name'], 0) : cols[0] || '',
+            handle: hasHeader ? getColumn(row, cols, ['Handle'], -1) : hasHandle ? cols[1] || '' : '',
+            website: normalizeExternalUrl(hasHeader ? getColumn(row, cols, ['Website', 'URL'], hasHandle ? 2 : 1) : hasHandle ? cols[2] || '' : cols[1] || ''),
+            calendar: normalizeExternalUrl(hasHeader ? getColumn(row, cols, ['Event calendar', 'Calendar'], hasHandle ? 3 : 2) : hasHandle ? cols[3] || '' : ''),
+            aliases: hasHeader ? getColumn(row, cols, ['Aliases', 'Alias'], hasHandle ? 4 : 3) : hasHandle ? cols[4] || '' : '',
+            notes: hasHeader ? getColumn(row, cols, ['Notes', 'Note'], hasHandle ? 5 : 2) : hasHandle ? cols[5] || '' : cols[2] || '',
+        };
+    },
+    resources: (cols: string[], row?: SheetRow): ResourceEntry => {
+        const hasHeader = Boolean(row?.name);
+        const hasHandle = !isProbablyUrl(cols[1]) && !isProbablyUrl(cols[2]) && isProbablyUrl(cols[3]);
+        return {
+            name: hasHeader ? getColumn(row, cols, ['Name'], 0) : cols[0] || '',
+            handle: hasHeader ? getColumn(row, cols, ['Handle'], -1) : hasHandle ? cols[1] || '' : '',
+            category: hasHeader ? getColumn(row, cols, ['Category'], hasHandle ? 2 : 1) : hasHandle ? cols[2] || '' : cols[1] || '',
+            website: normalizeExternalUrl(hasHeader ? getColumn(row, cols, ['Website', 'URL'], hasHandle ? 3 : 2) : hasHandle ? cols[3] || '' : cols[2] || ''),
+            calendar: normalizeExternalUrl(hasHeader ? getColumn(row, cols, ['Event calendar', 'Calendar'], hasHandle ? 4 : 3) : hasHandle ? cols[4] || '' : ''),
+            aliases: hasHeader ? getColumn(row, cols, ['Aliases', 'Alias'], hasHandle ? 5 : 4) : hasHandle ? cols[5] || '' : '',
+            notes: hasHeader ? getColumn(row, cols, ['Notes', 'Note'], hasHandle ? 6 : 3) : hasHandle ? cols[6] || '' : cols[3] || '',
+        };
+    },
     news: (cols: string[], row?: SheetRow): NewsEntry => ({
         name: getColumn(row, cols, ['Name'], 0),
         desc: getColumn(row, cols, ['Description', 'Desc', 'Notes', 'Note'], 1),
@@ -205,3 +278,7 @@ export const mappers = {
         note: getColumn(row, cols, ['Note', 'Notes'], 4),
     }),
 };
+
+function isProbablyUrl(value: string | undefined): boolean {
+    return /^https?:\/\//i.test((value || '').trim()) || /^[a-z0-9.-]+\.[a-z]{2,}/i.test((value || '').trim());
+}

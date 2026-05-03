@@ -212,7 +212,7 @@ export function QuickSearch() {
                         onChange={e => setQuery(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder="Jump to a resource..."
-                        className="flex-1 bg-transparent text-fg-primary text-sm focus:outline-none placeholder:text-fg-muted"
+                        className="quick-search-input flex-1 bg-transparent text-fg-primary text-sm border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 placeholder:text-fg-muted"
                     />
                     <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-fg-muted bg-bg-elevated border border-bg-border rounded">
                         ESC

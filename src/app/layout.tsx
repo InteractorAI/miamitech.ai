@@ -79,9 +79,17 @@ export default function RootLayout({
                 } else if (theme === 'miami') {
                   document.documentElement.classList.add('miami');
                   document.documentElement.style.colorScheme = 'dark';
+                } else if (theme === 'contrast') {
+                  document.documentElement.classList.add('contrast');
+                  document.documentElement.style.colorScheme = 'dark';
+                } else if (theme === 'contrast-light') {
+                  document.documentElement.classList.add('contrast-light');
+                  document.documentElement.style.colorScheme = 'light';
                 } else {
                   document.documentElement.classList.remove('dark');
                   document.documentElement.classList.remove('miami');
+                  document.documentElement.classList.remove('contrast');
+                  document.documentElement.classList.remove('contrast-light');
                   document.documentElement.style.colorScheme = 'light';
                 }
               })();

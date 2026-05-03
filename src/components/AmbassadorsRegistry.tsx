@@ -31,6 +31,12 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
         askInteractor(`Tell me about ${name}`);
     };
 
+    const handleRowKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, name: string) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        handleRowClick(name);
+    };
+
     const handleAmbassadorApply = () => {
         track('ambassador_apply_clicked');
         setShowModal(false);
@@ -67,13 +73,16 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                     <div
                         key={i}
                         onClick={() => handleRowClick(a.name)}
-                        className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                        onKeyDown={(e) => handleRowKeyDown(e, a.name)}
+                        role="button"
+                        tabIndex={0}
+                        className="focus-row flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                     >
                         <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
                             {a.name}
                         </span>
 
-                        <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity">
                             <button
                                 onClick={(e) => handleAskClick(e, a.name)}
                                 className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"

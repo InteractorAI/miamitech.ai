@@ -2,11 +2,17 @@
 import { useState, useEffect } from 'react';
 import { track } from '@vercel/analytics';
 
+type Theme = 'light' | 'dark' | 'miami' | 'contrast' | 'contrast-light';
+
 export function ThemeToggle() {
-    const [theme, setTheme] = useState<'light' | 'dark' | 'miami' | null>(null);
+    const [theme, setTheme] = useState<Theme | null>(null);
 
     useEffect(() => {
-        if (document.documentElement.classList.contains('miami')) {
+        if (document.documentElement.classList.contains('contrast-light')) {
+            setTheme('contrast-light');
+        } else if (document.documentElement.classList.contains('contrast')) {
+            setTheme('contrast');
+        } else if (document.documentElement.classList.contains('miami')) {
             setTheme('miami');
         } else if (document.documentElement.classList.contains('dark')) {
             setTheme('dark');
@@ -17,18 +23,22 @@ export function ThemeToggle() {
 
     const toggle = () => {
         const doc = document.documentElement;
-        let next: 'light' | 'dark' | 'miami';
+        let next: Theme;
         
         if (theme === 'light') next = 'dark';
         else if (theme === 'dark') next = 'miami';
+        else if (theme === 'miami') next = 'contrast';
+        else if (theme === 'contrast') next = 'contrast-light';
         else next = 'light';
 
-        doc.classList.remove('dark', 'miami');
+        doc.classList.remove('dark', 'miami', 'contrast', 'contrast-light');
         
         if (next === 'dark') doc.classList.add('dark');
         if (next === 'miami') doc.classList.add('miami');
+        if (next === 'contrast') doc.classList.add('contrast');
+        if (next === 'contrast-light') doc.classList.add('contrast-light');
 
-        doc.style.colorScheme = next === 'light' ? 'light' : 'dark';
+        doc.style.colorScheme = next === 'light' || next === 'contrast-light' ? 'light' : 'dark';
         localStorage.setItem('theme', next);
         track('theme_toggled', { theme: next });
         
@@ -38,8 +48,9 @@ export function ThemeToggle() {
     return (
         <button
             onClick={toggle}
-            className="p-2 rounded-lg bg-bg-elevated hover:bg-bg-hover border border-bg-border text-fg-secondary hover:text-fg-primary transition-all duration-200"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-bg-elevated/70 text-fg-secondary hover:bg-bg-hover hover:text-fg-primary transition-colors duration-150"
             aria-label="Toggle theme"
+            title={`Theme: ${theme ?? 'loading'}`}
         >
             {theme === 'light' ? (
                 <svg
@@ -71,6 +82,21 @@ export function ThemeToggle() {
                     className="animate-fade-in text-accent-pink"
                  >
                     <polygon points="12 2 2 22 12 17 22 22 12 2"/>
+                </svg>
+            ) : theme === 'contrast' || theme === 'contrast-light' ? (
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18" height="18"
+                    viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2"
+                    strokeLinecap="round" strokeLinejoin="round"
+                    className={theme === 'contrast-light' ? 'animate-fade-in text-accent-blue' : 'animate-fade-in text-accent-green'}
+                >
+                    <circle cx="12" cy="12" r="8" />
+                    <path d="M12 4v16" />
+                    <path d="M4 12h16" />
+                    <path d="m7 7 10 10" />
+                    <path d="m17 7-10 10" />
                 </svg>
             ) : (
                 <svg

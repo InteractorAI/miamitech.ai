@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 const SECTIONS = [
     { id: 'spaces', label: 'Spaces' },
     { id: 'communities', label: 'Communities' },
+    { id: 'events', label: 'Events' },
     { id: 'capital', label: 'Capital' },
     { id: 'accelerators', label: 'Accelerators' },
     { id: 'conferences', label: 'Conferences' },
@@ -21,7 +22,7 @@ export function MobileNav() {
     }, []);
 
     return (
-        <nav className="lg:hidden flex items-center gap-1.5 px-4 py-2.5 bg-bg-card/95 backdrop-blur-sm border-b border-bg-border shrink-0 sticky top-0 z-20 overflow-x-auto no-scrollbar">
+        <nav className="min-[900px]:hidden flex items-center gap-1.5 px-4 py-2.5 bg-bg-card/95 backdrop-blur-sm border-b border-bg-border shrink-0 sticky top-0 z-20 overflow-x-auto no-scrollbar">
             {SECTIONS.map((s) => (
                 <button
                     key={s.id}

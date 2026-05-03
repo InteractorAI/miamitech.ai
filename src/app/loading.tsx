@@ -5,6 +5,7 @@ import { CommunitiesDirectory } from '../components/CommunitiesDirectory';
 import { ConferencesDirectory } from '../components/ConferencesDirectory';
 import { AmbassadorsRegistry } from '../components/AmbassadorsRegistry';
 import { NewsSources } from '../components/NewsSources';
+import { EventsFeed } from '../components/EventsFeed';
 import { Credits } from '../components/Credits';
 import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
@@ -30,22 +31,22 @@ export default function HomeLoading() {
 
             <MobileNav />
 
-            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 min-h-0 overflow-auto lg:overflow-hidden">
+            <div className="flex-1 flex flex-col min-[900px]:grid min-[900px]:grid-cols-12 min-h-0 overflow-auto min-[900px]:overflow-hidden">
                 {/* Left column */}
-                <div className="shrink-0 lg:col-span-3 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
+                <div className="shrink-0 min-[900px]:col-span-3 min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
                     </div>
                     <div className="border-b border-bg-border">
                         <Sponsors />
                     </div>
-                    <div className="hidden lg:block border-b border-bg-border lg:border-b-0">
+                    <div className="hidden min-[900px]:block border-b border-bg-border min-[900px]:border-b-0">
                         <QuickSearchHint />
                     </div>
                 </div>
 
                 {/* Middle column */}
-                <div className="shrink-0 lg:col-span-4 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto animate-pulse">
+                <div className="shrink-0 min-[900px]:col-span-4 min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto animate-pulse">
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
                         <SpacesDirectory initialData={[]} />
                     </div>
@@ -61,14 +62,19 @@ export default function HomeLoading() {
                     <div id="news" className="border-b border-bg-border scroll-mt-12">
                         <NewsSources />
                     </div>
-                    <div id="faq" className="border-b border-bg-border lg:border-b-0 scroll-mt-12">
+                    <div id="faq" className="border-b border-bg-border min-[900px]:border-b-0 scroll-mt-12">
                         <FAQ />
                     </div>
                 </div>
 
-                {/* Right column: Capital */}
-                <div id="capital" className="min-h-[60vh] lg:min-h-0 lg:col-span-5 lg:flex-1 flex flex-col lg:overflow-hidden scroll-mt-12">
-                    <CapitalIndex data={[]} loading={true} />
+                {/* Right column: Events + Capital */}
+                <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-span-5 min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto animate-pulse">
+                    <div id="events" className="border-b border-bg-border scroll-mt-12">
+                        <EventsFeed events={[]} />
+                    </div>
+                    <div id="capital" className="scroll-mt-12">
+                        <CapitalIndex data={[]} loading={true} />
+                    </div>
                 </div>
             </div>
         </div>

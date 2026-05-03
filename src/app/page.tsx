@@ -6,6 +6,7 @@ import { ConferencesDirectory } from '../components/ConferencesDirectory';
 import { AmbassadorsRegistry } from '../components/AmbassadorsRegistry';
 import { AcceleratorsRegistry } from '../components/AcceleratorsRegistry';
 import { NewsSources } from '../components/NewsSources';
+import { EventsFeed } from '../components/EventsFeed';
 import { Credits } from '../components/Credits';
 import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
@@ -17,6 +18,9 @@ import { HomeScrollContainer } from '../components/HomeScrollContainer';
 
 // Server-side data fetching
 import { SHEET_CONFIG, mappers, parseSheetCSV } from '../lib/googleSheets';
+import { getUpcomingEvents } from '../lib/events/query';
+
+export const dynamic = 'force-dynamic';
 
 async function fetchSheetData<T>(gid: string, mapper: any, skipRows: number): Promise<T[]> {
     try {
@@ -31,15 +35,17 @@ async function fetchSheetData<T>(gid: string, mapper: any, skipRows: number): Pr
 }
 
 export default async function Dashboard() {
-    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData, newsData, faqData, acceleratorsData] = await Promise.all([
+    const [capitalData, spacesData, coffeeShopsData, communitiesData, conferencesData, ambassadorsData, newsData, faqData, acceleratorsData, eventsData] = await Promise.all([
         fetchSheetData<any>(SHEET_CONFIG.TABS.VCs, mappers.capital, 4),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Spaces, mappers.spaces, 1),
+        fetchSheetData<any>(SHEET_CONFIG.TABS.CoffeeShops, mappers.coffeeShops, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Communities, mappers.communities, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Conferences, mappers.conferences, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Ambassadors, mappers.ambassadors, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.News, mappers.news, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.FAQs, mappers.faqs, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Accelerators, mappers.accelerators, 1),
+        getUpcomingEvents(40),
     ]);
 
     return (
@@ -64,22 +70,22 @@ export default async function Dashboard() {
 
             <HomeScrollContainer>
                 {/* Left column */}
-                <div className="shrink-0 lg:col-span-3 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
+                <div className="shrink-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
                     </div>
                     <div className="border-b border-bg-border">
                         <Sponsors />
                     </div>
-                    <div className="hidden lg:block border-b border-bg-border lg:border-b-0">
+                    <div className="hidden min-[900px]:block border-b border-bg-border min-[900px]:border-b-0">
                         <QuickSearchHint />
                     </div>
                 </div>
 
                 {/* Middle column */}
-                <div className="shrink-0 lg:col-span-4 lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
+                <div className="shrink-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
-                        <SpacesDirectory initialData={spacesData} />
+                        <SpacesDirectory initialData={spacesData} coffeeShops={coffeeShopsData} />
                     </div>
                     <div id="communities" className="border-b border-bg-border scroll-mt-12">
                         <CommunitiesDirectory initialData={communitiesData} />
@@ -96,14 +102,19 @@ export default async function Dashboard() {
                     <div id="news" className="border-b border-bg-border scroll-mt-12">
                         <NewsSources initialData={newsData} />
                     </div>
-                    <div id="faq" className="border-b border-bg-border lg:border-b-0 scroll-mt-12">
+                    <div id="faq" className="border-b border-bg-border min-[900px]:border-b-0 scroll-mt-12">
                         <FAQ initialData={faqData} />
                     </div>
                 </div>
 
-                {/* Right column: Capital */}
-                <div id="capital" className="min-h-[60vh] lg:min-h-0 lg:col-span-5 lg:flex-1 flex flex-col lg:overflow-hidden scroll-mt-12">
-                    <CapitalIndex data={capitalData} loading={false} />
+                {/* Right column: Events + Capital */}
+                <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto">
+                    <div id="events" className="border-b border-bg-border scroll-mt-12">
+                        <EventsFeed events={eventsData} />
+                    </div>
+                    <div id="capital" className="scroll-mt-12">
+                        <CapitalIndex data={capitalData} loading={false} />
+                    </div>
                 </div>
             </HomeScrollContainer>
         </div>
