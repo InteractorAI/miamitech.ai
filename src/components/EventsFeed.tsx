@@ -12,7 +12,7 @@ const PREVIEW_COUNT = 5;
 function PinMark() {
     return (
         <span
-            className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full border border-bg-border bg-bg-primary text-accent-green shadow-sm"
+            className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-bg-card text-accent-green shadow-sm"
             aria-label="Pinned event"
         >
             <svg
@@ -180,7 +180,7 @@ export function EventsFeed({
                             >
                                 <div className={`${expanded ? 'grid-cols-[4.75rem_minmax(0,1fr)]' : 'grid-cols-[4.25rem_minmax(0,1fr)]'} grid gap-3 items-start`}>
                                     <div
-                                        className={`${expanded ? 'h-14 w-14' : 'h-12 w-12'} relative rounded-lg bg-bg-elevated/70 flex flex-col items-center justify-center text-center shrink-0 ${event.pinned ? 'ring-1 ring-accent-green/45' : ''}`}
+                                        className={`${expanded ? 'h-14 w-14' : 'h-12 w-12'} relative rounded-lg ${event.pinned ? 'bg-accent-green/10' : 'bg-bg-elevated/70'} flex flex-col items-center justify-center text-center shrink-0`}
                                         aria-label={getDateLabel(event.starts_at)}
                                     >
                                         <div className={`${dateTile.top.length > 5 ? 'text-[9px]' : 'text-[10px]'} font-semibold text-accent-green uppercase leading-none tracking-wide`}>
