@@ -29,6 +29,7 @@ export interface CoffeeShopEntry {
     wifi: string;
     note: string;
     url: string;
+    website: string;
 }
 
 export interface CommunityEntry {
@@ -211,7 +212,8 @@ export const mappers = {
         area: getColumn(row, cols, ['Area', 'Location'], 1),
         wifi: getColumn(row, cols, ['Wi-Fi', 'Wifi'], 2),
         note: getColumn(row, cols, ['Note', 'Notes'], 3),
-        url: normalizeExternalUrl(getColumn(row, cols, ['URL', 'Website'], 4)),
+        url: normalizeExternalUrl(getColumn(row, cols, ['URL'], 4)),
+        website: normalizeExternalUrl(getColumn(row, cols, ['Website'], 5)),
     }),
     communities: (cols: string[], row?: SheetRow): CommunityEntry => {
         const hasHeader = Boolean(row?.name);

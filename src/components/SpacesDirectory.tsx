@@ -29,6 +29,10 @@ function getItemUrl(item: DirectoryItem) {
     return isCoffeeShop(item) ? item.url : item.url;
 }
 
+function getFaviconUrl(item: DirectoryItem) {
+    return isCoffeeShop(item) ? item.website || item.url : item.url;
+}
+
 function getMapsUrl(item: DirectoryItem) {
     if (isCoffeeShop(item)) return item.url;
     const query = [item.name, item.location, 'Miami'].filter(Boolean).join(' ');
@@ -113,6 +117,7 @@ export function SpacesDirectory({ initialData = [], coffeeShops = [] }: { initia
                     const location = getItemLocation(item);
                     const note = getItemNote(item);
                     const url = getItemUrl(item);
+                    const faviconUrl = getFaviconUrl(item);
                     const mapsUrl = getMapsUrl(item);
                     const category = isCoffeeShop(item) ? 'Coffee Shops' : 'Spaces';
 
@@ -134,7 +139,7 @@ export function SpacesDirectory({ initialData = [], coffeeShops = [] }: { initia
                             />
                         )}
                         <div className="pointer-events-none flex items-center gap-2 min-w-0 flex-1">
-                            {url && <Favicon url={url} />}
+                            {faviconUrl && <Favicon url={faviconUrl} />}
                             <div className="flex flex-col min-w-0 flex-1 min-[480px]:flex-row min-[480px]:items-baseline min-[480px]:gap-2">
                                 <span className="text-sm font-medium text-fg-primary group-hover:text-accent-blue transition-colors truncate min-[480px]:shrink-0 min-[480px]:max-w-[65%] sm:max-w-[80%]">
                                     {item.name}
