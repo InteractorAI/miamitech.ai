@@ -20,6 +20,7 @@
     --selection-bg: rgba(224, 64, 251, 0.15);
     --selection-fg: #d946ef;
     --accent-pink-alpha: rgba(224, 64, 251, 0.12);
+    --accent-blue: #2563eb;
   }
 
   html.dark {
@@ -37,6 +38,7 @@
     --selection-bg: rgba(224, 64, 251, 0.2);
     --selection-fg: #ffffff;
     --accent-pink-alpha: rgba(224, 64, 251, 0.12);
+    --accent-blue: #448aff;
   }
 
   html.miami {
@@ -54,6 +56,7 @@
     --selection-bg: rgba(0, 255, 255, 0.2);
     --selection-fg: #00ffff;
     --accent-pink-alpha: rgba(0, 255, 255, 0.12);
+    --accent-blue: #00ffff;
   }
 
   html.miami * {
@@ -77,6 +80,7 @@
     --selection-bg: rgba(0, 229, 255, 0.32);
     --selection-fg: #ffffff;
     --accent-pink-alpha: rgba(255, 0, 230, 0.2);
+    --accent-blue: #00e5ff;
   }
 
   html.contrast-light {
@@ -94,6 +98,7 @@
     --selection-bg: rgba(255, 0, 230, 0.22);
     --selection-fg: #020c12;
     --accent-pink-alpha: rgba(255, 0, 230, 0.14);
+    --accent-blue: #006dff;
   }
 
   html.contrast body,
@@ -159,11 +164,11 @@
 
   html.contrast .text-accent-blue,
   html.contrast-light .text-accent-blue {
-    color: #00e5ff;
+    color: var(--accent-blue);
   }
 
   html.contrast-light .text-accent-blue {
-    color: #007f8f;
+    color: var(--accent-blue);
   }
 
   html.contrast button,
@@ -241,11 +246,8 @@
   html.contrast .panel-action [class*="bg-accent-pink-alpha"],
   html.contrast-light .panel-action [class*="bg-accent-pink-alpha"] {
     border: 0;
-    background: transparent;
+    background: var(--accent-pink-alpha);
     box-shadow: none;
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 4px;
   }
 
   .panel-action a,

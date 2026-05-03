@@ -66,17 +66,21 @@ function getDateLabel(value: string): string {
 
 function getDateTile(value: string): { top: string; bottom: string } {
     const label = getDateLabel(value);
-    if (label === 'Today') return { top: 'Today', bottom: '' };
-    if (label === 'Tomorrow') return { top: 'Tomorrow', bottom: '' };
+    if (label === 'Today') return { top: 'Today', bottom: getDayOfMonth(value) };
+    if (label === 'Tomorrow') return { top: 'Tmrw', bottom: getDayOfMonth(value) };
     if (/^[A-Za-z]{3}$/.test(label)) {
         return {
             top: label,
-            bottom: new Intl.DateTimeFormat('en-US', { day: 'numeric', timeZone: 'America/New_York' }).format(new Date(value)),
+            bottom: getDayOfMonth(value),
         };
     }
 
     const [month, day] = label.split(' ');
     return { top: month || label, bottom: day || '' };
+}
+
+function getDayOfMonth(value: string): string {
+    return new Intl.DateTimeFormat('en-US', { day: 'numeric', timeZone: 'America/New_York' }).format(new Date(value));
 }
 
 function getDateKey(value: Date): string {

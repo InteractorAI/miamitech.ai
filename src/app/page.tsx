@@ -35,9 +35,10 @@ async function fetchSheetData<T>(gid: string, mapper: any, skipRows: number): Pr
 }
 
 export default async function Dashboard() {
-    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData, newsData, faqData, acceleratorsData, eventsData] = await Promise.all([
+    const [capitalData, spacesData, coffeeShopsData, communitiesData, conferencesData, ambassadorsData, newsData, faqData, acceleratorsData, eventsData] = await Promise.all([
         fetchSheetData<any>(SHEET_CONFIG.TABS.VCs, mappers.capital, 4),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Spaces, mappers.spaces, 1),
+        fetchSheetData<any>(SHEET_CONFIG.TABS.CoffeeShops, mappers.coffeeShops, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Communities, mappers.communities, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Conferences, mappers.conferences, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Ambassadors, mappers.ambassadors, 1),
@@ -84,7 +85,7 @@ export default async function Dashboard() {
                 {/* Middle column */}
                 <div className="shrink-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
-                        <SpacesDirectory initialData={spacesData} />
+                        <SpacesDirectory initialData={spacesData} coffeeShops={coffeeShopsData} />
                     </div>
                     <div id="communities" className="border-b border-bg-border scroll-mt-12">
                         <CommunitiesDirectory initialData={communitiesData} />
