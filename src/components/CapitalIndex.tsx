@@ -176,8 +176,8 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         <thead className="sticky top-0 z-10 bg-bg-card">
                             <tr className="border-b border-bg-border">
                                 <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-auto lg:w-[25%]' : 'w-auto'}`}>Name</th>
-                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden lg:table-cell ${expanded ? 'lg:w-[15%]' : 'w-[25%]'}`}>Stage</th>
-                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden lg:table-cell ${expanded ? 'lg:w-[15%]' : 'w-[30%]'}`}>Check</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'hidden lg:table-cell lg:w-[15%]' : 'hidden xl:table-cell w-[25%]'}`}>Stage</th>
+                                <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'hidden lg:table-cell lg:w-[15%]' : 'hidden xl:table-cell w-[30%]'}`}>Check</th>
                                 {expanded && (
                                     <>
                                         <th className="text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider hidden xl:table-cell lg:w-[15%]">Type</th>
@@ -211,8 +211,8 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                             <span className="truncate group-hover:text-accent-pink transition-colors">{entry.name}</span>
                                         </div>
                                     </td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden lg:table-cell">{entry.stage || '—'}</td>
-                                    <td className="py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate hidden lg:table-cell">{entry.checkSize || '—'}</td>
+                                    <td className={`py-3 px-5 text-fg-secondary text-[13px] truncate ${expanded ? 'hidden lg:table-cell' : 'hidden xl:table-cell'}`}>{entry.stage || '—'}</td>
+                                    <td className={`py-3 px-5 text-fg-secondary text-[13px] tabular-nums truncate ${expanded ? 'hidden lg:table-cell' : 'hidden xl:table-cell'}`}>{entry.checkSize || '—'}</td>
                                     {expanded && (
                                         <>
                                             <td className="py-3 px-5 text-fg-secondary text-[13px] truncate hidden xl:table-cell">{entry.type || '—'}</td>

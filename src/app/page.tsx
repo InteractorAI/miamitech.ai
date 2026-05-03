@@ -69,20 +69,20 @@ export default async function Dashboard() {
 
             <HomeScrollContainer>
                 {/* Left column */}
-                <div className="shrink-0 lg:col-auto lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
+                <div className="shrink-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
                     </div>
                     <div className="border-b border-bg-border">
                         <Sponsors />
                     </div>
-                    <div className="hidden lg:block border-b border-bg-border lg:border-b-0">
+                    <div className="hidden min-[900px]:block border-b border-bg-border min-[900px]:border-b-0">
                         <QuickSearchHint />
                     </div>
                 </div>
 
                 {/* Middle column */}
-                <div className="shrink-0 lg:col-auto lg:flex lg:flex-col lg:border-r border-bg-border lg:min-h-0 lg:overflow-auto">
+                <div className="shrink-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
                         <SpacesDirectory initialData={spacesData} />
                     </div>
@@ -101,13 +101,13 @@ export default async function Dashboard() {
                     <div id="news" className="border-b border-bg-border scroll-mt-12">
                         <NewsSources initialData={newsData} />
                     </div>
-                    <div id="faq" className="border-b border-bg-border lg:border-b-0 scroll-mt-12">
+                    <div id="faq" className="border-b border-bg-border min-[900px]:border-b-0 scroll-mt-12">
                         <FAQ initialData={faqData} />
                     </div>
                 </div>
 
                 {/* Right column: Events + Capital */}
-                <div className="min-h-[60vh] lg:min-h-0 lg:col-auto lg:flex lg:flex-col lg:overflow-auto">
+                <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto">
                     <div id="events" className="border-b border-bg-border scroll-mt-12">
                         <EventsFeed events={eventsData} />
                     </div>

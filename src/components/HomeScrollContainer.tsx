@@ -4,11 +4,11 @@ import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent as 
 
 const SCROLL_KEY = 'miamitech.home.scrollTop';
 const MIDDLE_WIDTH_KEY = 'miamitech.home.middleWidth';
-const DEFAULT_SIDEBAR_WIDTH = 345;
-const DEFAULT_MIDDLE_WIDTH = 560;
+const DEFAULT_SIDEBAR_WIDTH = 320;
+const DEFAULT_MIDDLE_WIDTH = 520;
 const MIN_MIDDLE_WIDTH = 360;
 const MAX_MIDDLE_WIDTH = 760;
-const MIN_RIGHT_WIDTH = 520;
+const MIN_RIGHT_WIDTH = 420;
 
 function clampMiddleWidth(width: number, containerWidth: number) {
     const responsiveMax = containerWidth > 0
@@ -164,7 +164,7 @@ export function HomeScrollContainer({ children }: { children: ReactNode }) {
                 if (isRestoring.current) return;
                 sessionStorage.setItem(SCROLL_KEY, String(e.currentTarget.scrollTop));
             }}
-            className={`relative flex-1 flex flex-col min-h-0 overflow-auto xl:grid xl:[grid-template-columns:var(--left-sidebar-width)_var(--middle-column-width)_minmax(0,1fr)] xl:overflow-hidden ${isDraggingMiddle ? 'sidebar-trip-active' : ''}`}
+            className={`relative flex-1 flex flex-col min-h-0 overflow-auto min-[900px]:grid min-[900px]:[grid-template-columns:var(--left-sidebar-width)_var(--middle-column-width)_minmax(0,1fr)] min-[900px]:overflow-hidden ${isDraggingMiddle ? 'sidebar-trip-active' : ''}`}
         >
             {children}
             <button
@@ -184,7 +184,7 @@ export function HomeScrollContainer({ children }: { children: ReactNode }) {
                 onPointerUp={handlePointerUp}
                 onPointerCancel={handlePointerUp}
                 onKeyDown={handleKeyDown}
-                className="sidebar-trip-handle group hidden xl:block"
+                className="sidebar-trip-handle group hidden min-[900px]:block"
             >
                 <span className="sidebar-trip-core" />
             </button>
