@@ -23,6 +23,14 @@ export interface SpaceEntry {
     notes: string;
 }
 
+export interface CoffeeShopEntry {
+    name: string;
+    area: string;
+    wifi: string;
+    note: string;
+    url: string;
+}
+
 export interface CommunityEntry {
     name: string;
     handle: string;
@@ -88,6 +96,7 @@ export const SHEET_CONFIG = {
         Spaces: '1501823864',
         Communities: '585764250',
         Resources: '358470130',
+        CoffeeShops: '982435771',
         Ambassadors: '1836408446',
         Contributors: '18134085',
         Conferences: '1124651295',
@@ -197,6 +206,13 @@ export const mappers = {
             notes: hasHeader ? getColumn(row, cols, ['Notes', 'Note'], 6) : hasHandle ? cols[6] || '' : cols[5] || '',
         };
     },
+    coffeeShops: (cols: string[], row?: SheetRow): CoffeeShopEntry => ({
+        name: getColumn(row, cols, ['Name'], 0),
+        area: getColumn(row, cols, ['Area', 'Location'], 1),
+        wifi: getColumn(row, cols, ['Wi-Fi', 'Wifi'], 2),
+        note: getColumn(row, cols, ['Note', 'Notes'], 3),
+        url: normalizeExternalUrl(getColumn(row, cols, ['URL', 'Website'], 4)),
+    }),
     communities: (cols: string[], row?: SheetRow): CommunityEntry => {
         const hasHeader = Boolean(row?.name);
         const hasHandle = !isProbablyUrl(cols[1]) && isProbablyUrl(cols[2]);

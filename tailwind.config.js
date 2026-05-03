@@ -24,7 +24,7 @@ export default {
           green: '#00c853',
           pink: '#e040fb',
           'pink-alpha': 'var(--accent-pink-alpha)',
-          blue: '#448aff',
+          blue: 'var(--accent-blue)',
         },
       },
       fontFamily: {
