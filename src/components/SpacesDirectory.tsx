@@ -29,6 +29,31 @@ function getItemUrl(item: DirectoryItem) {
     return isCoffeeShop(item) ? item.url : item.url;
 }
 
+function getMapsUrl(item: DirectoryItem) {
+    if (isCoffeeShop(item)) return item.url;
+    const query = [item.name, item.location, 'Miami'].filter(Boolean).join(' ');
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+}
+
+function MapIcon() {
+    return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s6-5.1 6-11a6 6 0 1 0-12 0c0 5.9 6 11 6 11Z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 12.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Z" />
+        </svg>
+    );
+}
+
+function GlobeIcon() {
+    return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
+        </svg>
+    );
+}
+
 export function SpacesDirectory({ initialData = [], coffeeShops = [] }: { initialData?: SpaceEntry[]; coffeeShops?: CoffeeShopEntry[] }) {
     const spaces = initialData;
     const [activeTab, setActiveTab] = useState<SpacesTab>('cowork');
@@ -88,6 +113,8 @@ export function SpacesDirectory({ initialData = [], coffeeShops = [] }: { initia
                     const location = getItemLocation(item);
                     const note = getItemNote(item);
                     const url = getItemUrl(item);
+                    const mapsUrl = getMapsUrl(item);
+                    const category = isCoffeeShop(item) ? 'Coffee Shops' : 'Spaces';
 
                     return (
                     <div
@@ -127,23 +154,38 @@ export function SpacesDirectory({ initialData = [], coffeeShops = [] }: { initia
                                 <InteractorAskIcon />
                             </button>
                             {url && (
+                                <>
+                                <a
+                                    href={mapsUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        track('directory_link_clicked', { category, title: item.name, url: mapsUrl, from: 'map_button' });
+                                    }}
+                                    className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-fg-muted hover:text-accent-blue transition-colors"
+                                    title="Google Maps"
+                                    aria-label={`Open ${item.name} on Google Maps`}
+                                >
+                                    <MapIcon />
+                                </a>
+                                {!isCoffeeShop(item) && (
                                 <a
                                     href={url}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        track('directory_link_clicked', { category: isCoffeeShop(item) ? 'Coffee Shops' : 'Spaces', title: item.name, url });
+                                        track('directory_link_clicked', { category, title: item.name, url });
                                     }}
                                     className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-fg-muted hover:text-accent-blue transition-colors"
-                                    title={isCoffeeShop(item) ? 'Google Maps' : 'Website'}
+                                    title="Website"
+                                    aria-label={`Open ${item.name} website`}
                                 >
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9Z" />
-                                    </svg>
+                                    <GlobeIcon />
                                 </a>
+                                )}
+                                </>
                             )}
                         </div>
                     </div>

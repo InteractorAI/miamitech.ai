@@ -131,10 +131,10 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
             }
         >
             {/* Search */}
-            <div className="px-5 py-3 border-b border-bg-border shrink-0">
-                <div className="flex items-center bg-bg-elevated rounded-lg focus-within:ring-1 focus-within:ring-accent-pink/30 transition-shadow">
+            <div className={`${expanded ? 'px-5 py-3' : 'px-5 py-2.5'} border-b border-bg-border shrink-0`}>
+                <div className="flex items-center rounded-md bg-bg-hover/45 focus-within:bg-bg-hover/70 transition-colors">
                     <div className="pl-3 flex items-center justify-center pointer-events-none">
-                        <svg className="w-4 h-4 text-fg-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <svg className="w-3.5 h-3.5 text-fg-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
@@ -144,7 +144,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         value={search}
                         onChange={e => { setSearch(e.target.value); setActiveIndex(-1); }}
                         onKeyDown={handleKeyDown}
-                        className="capital-search-input peer w-full bg-transparent border-none text-base text-fg-primary placeholder:text-fg-muted pl-3 pr-2 py-2 outline-none font-sans"
+                        className={`capital-search-input peer w-full bg-transparent border-none text-fg-primary placeholder:text-fg-muted/80 pl-2.5 pr-2 outline-none font-sans ${expanded ? 'text-sm py-2' : 'text-[13px] py-1.5'}`}
                     />
                     <div className="hidden md:flex items-center gap-0.5 pr-2 pointer-events-none text-fg-muted opacity-0 peer-focus:opacity-50 transition-opacity duration-200">
                         <kbd className="inline-flex items-center justify-center px-1.5 py-0.5 h-5 text-[10px] font-sans font-medium bg-bg-card border border-bg-border rounded shadow-[0_1px_0_rgba(255,255,255,0.1)_inset]">↑</kbd>
