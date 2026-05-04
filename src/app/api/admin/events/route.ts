@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdminClient } from '../../../../lib/supabaseServer';
+import { areEventsEnabled } from '../../../../lib/featureFlags';
 
 function isAuthorized(request: Request) {
     const expectedSecret = process.env.EVENT_DISTRIBUTION_SECRET || process.env.CRON_SECRET || process.env.EVENT_INGEST_SECRET;
@@ -11,6 +12,10 @@ function isAuthorized(request: Request) {
 }
 
 export async function GET(request: Request) {
+    if (!areEventsEnabled()) {
+        return NextResponse.json({ error: 'Events are disabled.' }, { status: 404 });
+    }
+
     if (!isAuthorized(request)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -66,6 +71,10 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+    if (!areEventsEnabled()) {
+        return NextResponse.json({ error: 'Events are disabled.' }, { status: 404 });
+    }
+
     if (!isAuthorized(request)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

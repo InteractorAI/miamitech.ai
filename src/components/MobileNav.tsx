@@ -13,7 +13,7 @@ const SECTIONS = [
     { id: 'faq', label: 'FAQ' },
 ];
 
-export function MobileNav() {
+export function MobileNav({ showEvents = true }: { showEvents?: boolean }) {
     const scrollTo = useCallback((id: string) => {
         const el = document.getElementById(id);
         if (el) {
@@ -23,7 +23,7 @@ export function MobileNav() {
 
     return (
         <nav className="min-[900px]:hidden flex items-center gap-1.5 px-4 py-2.5 bg-bg-card/95 backdrop-blur-sm border-b border-bg-border shrink-0 sticky top-0 z-20 overflow-x-auto no-scrollbar">
-            {SECTIONS.map((s) => (
+            {SECTIONS.filter((s) => showEvents || s.id !== 'events').map((s) => (
                 <button
                     key={s.id}
                     onClick={() => scrollTo(s.id)}
