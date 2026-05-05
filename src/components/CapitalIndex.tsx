@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo, useRef, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Panel } from './TerminalBlock';
 import { type CapitalEntry } from '../lib/googleSheets';
@@ -21,9 +21,7 @@ interface CapitalIndexProps {
 export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexProps) {
     const [search, setSearch] = useState('');
     const [stageFilter, setStageFilter] = useState<string>('All');
-    const [activeIndex, setActiveIndex] = useState<number>(-1);
     const [showAll, setShowAll] = useState(false);
-    const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
 
     const filtered = useMemo(() => {
         let result = data;
@@ -63,47 +61,14 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
         askInteractor(`Tell me about ${entry.name}`);
     };
 
-    const handleRowKeyDown = (e: React.KeyboardEvent<HTMLTableRowElement>, idx: number, entry: CapitalEntry) => {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        e.preventDefault();
-        setActiveIndex(idx);
-        handleRowClick(entry);
-    };
-
-    const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (visible.length === 0) return;
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            setActiveIndex(prev => {
-                const next = Math.min(prev + 1, visible.length - 1);
-                rowRefs.current[next]?.scrollIntoView({ block: 'nearest' });
-                return next;
-            });
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            setActiveIndex(prev => {
-                const next = Math.max(prev - 1, 0);
-                rowRefs.current[next]?.scrollIntoView({ block: 'nearest' });
-                return next;
-            });
-        } else if (e.key === 'Enter') {
-            if (activeIndex >= 0 && activeIndex < visible.length) {
-                handleRowClick(visible[activeIndex]);
-            }
-        } else if (e.key === 'Escape') {
-            setSearch('');
-            setActiveIndex(-1);
-        }
-    }, [visible, activeIndex, handleRowClick]);
-
     return (
         <Panel
             title="Capital"
             className={expanded ? 'h-full' : ''}
             noPadding
             action={
-                <div className="flex items-center gap-2 min-w-0">
-                    <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-1">
+                <div className="flex w-full min-w-0 items-center justify-end gap-2">
+                    <div className="flex min-w-0 gap-1.5 overflow-x-auto no-scrollbar py-1">
                         {STAGES.map(s => (
                             <button
                                 key={s}
@@ -133,7 +98,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
         >
             {/* Search */}
             <div className={`${expanded ? 'px-5 py-3' : 'px-5 py-2.5'} border-b border-bg-border shrink-0`}>
-                <div className="flex items-center rounded-md bg-bg-hover/45 focus-within:bg-bg-hover/70 transition-colors">
+                <div className="flex items-center rounded-md bg-bg-hover/45 transition-colors">
                     <div className="pl-3 flex items-center justify-center pointer-events-none">
                         <svg className="w-3.5 h-3.5 text-fg-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -143,14 +108,9 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         type="text"
                         placeholder={loading ? 'Search investors...' : `Search ${data.length} investors...`}
                         value={search}
-                        onChange={e => { setSearch(e.target.value); setActiveIndex(-1); }}
-                        onKeyDown={handleKeyDown}
+                        onChange={e => setSearch(e.target.value)}
                         className={`capital-search-input peer w-full bg-transparent border-none text-fg-primary placeholder:text-fg-muted/80 pl-2.5 pr-2 outline-none font-sans ${expanded ? 'text-sm py-2' : 'text-[13px] py-1.5'}`}
                     />
-                    <div className="hidden md:flex items-center gap-0.5 pr-2 pointer-events-none text-fg-muted opacity-0 peer-focus:opacity-50 transition-opacity duration-200">
-                        <kbd className="inline-flex items-center justify-center px-1.5 py-0.5 h-5 text-[10px] font-sans font-medium bg-bg-card border border-bg-border rounded shadow-[0_1px_0_rgba(255,255,255,0.1)_inset]">↑</kbd>
-                        <kbd className="inline-flex items-center justify-center px-1.5 py-0.5 h-5 text-[10px] font-sans font-medium bg-bg-card border border-bg-border rounded shadow-[0_1px_0_rgba(255,255,255,0.1)_inset]">↓</kbd>
-                    </div>
                     {search && (
                         <button
                             onClick={() => setSearch('')}
@@ -193,17 +153,10 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                             {visible.map((entry, idx) => (
                                 <tr
                                     key={idx}
-                                    ref={el => { rowRefs.current[idx] = el; }}
-                                    onClick={() => { setActiveIndex(idx); handleRowClick(entry); }}
-                                    onKeyDown={(e) => handleRowKeyDown(e, idx, entry)}
-                                    role="button"
-                                    tabIndex={0}
-                                    className={`focus-row border-b border-bg-border-subtle cursor-pointer transition-colors duration-100 group ${activeIndex === idx
-                                        ? 'bg-accent-pink/10'
-                                        : 'hover:bg-bg-hover'
-                                        }`}
+                                    onClick={() => handleRowClick(entry)}
+                                    className="border-b border-bg-border-subtle cursor-pointer transition-colors duration-100 group hover:bg-bg-hover"
                                 >
-                                    <td className={`py-3 px-5 font-medium transition-colors ${activeIndex === idx ? 'text-accent-pink' : 'text-fg-primary'}`}>
+                                    <td className="py-3 px-5 font-medium text-fg-primary transition-colors">
                                         <div className="flex items-center gap-2 min-w-0">
                                             {entry.topTen && (
                                                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-green shrink-0" />
@@ -222,7 +175,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                         </>
                                     )}
                                     <td className="py-3 px-2 text-center w-24 lg:w-16">
-                                        <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity duration-150">
+                                        <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
                                             <button
                                                 onClick={(e) => handleAskClick(e, entry)}
                                                 className="min-h-9 min-w-9 lg:min-h-7 lg:min-w-7 p-2 lg:p-1 inline-flex shrink-0 items-center justify-center text-accent-pink active:scale-[0.98]"

@@ -18,7 +18,7 @@ export function SysInfo() {
         <Panel title="About">
             <div className="space-y-5">
                 <p className="text-sm text-fg-secondary leading-relaxed">
-                    The AI concierge for the Miami tech ecosystem, connecting you to the best resources in our community.
+                    The AI concierge and index for the Miami tech ecosystem, connecting you to the best resources in our community.
                 </p>
 
                 <div className="flex gap-2">

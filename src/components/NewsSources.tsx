@@ -23,7 +23,7 @@ export function NewsSources({ initialData = [] }: { initialData?: NewsEntry[] })
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => track('news_link_clicked', { title: source.name, url: source.url })}
-                        className="focus-row flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
+                        className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
                     >
                         <span className="flex items-center gap-2 text-sm font-medium text-fg-primary group-hover:text-accent-blue transition-colors">
                             <Favicon url={source.url} />

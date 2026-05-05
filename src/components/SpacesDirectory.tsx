@@ -124,7 +124,7 @@ export function SpacesDirectory({ initialData = [], coffeeShops = [] }: { initia
                     return (
                     <div
                         key={`${activeTab}-${item.name}-${url || idx}`}
-                        className="focus-row relative flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
+                        className="relative flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
                     >
                         {url && (
                             <a
@@ -149,7 +149,7 @@ export function SpacesDirectory({ initialData = [], coffeeShops = [] }: { initia
                                 </span>
                             </div>
                         </div>
-                        <div className="relative z-20 flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity duration-150">
+                        <div className="relative z-20 flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
                             <button
                                 onClick={(e) => handleAskClick(e, item)}
                                 className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"

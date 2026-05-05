@@ -98,7 +98,6 @@ function buildResults(
 export function QuickSearch() {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');
-    const [activeIdx, setActiveIdx] = useState(0);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const { data: spaces } = useSpacesData();
@@ -113,7 +112,6 @@ export function QuickSearch() {
     const close = useCallback(() => {
         setOpen(false);
         setQuery('');
-        setActiveIdx(0);
     }, []);
 
     // Global keyboard shortcut: Cmd+J / Ctrl+J
@@ -125,7 +123,6 @@ export function QuickSearch() {
                     const next = !prev;
                     if (next) {
                         track('search_opened', { from: 'shortcut' });
-                        setActiveIdx(0);
                     }
                     return next;
                 });
@@ -135,7 +132,6 @@ export function QuickSearch() {
         const handleCustomOpen = () => {
             track('search_opened', { from: 'event' });
             setOpen(true);
-            setActiveIdx(0);
         };
         window.addEventListener('keydown', handler);
         window.addEventListener('openQuickSearch', handleCustomOpen);
@@ -151,27 +147,6 @@ export function QuickSearch() {
             setTimeout(() => inputRef.current?.focus(), 50);
         }
     }, [open]);
-
-    // Reset active index when results change
-    useEffect(() => {
-        setActiveIdx(0);
-    }, [query]);
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            setActiveIdx(i => Math.min(i + 1, results.length - 1));
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            setActiveIdx(i => Math.max(i - 1, 0));
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-            if (results[activeIdx]) {
-                results[activeIdx].onRowClick();
-                close();
-            }
-        }
-    };
 
     const handleRowClick = (result: SearchResult) => {
         track('search_result_clicked', {
@@ -210,13 +185,9 @@ export function QuickSearch() {
                         type="text"
                         value={query}
                         onChange={e => setQuery(e.target.value)}
-                        onKeyDown={handleKeyDown}
                         placeholder="Jump to a resource..."
                         className="quick-search-input flex-1 bg-transparent text-fg-primary text-sm border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 placeholder:text-fg-muted"
                     />
-                    <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-fg-muted bg-bg-elevated border border-bg-border rounded">
-                        ESC
-                    </kbd>
                 </div>
 
                 {/* Results */}
@@ -235,8 +206,7 @@ export function QuickSearch() {
                                 <div
                                     key={`${result.section}-${result.name}`}
                                     onClick={() => handleRowClick(result)}
-                                    className={`flex items-center justify-between px-4 py-2.5 border-b border-bg-border-subtle last:border-b-0 cursor-pointer transition-colors duration-75 group ${idx === activeIdx ? 'bg-bg-hover' : 'hover:bg-bg-hover'
-                                        }`}
+                                    className="flex items-center justify-between px-4 py-2.5 border-b border-bg-border-subtle last:border-b-0 cursor-pointer transition-colors duration-75 group hover:bg-bg-hover"
                                 >
                                     <div className="flex items-center gap-2.5 min-w-0">
                                         {result.url && <Favicon url={result.url} />}
@@ -270,21 +240,6 @@ export function QuickSearch() {
                         </div>
                     )}
                 </div>
-
-                {/* Footer hint */}
-                {results.length > 0 && (
-                    <div className="px-4 py-2 border-t border-bg-border flex items-center gap-3 text-[11px] text-fg-muted bg-bg-elevated/50">
-                        <span className="flex items-center gap-1">
-                            <kbd className="px-1 py-0.5 bg-bg-card border border-bg-border rounded text-[10px]">↑↓</kbd> navigate
-                        </span>
-                        <span className="flex items-center gap-1">
-                            <kbd className="px-1 py-0.5 bg-bg-card border border-bg-border rounded text-[10px]">↵</kbd> ask AI
-                        </span>
-                        <span className="flex items-center gap-1">
-                            <kbd className="px-1 py-0.5 bg-bg-card border border-bg-border rounded text-[10px]">ESC</kbd> close
-                        </span>
-                    </div>
-                )}
             </div>
         </div>
     );
@@ -302,7 +257,7 @@ export function QuickSearchHint({ onOpen }: { onOpen?: () => void }) {
         <button
             onClick={handleClick}
             className="hidden lg:flex items-center justify-between w-full px-5 py-4 hover:bg-bg-hover transition-colors group"
-            title="Quick search (⌘J)"
+            title="Quick search"
         >
             <div className="flex items-center gap-3">
                 <svg className="w-4 h-4 text-fg-muted group-hover:text-accent-pink transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -312,10 +267,6 @@ export function QuickSearchHint({ onOpen }: { onOpen?: () => void }) {
                 <span className="text-sm font-medium text-fg-secondary group-hover:text-accent-pink transition-colors">
                     Jump to a resource...
                 </span>
-            </div>
-            <div className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 text-[11px] font-sans font-medium text-fg-muted bg-bg-elevated border border-bg-border rounded">⌘</kbd>
-                <kbd className="px-1.5 py-0.5 text-[11px] font-sans font-medium text-fg-muted bg-bg-elevated border border-bg-border rounded">J</kbd>
             </div>
         </button>
     );
