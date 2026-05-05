@@ -162,6 +162,12 @@
     box-shadow: inset 0 0 0 1px rgba(68, 138, 255, 0.38), 0 0 0 3px rgba(68, 138, 255, 0.14);
   }
 
+  input.quick-search-input:focus-visible,
+  input.capital-search-input:focus-visible {
+    outline: 0;
+    box-shadow: none;
+  }
+
   html.contrast .text-accent-blue,
   html.contrast-light .text-accent-blue {
     color: var(--accent-blue);
@@ -200,14 +206,6 @@
   html.contrast-light .focus-row:has(:focus-visible) {
     outline: 2px solid #00e5ff;
     box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.7), 0 0 0 5px rgba(0, 229, 255, 0.22);
-  }
-
-  html.contrast input.quick-search-input:focus-visible,
-  html.contrast-light input.quick-search-input:focus-visible,
-  html.contrast input.capital-search-input:focus-visible,
-  html.contrast-light input.capital-search-input:focus-visible {
-    outline: 0;
-    box-shadow: none;
   }
 
   html.contrast .panel-header,
