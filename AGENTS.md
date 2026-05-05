@@ -7,4 +7,5 @@
 - Keep action semantics consistent: blue means external link, pink means Interactor/internal action. On touch/mobile, use explicit pink chat controls instead of hidden row-trigger behavior.
 - Keep the main mobile tabs quiet and scannable. Do not add scrollspy/active-section tracking unless explicitly requested.
 - To stage: switch to the real `staging` branch, merge the intended work there, and push `staging`. Vercel is tied to the staging branch automatically; do not manually alias `staging.miamitech.ai` to feature-branch preview deployments unless the Vercel branch setup is broken and the user explicitly approves.
+- "Hotfix it" means make the smallest safe fix on `main`, commit it, push `main`, then merge `main` into `staging` and push `staging`. Do not deploy production unless the user explicitly says to ship live or deploy prod.
 - To ship: push `main`, then run `npx vercel --prod --yes`. Confirm the production deploy aliases to `https://miamitech.ai`.
