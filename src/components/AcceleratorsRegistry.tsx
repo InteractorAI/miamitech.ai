@@ -5,7 +5,7 @@ import { Panel } from './TerminalBlock';
 import type { AcceleratorEntry } from '../lib/googleSheets';
 import { track } from '@vercel/analytics';
 import { Favicon } from './Favicon';
-import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { askInteractor } from '../lib/interactor';
 import { ExpandIcon } from './ExpandIcon';
 import { InteractorAskIcon } from './InteractorAskIcon';
 
@@ -28,21 +28,15 @@ export function AcceleratorsRegistry({
     const remaining = accelerators.length - PREVIEW_COUNT;
 
     const handleRowClick = (entry: AcceleratorEntry) => {
-        if (usesExplicitTouchActions()) return;
-        track('directory_row_clicked', { category: 'Accelerators', title: entry.name });
-        askInteractor(`Tell me about ${entry.name}`);
+        if (!entry.website) return;
+        track('directory_link_clicked', { category: 'Accelerators', title: entry.name, url: entry.website, from: 'row' });
+        window.open(entry.website, '_blank', 'noopener,noreferrer');
     };
 
     const handleAskClick = (e: React.MouseEvent, entry: AcceleratorEntry) => {
         e.stopPropagation();
         track('directory_row_clicked', { category: 'Accelerators', title: entry.name, from: 'ask_button' });
         askInteractor(`Tell me about ${entry.name}`);
-    };
-
-    const handleRowKeyDown = (e: React.KeyboardEvent<HTMLElement>, entry: AcceleratorEntry) => {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        e.preventDefault();
-        handleRowClick(entry);
     };
 
     const action = !expanded && (
@@ -102,15 +96,12 @@ export function AcceleratorsRegistry({
                                     <tr
                                         key={i}
                                         onClick={() => handleRowClick(a)}
-                                        onKeyDown={(e) => handleRowKeyDown(e, a)}
-                                        role="button"
-                                        tabIndex={0}
-                                        className="focus-row border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                                        className={`border-b border-bg-border-subtle last:border-b-0 transition-colors duration-100 group ${a.website ? 'cursor-pointer hover:bg-bg-hover' : ''}`}
                                     >
                                         <td className="py-3 px-5 font-medium text-fg-primary">
                                             <div className="flex items-center gap-2 min-w-0">
                                                 {a.website && <Favicon url={a.website} />}
-                                                <span className="truncate group-hover:text-accent-pink transition-colors truncate">
+                                                <span className={`truncate transition-colors ${a.website ? 'group-hover:text-accent-blue' : ''}`}>
                                                     {a.name}
                                                 </span>
                                             </div>
@@ -125,7 +116,7 @@ export function AcceleratorsRegistry({
                                             {a.stage || '—'}
                                         </td>
                                         <td className="py-3 px-2 text-center w-24 lg:w-10">
-                                            <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity duration-150">
+                                            <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
                                                 <button
                                                     onClick={(e) => handleAskClick(e, a)}
                                                     className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"
@@ -148,21 +139,22 @@ export function AcceleratorsRegistry({
                             <div
                                 key={i}
                                 onClick={() => handleRowClick(a)}
-                                onKeyDown={(e) => handleRowKeyDown(e, a)}
-                                role="button"
-                                tabIndex={0}
-                                className="focus-row flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                                className={`flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 transition-colors duration-100 group ${a.website ? 'cursor-pointer hover:bg-bg-hover' : ''}`}
                             >
-                                <div className="flex items-center gap-2 min-w-0">
+                                <div className="flex items-center gap-2 min-w-0 flex-1">
                                     {a.website && <Favicon url={a.website} />}
-                                    <div className="flex items-baseline gap-2 min-w-0">
-                                        <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
+                                    <div className="flex min-w-0 flex-1 flex-col min-[480px]:flex-row min-[480px]:items-baseline min-[480px]:gap-2">
+                                        <span className={`text-sm font-medium text-fg-primary transition-colors truncate ${a.website ? 'group-hover:text-accent-blue' : ''}`}>
                                             {a.name}
                                         </span>
-                                        <span className="text-xs text-fg-muted truncate">{a.stage}</span>
+                                        {(a.stage || a.checkSize) && (
+                                            <span className="text-xs text-fg-muted truncate min-w-0 opacity-80">
+                                                {[a.stage, a.checkSize].filter(Boolean).join(' · ')}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity">
+                                <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                                     <button
                                         onClick={(e) => handleAskClick(e, a)}
                                         className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"

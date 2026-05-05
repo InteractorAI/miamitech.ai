@@ -2,8 +2,13 @@ import { NextResponse } from 'next/server';
 import { ingestEventSources } from '../../../../lib/events/ingest';
 import { syncSheetEntities } from '../../../../lib/events/sync';
 import { getSupabaseAdminClient } from '../../../../lib/supabaseServer';
+import { areEventsEnabled } from '../../../../lib/featureFlags';
 
 export async function POST(request: Request) {
+    if (!areEventsEnabled()) {
+        return NextResponse.json({ error: 'Events are disabled.' }, { status: 404 });
+    }
+
     const expectedSecret = process.env.CRON_SECRET || process.env.EVENT_INGEST_SECRET;
     if (expectedSecret) {
         const receivedSecret = request.headers.get('authorization')?.replace(/^Bearer\s+/i, '');

@@ -19,6 +19,7 @@ import { HomeScrollContainer } from '../components/HomeScrollContainer';
 // Server-side data fetching
 import { SHEET_CONFIG, mappers, parseSheetCSV } from '../lib/googleSheets';
 import { getUpcomingEvents } from '../lib/events/query';
+import { areEventsEnabled } from '../lib/featureFlags';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,16 +36,18 @@ async function fetchSheetData<T>(gid: string, mapper: any, skipRows: number): Pr
 }
 
 export default async function Dashboard() {
-    const [capitalData, spacesData, communitiesData, conferencesData, ambassadorsData, newsData, faqData, acceleratorsData, eventsData] = await Promise.all([
+    const showEvents = areEventsEnabled();
+    const [capitalData, spacesData, coffeeShopsData, communitiesData, conferencesData, ambassadorsData, newsData, faqData, acceleratorsData, eventsData] = await Promise.all([
         fetchSheetData<any>(SHEET_CONFIG.TABS.VCs, mappers.capital, 4),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Spaces, mappers.spaces, 1),
+        fetchSheetData<any>(SHEET_CONFIG.TABS.CoffeeShops, mappers.coffeeShops, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Communities, mappers.communities, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Conferences, mappers.conferences, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Ambassadors, mappers.ambassadors, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.News, mappers.news, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.FAQs, mappers.faqs, 1),
         fetchSheetData<any>(SHEET_CONFIG.TABS.Accelerators, mappers.accelerators, 1),
-        getUpcomingEvents(40),
+        showEvents ? getUpcomingEvents(40) : Promise.resolve([]),
     ]);
 
     return (
@@ -65,11 +68,11 @@ export default async function Dashboard() {
                 </div>
             </header>
 
-            <MobileNav />
+            <MobileNav showEvents={showEvents} />
 
             <HomeScrollContainer>
                 {/* Left column */}
-                <div className="shrink-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
+                <div className="shrink-0 min-[900px]:col-span-3 min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
                     </div>
@@ -82,9 +85,9 @@ export default async function Dashboard() {
                 </div>
 
                 {/* Middle column */}
-                <div className="shrink-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
+                <div className="shrink-0 min-[900px]:col-span-4 min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
-                        <SpacesDirectory initialData={spacesData} />
+                        <SpacesDirectory initialData={spacesData} coffeeShops={coffeeShopsData} />
                     </div>
                     <div id="communities" className="border-b border-bg-border scroll-mt-12">
                         <CommunitiesDirectory initialData={communitiesData} />
@@ -106,11 +109,13 @@ export default async function Dashboard() {
                     </div>
                 </div>
 
-                {/* Right column: Events + Capital */}
-                <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto">
-                    <div id="events" className="border-b border-bg-border scroll-mt-12">
-                        <EventsFeed events={eventsData} />
-                    </div>
+                {/* Right column: optional Events + Capital */}
+                <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-span-5 min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto">
+                    {showEvents && (
+                        <div id="events" className="border-b border-bg-border scroll-mt-12">
+                            <EventsFeed events={eventsData} />
+                        </div>
+                    )}
                     <div id="capital" className="scroll-mt-12">
                         <CapitalIndex data={capitalData} loading={false} />
                     </div>

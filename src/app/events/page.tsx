@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { EventsFeed } from '../../components/EventsFeed';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { getUpcomingEvents } from '../../lib/events/query';
+import { areEventsEnabled } from '../../lib/featureFlags';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +25,8 @@ export const metadata = {
 };
 
 export default async function EventsFocused() {
+    if (!areEventsEnabled()) notFound();
+
     const events = await getUpcomingEvents(80);
 
     return (

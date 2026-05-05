@@ -20,6 +20,7 @@
     --selection-bg: rgba(224, 64, 251, 0.15);
     --selection-fg: #d946ef;
     --accent-pink-alpha: rgba(224, 64, 251, 0.12);
+    --accent-blue: #2563eb;
   }
 
   html.dark {
@@ -37,6 +38,7 @@
     --selection-bg: rgba(224, 64, 251, 0.2);
     --selection-fg: #ffffff;
     --accent-pink-alpha: rgba(224, 64, 251, 0.12);
+    --accent-blue: #448aff;
   }
 
   html.miami {
@@ -54,6 +56,7 @@
     --selection-bg: rgba(0, 255, 255, 0.2);
     --selection-fg: #00ffff;
     --accent-pink-alpha: rgba(0, 255, 255, 0.12);
+    --accent-blue: #00ffff;
   }
 
   html.miami * {
@@ -77,6 +80,7 @@
     --selection-bg: rgba(0, 229, 255, 0.32);
     --selection-fg: #ffffff;
     --accent-pink-alpha: rgba(255, 0, 230, 0.2);
+    --accent-blue: #00e5ff;
   }
 
   html.contrast-light {
@@ -94,6 +98,7 @@
     --selection-bg: rgba(255, 0, 230, 0.22);
     --selection-fg: #020c12;
     --accent-pink-alpha: rgba(255, 0, 230, 0.14);
+    --accent-blue: #006dff;
   }
 
   html.contrast body,
@@ -131,78 +136,21 @@
     color: #d4008f;
   }
 
-  button:focus,
-  a:focus,
-  input:focus,
-  [role="button"]:focus {
-    outline: 0;
-  }
-
   button:focus-visible,
   a:focus-visible,
   input:focus-visible,
   [role="button"]:focus-visible {
-    outline: 1px solid rgb(var(--bg-border));
-    outline-offset: 3px;
-    box-shadow: 0 0 0 4px var(--accent-pink-alpha);
-  }
-
-  .focus-row:focus-visible,
-  .focus-row:has(:focus-visible) {
-    position: relative;
-    z-index: 1;
-    outline: 2px solid #448aff;
-    outline-offset: -2px;
-    background: rgb(var(--bg-hover));
-    box-shadow: inset 0 0 0 1px rgba(68, 138, 255, 0.38), 0 0 0 3px rgba(68, 138, 255, 0.14);
+    outline: 0;
+    box-shadow: none;
   }
 
   html.contrast .text-accent-blue,
   html.contrast-light .text-accent-blue {
-    color: #00e5ff;
+    color: var(--accent-blue);
   }
 
   html.contrast-light .text-accent-blue {
-    color: #007f8f;
-  }
-
-  html.contrast button,
-  html.contrast a,
-  html.contrast input,
-  html.contrast [role="button"],
-  html.contrast-light button,
-  html.contrast-light a,
-  html.contrast-light input,
-  html.contrast-light [role="button"] {
-    outline-offset: 3px;
-  }
-
-  html.contrast button:focus-visible,
-  html.contrast a:focus-visible,
-  html.contrast input:focus-visible,
-  html.contrast [role="button"]:focus-visible,
-  html.contrast-light button:focus-visible,
-  html.contrast-light a:focus-visible,
-  html.contrast-light input:focus-visible,
-  html.contrast-light [role="button"]:focus-visible {
-    outline: 2px solid #00e5ff;
-    box-shadow: 0 0 0 5px rgba(0, 229, 255, 0.22);
-  }
-
-  html.contrast .focus-row:focus-visible,
-  html.contrast .focus-row:has(:focus-visible),
-  html.contrast-light .focus-row:focus-visible,
-  html.contrast-light .focus-row:has(:focus-visible) {
-    outline: 2px solid #00e5ff;
-    box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.7), 0 0 0 5px rgba(0, 229, 255, 0.22);
-  }
-
-  html.contrast input.quick-search-input:focus-visible,
-  html.contrast-light input.quick-search-input:focus-visible,
-  html.contrast input.capital-search-input:focus-visible,
-  html.contrast-light input.capital-search-input:focus-visible {
-    outline: 0;
-    box-shadow: none;
+    color: var(--accent-blue);
   }
 
   html.contrast .panel-header,
@@ -241,11 +189,8 @@
   html.contrast .panel-action [class*="bg-accent-pink-alpha"],
   html.contrast-light .panel-action [class*="bg-accent-pink-alpha"] {
     border: 0;
-    background: transparent;
+    background: var(--accent-pink-alpha);
     box-shadow: none;
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 4px;
   }
 
   .panel-action a,
@@ -379,69 +324,32 @@
   transform: translateY(-1px);
 }
 
-@keyframes sidebar-trip {
-  0% {
-    filter: hue-rotate(0deg);
-    transform: translateX(-50%) scaleY(0.96);
-  }
-  50% {
-    filter: hue-rotate(180deg);
-    transform: translateX(-50%) scaleY(1.04);
-  }
-  100% {
-    filter: hue-rotate(360deg);
-    transform: translateX(-50%) scaleY(0.96);
-  }
+button[title="Ask Interactor"] {
+  transition:
+    color 150ms ease,
+    opacity 150ms ease,
+    transform 150ms ease;
+  opacity: 0.72;
 }
 
-@keyframes sidebar-readout {
-  0%, 100% {
-    transform: translate(8px, -50%) rotate(-1deg);
-  }
-  50% {
-    transform: translate(8px, -50%) rotate(1deg);
-  }
-}
-
-.sidebar-trip-handle {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: var(--resize-handle-x);
-  z-index: 30;
-  width: 8px;
-  cursor: col-resize;
-  transform: translateX(-50%);
-  background: transparent;
-  border: 0;
-  touch-action: none;
-}
-
-.sidebar-trip-core {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  transform: translateX(-50%);
-  background: rgb(var(--bg-border));
-  opacity: 0;
-  transition: opacity 160ms ease, box-shadow 160ms ease, width 160ms ease;
-}
-
-html.contrast-light .sidebar-trip-core {
-  background: rgb(var(--bg-border) / 0.55);
-}
-
-.sidebar-trip-handle:hover .sidebar-trip-core,
-.sidebar-trip-handle:focus-visible .sidebar-trip-core,
-.sidebar-trip-handle[data-active="true"] .sidebar-trip-core {
-  width: 3px;
+button[title="Ask Interactor"]:hover {
   opacity: 1;
-  background: linear-gradient(180deg, #e040fb, #448aff, #00c853, #e040fb);
-  box-shadow: 0 0 18px rgba(224, 64, 251, 0.55), 0 0 28px rgba(68, 138, 255, 0.35);
+  color: rgb(224, 64, 251);
 }
 
-.sidebar-trip-handle[data-active="true"] .sidebar-trip-core {
-  animation: sidebar-trip 900ms linear infinite;
+button[title="Ask Interactor"]:active {
+  opacity: 1;
+  transform: scale(0.98);
+}
+
+html.contrast-light button[title="Ask Interactor"]:hover {
+  color: #d4008f;
+}
+
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }

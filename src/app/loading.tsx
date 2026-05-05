@@ -13,8 +13,11 @@ import { ThemeToggle } from '../components/ThemeToggle';
 import { QuickSearchHint } from '../components/QuickSearch';
 import Link from 'next/link';
 import { MobileNav } from '../components/MobileNav';
+import { areEventsEnabled } from '../lib/featureFlags';
 
 export default function HomeLoading() {
+    const showEvents = areEventsEnabled();
+
     return (
         <div className="h-full flex flex-col overflow-hidden opacity-60 pointer-events-none transition-opacity duration-300">
             {/* Global quick-search modal */}
@@ -29,7 +32,7 @@ export default function HomeLoading() {
                 </div>
             </header>
 
-            <MobileNav />
+            <MobileNav showEvents={showEvents} />
 
             <div className="flex-1 flex flex-col min-[900px]:grid min-[900px]:grid-cols-12 min-h-0 overflow-auto min-[900px]:overflow-hidden">
                 {/* Left column */}
@@ -67,11 +70,13 @@ export default function HomeLoading() {
                     </div>
                 </div>
 
-                {/* Right column: Events + Capital */}
+                {/* Right column: optional Events + Capital */}
                 <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-span-5 min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto animate-pulse">
-                    <div id="events" className="border-b border-bg-border scroll-mt-12">
-                        <EventsFeed events={[]} />
-                    </div>
+                    {showEvents && (
+                        <div id="events" className="border-b border-bg-border scroll-mt-12">
+                            <EventsFeed events={[]} />
+                        </div>
+                    )}
                     <div id="capital" className="scroll-mt-12">
                         <CapitalIndex data={[]} loading={true} />
                     </div>

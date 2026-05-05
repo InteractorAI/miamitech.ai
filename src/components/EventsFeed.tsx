@@ -66,17 +66,21 @@ function getDateLabel(value: string): string {
 
 function getDateTile(value: string): { top: string; bottom: string } {
     const label = getDateLabel(value);
-    if (label === 'Today') return { top: 'Today', bottom: '' };
-    if (label === 'Tomorrow') return { top: 'Tomorrow', bottom: '' };
+    if (label === 'Today') return { top: 'Today', bottom: getDayOfMonth(value) };
+    if (label === 'Tomorrow') return { top: 'Tmrw', bottom: getDayOfMonth(value) };
     if (/^[A-Za-z]{3}$/.test(label)) {
         return {
             top: label,
-            bottom: new Intl.DateTimeFormat('en-US', { day: 'numeric', timeZone: 'America/New_York' }).format(new Date(value)),
+            bottom: getDayOfMonth(value),
         };
     }
 
     const [month, day] = label.split(' ');
     return { top: month || label, bottom: day || '' };
+}
+
+function getDayOfMonth(value: string): string {
+    return new Intl.DateTimeFormat('en-US', { day: 'numeric', timeZone: 'America/New_York' }).format(new Date(value));
 }
 
 function getDateKey(value: Date): string {
@@ -176,7 +180,7 @@ export function EventsFeed({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={() => track('event_clicked', { title: event.title, url: event.canonical_url })}
-                                className={`focus-row block px-5 ${expanded ? 'py-3' : 'py-2.5'} border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group`}
+                                className={`block px-5 ${expanded ? 'py-3' : 'py-2.5'} border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group`}
                             >
                                 <div className={`${expanded ? 'grid-cols-[4.75rem_minmax(0,1fr)]' : 'grid-cols-[4.25rem_minmax(0,1fr)]'} grid gap-3 items-start`}>
                                     <div

@@ -29,6 +29,7 @@ Most directory sections read directly from the Google Sheet at request time:
 
 - Capital
 - Spaces
+- Coffee Shops
 - Communities
 - Conferences
 - Ambassadors
@@ -209,6 +210,8 @@ Humans still choose which calendars belong in the sheet. The system is not tryin
 - Pink is for Interactor and in-app actions.
 - Keep the dashboard dense, scannable, and useful.
 - Avoid marketing-page patterns inside the app.
+- Use compact text tabs inside panel headers when a directory needs a curated sub-view; active state should use text color plus a barely visible neutral background, not bold type, pink pills, or underlines.
+- Directory rows should stay dense and scan-first: primary name, muted context, then pink Interactor actions and blue external links.
 - Use explicit action controls on touch/mobile instead of relying on hidden row click behavior.
 - Keep keyboard focus visible, especially for rows and controls.
 - Contrast-oriented themes can be louder; default themes should stay quieter.

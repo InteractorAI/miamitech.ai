@@ -16,7 +16,7 @@ export function Panel({ title, subtitle, children, className = '', action, noPad
                     <h2 className="text-[15px] font-semibold text-accent-green tracking-tight">{title}</h2>
                     {subtitle && <span className="text-xs text-fg-muted font-normal">{subtitle}</span>}
                 </div>
-                {action && <div className="panel-action min-w-0 shrink-0">{action}</div>}
+                {action && <div className="panel-action flex min-w-0 flex-1 justify-end">{action}</div>}
             </div>
             <div className={`flex-1 min-h-0 flex flex-col overflow-hidden ${noPadding ? '' : 'p-5'}`}>
                 {children}
