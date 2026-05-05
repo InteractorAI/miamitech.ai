@@ -24,7 +24,7 @@ export function AskAI() {
                     {/* Subtle persistent gradient border */}
                     <div className="absolute -inset-[1px] bg-gradient-to-r from-accent-pink/20 via-accent-blue/20 to-accent-green/20 rounded-lg blur-[1px]" />
 
-                    <div className="relative flex items-center bg-bg-primary/50 backdrop-blur-sm rounded-lg border border-bg-border focus-within:border-accent-pink/30 transition-all duration-300">
+                    <div className="relative flex items-center bg-bg-primary/50 backdrop-blur-sm rounded-lg border border-bg-border transition-all duration-300">
                         <input
                             type="text"
                             value={query}

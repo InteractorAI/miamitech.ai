@@ -39,12 +39,6 @@ export function AcceleratorsRegistry({
         askInteractor(`Tell me about ${entry.name}`);
     };
 
-    const handleRowKeyDown = (e: React.KeyboardEvent<HTMLElement>, entry: AcceleratorEntry) => {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        e.preventDefault();
-        handleRowClick(entry);
-    };
-
     const action = !expanded && (
         <Link
             href="/accelerators"
@@ -102,10 +96,7 @@ export function AcceleratorsRegistry({
                                     <tr
                                         key={i}
                                         onClick={() => handleRowClick(a)}
-                                        onKeyDown={(e) => handleRowKeyDown(e, a)}
-                                        role="button"
-                                        tabIndex={0}
-                                        className="focus-row border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                                        className="border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                                     >
                                         <td className="py-3 px-5 font-medium text-fg-primary">
                                             <div className="flex items-center gap-2 min-w-0">
@@ -125,7 +116,7 @@ export function AcceleratorsRegistry({
                                             {a.stage || '—'}
                                         </td>
                                         <td className="py-3 px-2 text-center w-24 lg:w-10">
-                                            <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity duration-150">
+                                            <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
                                                 <button
                                                     onClick={(e) => handleAskClick(e, a)}
                                                     className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"
@@ -148,10 +139,7 @@ export function AcceleratorsRegistry({
                             <div
                                 key={i}
                                 onClick={() => handleRowClick(a)}
-                                onKeyDown={(e) => handleRowKeyDown(e, a)}
-                                role="button"
-                                tabIndex={0}
-                                className="focus-row flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                                className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                             >
                                 <div className="flex items-center gap-2 min-w-0">
                                     {a.website && <Favicon url={a.website} />}
@@ -162,7 +150,7 @@ export function AcceleratorsRegistry({
                                         <span className="text-xs text-fg-muted truncate">{a.stage}</span>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity">
+                                <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                                     <button
                                         onClick={(e) => handleAskClick(e, a)}
                                         className="min-h-9 min-w-9 lg:min-h-0 lg:min-w-0 p-2 lg:p-1 inline-flex items-center justify-center text-accent-pink active:scale-[0.98]"

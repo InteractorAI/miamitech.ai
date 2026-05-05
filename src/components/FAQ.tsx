@@ -39,15 +39,7 @@ export function FAQ({ initialData = [] }: { initialData?: FAQEntry[] }) {
                     <div
                         key={i}
                         onClick={() => handleClick(q)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                handleClick(q);
-                            }
-                        }}
-                        role="button"
-                        tabIndex={0}
-                        className="focus-row w-full text-left flex items-center gap-2 px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                        className="w-full text-left flex items-center gap-2 px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
                     >
                         <QuestionIcon className="w-4 h-4 text-fg-muted shrink-0" />
                         <span className="text-sm text-fg-primary group-hover:text-accent-pink transition-colors flex-1">
