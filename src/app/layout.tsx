@@ -72,7 +72,7 @@ export default function RootLayout({
                         __html: `
               (function () {
                 const savedTheme = localStorage.getItem('theme');
-                const theme = savedTheme || 'dark'; // Always default to dark mode, override if user explicitly saved 'light'
+                const theme = savedTheme || 'contrast-light';
                 if (theme === 'dark') {
                   document.documentElement.classList.add('dark');
                   document.documentElement.style.colorScheme = 'dark';
