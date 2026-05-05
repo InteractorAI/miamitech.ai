@@ -380,3 +380,27 @@
   box-shadow: 0 0 15px -1px rgba(255, 255, 255, 0.15), 0 0 10px -2px currentColor;
   transform: translateY(-1px);
 }
+
+button[title="Ask Interactor"] {
+  transition:
+    color 150ms ease,
+    opacity 150ms ease,
+    transform 150ms ease;
+  opacity: 0.72;
+}
+
+button[title="Ask Interactor"]:hover,
+button[title="Ask Interactor"]:focus-visible {
+  opacity: 1;
+  color: rgb(224, 64, 251);
+}
+
+button[title="Ask Interactor"]:active {
+  opacity: 1;
+  transform: scale(0.98);
+}
+
+html.contrast-light button[title="Ask Interactor"]:hover,
+html.contrast-light button[title="Ask Interactor"]:focus-visible {
+  color: #d4008f;
+}
