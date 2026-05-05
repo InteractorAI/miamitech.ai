@@ -108,10 +108,11 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                             <button
                                 key={s}
                                 onClick={() => setStageFilter(s)}
-                                className={`text-[11px] px-2.5 py-1 rounded-md transition-all duration-150 whitespace-nowrap ${stageFilter === s
+                                className={`inline-flex h-8 items-center rounded-md px-2.5 text-[11px] transition-colors duration-150 whitespace-nowrap ${stageFilter === s
                                     ? 'bg-bg-hover/30 text-fg-primary'
                                     : 'text-fg-muted hover:text-fg-secondary hover:bg-bg-hover'
                                     }`}
+                                aria-pressed={stageFilter === s}
                             >
                                 {s}
                             </button>
