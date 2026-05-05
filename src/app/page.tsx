@@ -72,7 +72,7 @@ export default async function Dashboard() {
 
             <HomeScrollContainer>
                 {/* Left column */}
-                <div className="shrink-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
+                <div className="shrink-0 min-[900px]:col-span-3 min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
                     </div>
@@ -85,7 +85,7 @@ export default async function Dashboard() {
                 </div>
 
                 {/* Middle column */}
-                <div className="shrink-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
+                <div className="shrink-0 min-[900px]:col-span-4 min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
                         <SpacesDirectory initialData={spacesData} coffeeShops={coffeeShopsData} />
                     </div>
@@ -110,7 +110,7 @@ export default async function Dashboard() {
                 </div>
 
                 {/* Right column: optional Events + Capital */}
-                <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-auto min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto">
+                <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-span-5 min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto">
                     {showEvents && (
                         <div id="events" className="border-b border-bg-border scroll-mt-12">
                             <EventsFeed events={eventsData} />
