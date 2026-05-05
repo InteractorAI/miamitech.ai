@@ -5,12 +5,18 @@ import { Panel } from './TerminalBlock';
 import { type CapitalEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
-import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { askInteractor } from '../lib/interactor';
 import { ExpandIcon } from './ExpandIcon';
 import { InteractorAskIcon } from './InteractorAskIcon';
 
 const STAGES = ['All', 'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Growth'] as const;
 const PREVIEW_COUNT = 12;
+
+function getCapitalMeta(entry: CapitalEntry) {
+    return [entry.stage, entry.checkSize, entry.type || entry.focus]
+        .filter(Boolean)
+        .join(' · ');
+}
 
 interface CapitalIndexProps {
     data: CapitalEntry[];
@@ -50,9 +56,9 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
     const remaining = filtered.length - PREVIEW_COUNT;
 
     const handleRowClick = (entry: CapitalEntry) => {
-        if (usesExplicitTouchActions()) return;
-        track('vc_row_clicked', { vc_name: entry.name });
-        askInteractor(`Tell me about ${entry.name}`);
+        if (!entry.website) return;
+        track('vc_link_clicked', { vc_name: entry.name, url: entry.website, from: 'row' });
+        window.open(entry.website, '_blank', 'noopener,noreferrer');
     };
 
     const handleAskClick = (e: React.MouseEvent, entry: CapitalEntry) => {
@@ -97,7 +103,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
             }
         >
             {/* Search */}
-            <div className={`${expanded ? 'px-5 py-3' : 'px-5 py-2.5'} border-b border-bg-border shrink-0`}>
+            <div className={`${expanded ? 'px-5 py-3' : 'px-5 py-3'} border-b border-bg-border shrink-0`}>
                 <div className="flex items-center rounded-md bg-bg-hover/45 transition-colors">
                     <div className="pl-3 flex items-center justify-center pointer-events-none">
                         <svg className="w-3.5 h-3.5 text-fg-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -109,7 +115,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                         placeholder={loading ? 'Search investors...' : `Search ${data.length} investors...`}
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        className={`capital-search-input peer w-full bg-transparent border-none text-fg-primary placeholder:text-fg-muted/80 pl-2.5 pr-2 outline-none font-sans ${expanded ? 'text-sm py-2' : 'text-[13px] py-1.5'}`}
+                        className={`capital-search-input peer w-full bg-transparent border-none text-fg-primary placeholder:text-fg-muted/80 pl-2.5 pr-2 outline-none font-sans ${expanded ? 'text-sm py-2' : 'text-[13px] py-2'}`}
                     />
                     {search && (
                         <button
@@ -134,7 +140,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
             ) : (
                 <div className={expanded ? 'overflow-auto flex-1 min-h-0' : ''}>
                     <table className="w-full text-sm table-fixed">
-                        <thead className="sticky top-0 z-10 bg-bg-card">
+                        <thead className={`sticky top-0 z-10 bg-bg-card ${expanded ? 'hidden lg:table-header-group' : 'hidden xl:table-header-group'}`}>
                             <tr className="border-b border-bg-border">
                                 <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'w-auto lg:w-[25%]' : 'w-auto'}`}>Name</th>
                                 <th className={`text-left py-3 px-5 text-[11px] font-semibold text-fg-muted uppercase tracking-wider ${expanded ? 'hidden lg:table-cell lg:w-[15%]' : 'hidden xl:table-cell w-[25%]'}`}>Stage</th>
@@ -150,11 +156,13 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                             </tr>
                         </thead>
                         <tbody>
-                            {visible.map((entry, idx) => (
+                            {visible.map((entry, idx) => {
+                                const meta = getCapitalMeta(entry);
+                                return (
                                 <tr
                                     key={idx}
                                     onClick={() => handleRowClick(entry)}
-                                    className="border-b border-bg-border-subtle cursor-pointer transition-colors duration-100 group hover:bg-bg-hover"
+                                    className={`border-b border-bg-border-subtle transition-colors duration-100 group ${entry.website ? 'cursor-pointer hover:bg-bg-hover' : ''}`}
                                 >
                                     <td className="py-3 px-5 font-medium text-fg-primary transition-colors">
                                         <div className="flex items-center gap-2 min-w-0">
@@ -162,7 +170,14 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-green shrink-0" />
                                             )}
                                             {entry.website && <Favicon url={entry.website} />}
-                                            <span className="truncate group-hover:text-accent-pink transition-colors">{entry.name}</span>
+                                            <span className="min-w-0 flex-1">
+                                                <span className={`block truncate transition-colors ${entry.website ? 'group-hover:text-accent-blue' : ''}`}>{entry.name}</span>
+                                                {meta && (
+                                                    <span className="mt-0.5 block truncate text-xs font-normal text-fg-muted xl:hidden">
+                                                        {meta}
+                                                    </span>
+                                                )}
+                                            </span>
                                         </div>
                                     </td>
                                     <td className={`py-3 px-5 text-fg-secondary text-[13px] truncate ${expanded ? 'hidden lg:table-cell' : 'hidden xl:table-cell'}`}>{entry.stage || '—'}</td>
@@ -205,7 +220,8 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
+                                );
+                            })}
                             {filtered.length === 0 && (
                                 <tr>
                                     <td colSpan={expanded ? 7 : 5} className="py-12 text-center text-fg-muted text-sm">

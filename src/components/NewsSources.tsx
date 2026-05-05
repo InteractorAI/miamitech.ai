@@ -25,11 +25,14 @@ export function NewsSources({ initialData = [] }: { initialData?: NewsEntry[] })
                         onClick={() => track('news_link_clicked', { title: source.name, url: source.url })}
                         className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover transition-colors duration-100 group"
                     >
-                        <span className="flex items-center gap-2 text-sm font-medium text-fg-primary group-hover:text-accent-blue transition-colors">
+                        <span className="flex min-w-0 flex-1 items-center gap-2">
                             <Favicon url={source.url} />
-                            {source.name}
+                            <span className="flex min-w-0 flex-1 flex-col min-[480px]:flex-row min-[480px]:items-baseline min-[480px]:gap-2">
+                                <span className="truncate text-sm font-medium text-fg-primary group-hover:text-accent-blue transition-colors min-[480px]:shrink-0 min-[480px]:max-w-[65%] sm:max-w-[80%]">{source.name}</span>
+                                <span className="block truncate text-xs text-fg-muted opacity-80 sm:hidden">{source.desc}</span>
+                            </span>
                         </span>
-                        <span className="text-[11px] text-fg-muted font-medium truncate ml-4">{source.desc}</span>
+                        <span className="ml-4 hidden max-w-[45%] truncate text-xs text-fg-muted opacity-80 sm:block">{source.desc}</span>
                     </a>
                 ))}
                 {NEWS_SOURCES.length > PREVIEW_COUNT && (

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Panel } from './TerminalBlock';
 import type { AmbassadorEntry } from '../lib/googleSheets';
 import { track } from '@vercel/analytics';
-import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { askInteractor } from '../lib/interactor';
 import { CloseIcon } from './CloseIcon';
 import { InteractorAskIcon } from './InteractorAskIcon';
 import { QuestionIcon } from './QuestionIcon';
@@ -18,12 +18,6 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
 
     const visible = expanded ? ambassadors : ambassadors.slice(0, PREVIEW_COUNT);
     const remaining = ambassadors.length - PREVIEW_COUNT;
-
-    const handleRowClick = (name: string) => {
-        if (usesExplicitTouchActions()) return;
-        track('directory_row_clicked', { category: 'Ambassadors', title: name });
-        askInteractor(`Tell me about ${name}`);
-    };
 
     const handleAskClick = (e: React.MouseEvent, name: string) => {
         e.stopPropagation();
@@ -66,10 +60,9 @@ export function AmbassadorsRegistry({ initialData = [] }: { initialData?: Ambass
                 {visible.map((a, i) => (
                     <div
                         key={i}
-                        onClick={() => handleRowClick(a.name)}
-                        className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                        className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 transition-colors duration-100 group"
                     >
-                        <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
+                        <span className="text-sm font-medium text-fg-primary transition-colors truncate">
                             {a.name}
                         </span>
 

@@ -4,7 +4,7 @@ import { Panel } from './TerminalBlock';
 import type { ConferenceEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
-import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { askInteractor } from '../lib/interactor';
 import { InteractorAskIcon } from './InteractorAskIcon';
 
 const PREVIEW_COUNT = 5;
@@ -18,9 +18,9 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
     const remaining = conferences.length - PREVIEW_COUNT;
 
     const handleRowClick = (conference: ConferenceEntry) => {
-        if (usesExplicitTouchActions()) return;
-        track('directory_row_clicked', { category: 'Conferences', title: conference.name });
-        askInteractor(`Tell me about the ${conference.name} conference`);
+        if (!conference.website) return;
+        track('directory_link_clicked', { category: 'Conferences', title: conference.name, url: conference.website, from: 'row' });
+        window.open(conference.website, '_blank', 'noopener,noreferrer');
     };
 
     const handleAskClick = (e: React.MouseEvent, conference: ConferenceEntry) => {
@@ -44,12 +44,12 @@ export function ConferencesDirectory({ initialData = [] }: { initialData?: Confe
                             <div
                                 key={idx}
                                 onClick={() => handleRowClick(conference)}
-                                className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                                className={`flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 transition-colors duration-100 group ${conference.website ? 'cursor-pointer hover:bg-bg-hover' : ''}`}
                             >
                                 <div className="flex items-center gap-2 min-w-0 flex-1">
                                     {conference.website && <Favicon url={conference.website} />}
-                                    <div className="flex items-baseline gap-2 min-w-0 flex-1">
-                                        <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate shrink-0 max-w-[65%] sm:max-w-[80%]">
+                                    <div className="flex min-w-0 flex-1 flex-col min-[480px]:flex-row min-[480px]:items-baseline min-[480px]:gap-2">
+                                        <span className={`text-sm font-medium text-fg-primary transition-colors truncate min-[480px]:shrink-0 min-[480px]:max-w-[65%] sm:max-w-[80%] ${conference.website ? 'group-hover:text-accent-blue' : ''}`}>
                                             {conference.name}
                                         </span>
                                         {conference.notes && (

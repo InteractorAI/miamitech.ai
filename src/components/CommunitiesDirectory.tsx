@@ -4,7 +4,7 @@ import { Panel } from './TerminalBlock';
 import type { CommunityEntry } from '../lib/googleSheets';
 import { Favicon } from './Favicon';
 import { track } from '@vercel/analytics';
-import { askInteractor, usesExplicitTouchActions } from '../lib/interactor';
+import { askInteractor } from '../lib/interactor';
 import { InteractorAskIcon } from './InteractorAskIcon';
 
 const PREVIEW_COUNT = 4;
@@ -18,9 +18,9 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
     const remaining = communities.length - PREVIEW_COUNT;
 
     const handleRowClick = (community: CommunityEntry) => {
-        if (usesExplicitTouchActions()) return;
-        track('directory_row_clicked', { category: 'Communities', title: community.name });
-        askInteractor(`Tell me about the ${community.name} community`);
+        if (!community.url) return;
+        track('directory_link_clicked', { category: 'Communities', title: community.name, type: 'website', url: community.url, from: 'row' });
+        window.open(community.url, '_blank', 'noopener,noreferrer');
     };
 
     const handleAskClick = (e: React.MouseEvent, community: CommunityEntry) => {
@@ -36,13 +36,20 @@ export function CommunitiesDirectory({ initialData = [] }: { initialData?: Commu
                     <div
                         key={idx}
                         onClick={() => handleRowClick(community)}
-                        className="flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 hover:bg-bg-hover cursor-pointer transition-colors duration-100 group"
+                        className={`flex items-center justify-between px-5 py-3 border-b border-bg-border-subtle last:border-b-0 transition-colors duration-100 group ${community.url ? 'cursor-pointer hover:bg-bg-hover' : ''}`}
                     >
-                        <div className="flex items-center gap-2 min-w-0">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
                             {community.url && <Favicon url={community.url} />}
-                            <span className="text-sm font-medium text-fg-primary group-hover:text-accent-pink transition-colors truncate">
-                                {community.name}
-                            </span>
+                            <div className="flex min-w-0 flex-1 flex-col min-[480px]:flex-row min-[480px]:items-baseline min-[480px]:gap-2">
+                                <span className={`text-sm font-medium text-fg-primary transition-colors truncate min-[480px]:shrink-0 min-[480px]:max-w-[65%] sm:max-w-[80%] ${community.url ? 'group-hover:text-accent-blue' : ''}`}>
+                                    {community.name}
+                                </span>
+                                {community.notes && (
+                                    <span className="text-xs text-fg-muted truncate min-w-0 opacity-80">
+                                        {community.notes}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0 ml-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150">
                             <button
