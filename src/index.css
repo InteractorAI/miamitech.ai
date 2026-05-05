@@ -345,3 +345,11 @@ button[title="Ask Interactor"]:active {
 html.contrast-light button[title="Ask Interactor"]:hover {
   color: #d4008f;
 }
+
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
