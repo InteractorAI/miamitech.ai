@@ -56,6 +56,11 @@ export default function HomeLoading() {
                     <div id="communities" className="border-b border-bg-border scroll-mt-12">
                         <CommunitiesDirectory initialData={[]} />
                     </div>
+                    {showEvents && (
+                        <div id="events" className="border-b border-bg-border scroll-mt-12 min-[900px]:hidden">
+                            <EventsFeed events={[]} />
+                        </div>
+                    )}
                     <div id="conferences" className="border-b border-bg-border scroll-mt-12">
                         <ConferencesDirectory initialData={[]} />
                     </div>
@@ -73,7 +78,7 @@ export default function HomeLoading() {
                 {/* Right column: optional Events + Capital */}
                 <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-span-5 min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto animate-pulse">
                     {showEvents && (
-                        <div id="events" className="border-b border-bg-border scroll-mt-12">
+                        <div className="hidden border-b border-bg-border scroll-mt-12 min-[900px]:block">
                             <EventsFeed events={[]} />
                         </div>
                     )}
