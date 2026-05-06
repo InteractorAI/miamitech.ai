@@ -12,6 +12,7 @@ import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { QuickSearch, QuickSearchHint } from '../components/QuickSearch';
+import { FollowMiamiTech } from '../components/FollowMiamiTech';
 import Link from 'next/link';
 import { MobileNav } from '../components/MobileNav';
 import { HomeScrollContainer } from '../components/HomeScrollContainer';
@@ -75,6 +76,9 @@ export default async function Dashboard() {
                 <div className="shrink-0 min-[900px]:col-span-3 min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
+                    </div>
+                    <div className="border-b border-bg-border">
+                        <FollowMiamiTech />
                     </div>
                     <div className="border-b border-bg-border">
                         <Sponsors />
