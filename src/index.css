@@ -324,6 +324,31 @@
   transform: translateY(-1px);
 }
 
+@keyframes follow-border-race {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+
+  100% {
+    background-position: 0 0, 96px 0;
+  }
+}
+
+.follow-cta-race {
+  border-color: transparent;
+  background:
+    linear-gradient(rgb(var(--bg-card)), rgb(var(--bg-card))) padding-box,
+    linear-gradient(90deg, rgba(224, 64, 251, 0.28), rgba(68, 138, 255, 0.9), rgba(0, 200, 83, 0.72), rgba(224, 64, 251, 0.28)) border-box;
+  background-size: auto, 96px 100%;
+  animation: follow-border-race 1.45s linear 2.25s 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .follow-cta-race {
+    animation: none;
+  }
+}
+
 button[title="Ask Interactor"] {
   transition:
     color 150ms ease,

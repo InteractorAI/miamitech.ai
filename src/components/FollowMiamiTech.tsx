@@ -16,7 +16,7 @@ type FollowProfile = {
     followedAt: string;
 };
 
-type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
+type SubmitState = 'idle' | 'submitting' | 'error';
 
 function getFirstName(displayName: string) {
     return displayName.trim().split(/\s+/)[0] || displayName;
@@ -40,6 +40,10 @@ function saveProfile(profile: FollowProfile) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
 }
 
+function clearProfile() {
+    window.localStorage.removeItem(STORAGE_KEY);
+}
+
 type FollowMiamiTechProps = {
     variant?: 'panel' | 'button';
     className?: string;
@@ -50,6 +54,7 @@ export function FollowMiamiTech({ variant = 'panel', className = '' }: FollowMia
     const [open, setOpen] = useState(false);
     const [submitState, setSubmitState] = useState<SubmitState>('idle');
     const [error, setError] = useState('');
+    const [isDeleting, setIsDeleting] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -104,18 +109,59 @@ export function FollowMiamiTech({ variant = 'panel', className = '' }: FollowMia
 
             saveProfile(json.follower);
             setProfile(json.follower);
-            setSubmitState('success');
             track('follow_saved', {
                 resend: json.integrations?.resend || 'unknown',
                 sms_opt_in: Boolean(json.follower?.smsOptIn),
             });
 
-            window.setTimeout(() => setOpen(false), 650);
+            setOpen(false);
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Could not save your follow yet.';
             setError(message);
             setSubmitState('error');
             track('follow_save_failed');
+        }
+    };
+
+    const handleUnfollow = async () => {
+        if (!profile?.email) return;
+
+        const confirmed = window.confirm('Remove your follow record and stop MiamiTech.ai updates?');
+        if (!confirmed) return;
+
+        setIsDeleting(true);
+        setSubmitState('idle');
+        setError('');
+
+        try {
+            const response = await fetch('/api/follow', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: profile.email }),
+            });
+
+            const json = await response.json();
+
+            if (!response.ok) {
+                throw new Error(json?.error || 'Could not remove your follow yet.');
+            }
+
+            clearProfile();
+            setProfile(null);
+            setName('');
+            setEmail('');
+            setPhone('');
+            setSmsOptIn(false);
+            setOpen(false);
+            track('follow_removed', {
+                resend: json.integrations?.resend || 'unknown',
+            });
+        } catch (err) {
+            const message = err instanceof Error ? err.message : 'Could not remove your follow yet.';
+            setError(message);
+            track('follow_remove_failed');
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -136,7 +182,7 @@ export function FollowMiamiTech({ variant = 'panel', className = '' }: FollowMia
                         <div className="flex items-center justify-between border-b border-bg-border p-4">
                             <div>
                                 <h2 className="text-[15px] font-bold tracking-tight text-fg-primary">Follow MiamiTech.ai</h2>
-                                <p className="mt-1 text-xs text-fg-muted">Name, email, and phone.</p>
+                                <p className="mt-1 text-xs text-fg-muted">Love our updates, or leave anytime.</p>
                             </div>
                             <button
                                 type="button"
@@ -174,14 +220,16 @@ export function FollowMiamiTech({ variant = 'panel', className = '' }: FollowMia
                             </label>
 
                             <label className="block">
-                                <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-fg-muted">Phone</span>
+                                <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-fg-muted">
+                                    Phone {smsOptIn ? '' : <span className="normal-case tracking-normal">(optional)</span>}
+                                </span>
                                 <input
                                     value={phone}
                                     onChange={(event) => setPhone(event.target.value)}
                                     autoComplete="tel"
                                     inputMode="tel"
                                     type="tel"
-                                    required
+                                    required={smsOptIn}
                                     className="h-10 w-full rounded-md border border-bg-border bg-bg-primary px-3 text-sm text-fg-primary outline-none transition-colors placeholder:text-fg-muted focus:border-accent-pink"
                                 />
                             </label>
@@ -193,7 +241,7 @@ export function FollowMiamiTech({ variant = 'panel', className = '' }: FollowMia
                                     onChange={(event) => setSmsOptIn(event.target.checked)}
                                     className="mt-0.5 h-4 w-4 accent-[#e040fb]"
                                 />
-                                <span>Text me occasional MiamiTech.ai updates.</span>
+                                <span>Text me occasional MiamiTech.ai updates</span>
                             </label>
 
                             {error && (
@@ -202,21 +250,26 @@ export function FollowMiamiTech({ variant = 'panel', className = '' }: FollowMia
                                 </p>
                             )}
 
-                            {submitState === 'success' && (
-                                <p className="rounded-md border border-accent-green bg-accent-green/10 px-3 py-2 text-xs text-fg-primary">
-                                    You are following MiamiTech.ai.
-                                </p>
-                            )}
                         </div>
 
                         <div className="border-t border-bg-border p-4">
                             <button
                                 type="submit"
-                                disabled={submitState === 'submitting'}
+                                disabled={submitState === 'submitting' || isDeleting}
                                 className="h-10 w-full rounded-md bg-accent-pink px-4 text-sm font-semibold text-white transition-all duration-200 hover:bg-accent-pink/90 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[0.99]"
                             >
-                                {submitState === 'submitting' ? 'Saving...' : 'Follow'}
+                                {submitState === 'submitting' ? 'Saving...' : profile ? 'Save Contact' : 'Follow'}
                             </button>
+                            {profile && (
+                                <button
+                                    type="button"
+                                    onClick={handleUnfollow}
+                                    disabled={isDeleting || submitState === 'submitting'}
+                                    className="mt-3 w-full text-center text-[11px] font-medium text-fg-muted transition-colors duration-150 hover:text-accent-pink disabled:cursor-not-allowed disabled:opacity-60"
+                                >
+                                    {isDeleting ? 'Leaving...' : 'Unfollow MiamiTech.ai'}
+                                </button>
+                            )}
                         </div>
                     </form>
                 </div>
@@ -244,21 +297,24 @@ export function FollowMiamiTech({ variant = 'panel', className = '' }: FollowMia
                         <div>
                             <p className="text-sm font-semibold text-fg-primary">Hi, {getFirstName(profile.displayName)}.</p>
                             <p className="mt-1 text-sm leading-relaxed text-fg-secondary">
-                                You are following MiamiTech.ai.
+                                You're set to receive occasional updates about events and more.
                             </p>
                         </div>
                         <button
                             onClick={() => openModal('update')}
                             className="w-full rounded-md border border-bg-border px-3 py-2 text-[11px] font-medium text-fg-secondary transition-all duration-200 hover:bg-bg-hover hover:text-accent-pink"
                         >
-                            Update Info
+                            Update Contact
                         </button>
                     </>
                 ) : (
                     <>
+                        <p className="text-sm leading-relaxed text-fg-secondary">
+                            Get a weekly digest of upcoming events in your inbox. Never spam, leave anytime.
+                        </p>
                         <button
                             onClick={() => openModal('follow')}
-                            className="w-full rounded-md bg-accent-pink px-3 py-2 text-[11px] font-semibold text-white transition-all duration-200 hover:bg-accent-pink/90 active:scale-[0.98]"
+                            className="follow-cta-race w-full rounded-md border border-accent-pink/50 px-3 py-2 text-[11px] font-medium text-fg-secondary transition-all duration-200 hover:border-accent-pink hover:bg-bg-hover hover:text-fg-primary active:scale-[0.98]"
                         >
                             Follow MiamiTech.ai
                         </button>
