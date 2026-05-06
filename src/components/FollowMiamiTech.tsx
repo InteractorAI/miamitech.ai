@@ -291,11 +291,11 @@ export function FollowMiamiTech() {
                 ) : (
                     <>
                         <p className="text-sm leading-relaxed text-fg-secondary">
-                            Get occassional Miami tech signal in your inbox. Never spam, leave anytime.
+                            Get a weekly digest of upcoming events in your inbox. Never spam, leave anytime.
                         </p>
                         <button
                             onClick={() => openModal('follow')}
-                            className="w-full rounded-md border border-accent-pink/50 px-3 py-2 text-[11px] font-medium text-fg-secondary transition-all duration-200 hover:border-accent-pink hover:bg-bg-hover hover:text-fg-primary active:scale-[0.98]"
+                            className="follow-cta-race w-full rounded-md border border-accent-pink/50 px-3 py-2 text-[11px] font-medium text-fg-secondary transition-all duration-200 hover:border-accent-pink hover:bg-bg-hover hover:text-fg-primary active:scale-[0.98]"
                         >
                             Follow MiamiTech.ai
                         </button>
