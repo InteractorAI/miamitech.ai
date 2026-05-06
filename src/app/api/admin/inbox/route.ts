@@ -39,6 +39,9 @@ export async function GET(request: Request) {
             bcc_addresses,
             subject,
             attachment_count,
+            text_body,
+            html_body,
+            body_status,
             received_at
         `)
         .order('received_at', { ascending: false })

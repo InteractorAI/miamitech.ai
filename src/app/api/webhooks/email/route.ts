@@ -20,6 +20,12 @@ type EmailReceivedPayload = {
     };
 };
 
+type ReceivedEmailContent = {
+    text?: unknown;
+    html?: unknown;
+    headers?: unknown;
+};
+
 function toStringValue(value: unknown) {
     return typeof value === 'string' ? value : null;
 }
@@ -33,6 +39,36 @@ function toDateString(value: unknown) {
     if (typeof value !== 'string') return new Date().toISOString();
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? new Date().toISOString() : date.toISOString();
+}
+
+async function getReceivedEmailContent(resend: Resend, emailId: string | null) {
+    if (!emailId) {
+        return {
+            bodyStatus: 'unavailable',
+            textBody: null,
+            htmlBody: null,
+            headers: {},
+        };
+    }
+
+    const { data, error } = await resend.emails.receiving.get(emailId);
+    if (error || !data) {
+        console.error('Failed to retrieve inbound email body', error);
+        return {
+            bodyStatus: 'failed',
+            textBody: null,
+            htmlBody: null,
+            headers: {},
+        };
+    }
+
+    const email = data as ReceivedEmailContent;
+    return {
+        bodyStatus: 'retrieved',
+        textBody: toStringValue(email.text),
+        htmlBody: toStringValue(email.html),
+        headers: email.headers && typeof email.headers === 'object' ? email.headers : {},
+    };
 }
 
 export async function POST(request: NextRequest) {
@@ -79,12 +115,14 @@ export async function POST(request: NextRequest) {
     }
 
     const attachments = Array.isArray(event.data?.attachments) ? event.data.attachments : [];
+    const providerEmailId = toStringValue(event.data?.email_id);
+    const emailContent = await getReceivedEmailContent(resend, providerEmailId);
     const { error } = await supabase
         .from('email_inbox_messages')
         .upsert({
             provider: 'resend',
             provider_event_id: providerEventId,
-            provider_email_id: toStringValue(event.data?.email_id),
+            provider_email_id: providerEmailId,
             message_id: toStringValue(event.data?.message_id),
             from_text: toStringValue(event.data?.from),
             to_addresses: toStringArray(event.data?.to),
@@ -92,6 +130,10 @@ export async function POST(request: NextRequest) {
             bcc_addresses: toStringArray(event.data?.bcc),
             subject: toStringValue(event.data?.subject),
             attachment_count: attachments.length,
+            text_body: emailContent.textBody,
+            html_body: emailContent.htmlBody,
+            headers: emailContent.headers,
+            body_status: emailContent.bodyStatus,
             raw_payload: event,
             received_at: toDateString(event.data?.created_at || event.created_at),
         }, { onConflict: 'provider,provider_event_id' });
