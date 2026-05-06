@@ -10,6 +10,10 @@ type FollowPayload = {
     smsOptIn?: unknown;
 };
 
+type UnfollowPayload = {
+    email?: unknown;
+};
+
 function normalizeEmail(value: unknown) {
     if (typeof value !== 'string') return '';
     return value.trim().toLowerCase();
@@ -111,6 +115,23 @@ async function syncResendContact({
     return { status: 'synced' as const, contactId: json?.id as string | undefined };
 }
 
+async function unsubscribeResendContact(email: string) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) return { status: 'skipped' as const };
+
+    const response = await fetch(`https://api.resend.com/contacts/${encodeURIComponent(email)}`, {
+        method: 'PATCH',
+        headers: {
+            Authorization: `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ unsubscribed: true }),
+    });
+
+    if (!response.ok) return { status: 'failed' as const };
+    return { status: 'synced' as const };
+}
+
 export async function POST(request: NextRequest) {
     let payload: FollowPayload;
 
@@ -133,7 +154,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Enter a valid email address.' }, { status: 400 });
     }
 
-    if (!phone) {
+    if (smsOptIn && !phone) {
         return NextResponse.json({ error: 'Enter a valid phone number.' }, { status: 400 });
     }
 
@@ -147,7 +168,7 @@ export async function POST(request: NextRequest) {
     const followerRow: Record<string, unknown> = {
         email_normalized: email,
         display_name: displayName,
-        phone_e164: phone,
+        phone_e164: phone || null,
         email_opt_in: true,
         sms_opt_in: smsOptIn,
         source: 'site_follow_modal',
@@ -184,6 +205,45 @@ export async function POST(request: NextRequest) {
             smsOptIn: data.sms_opt_in,
             followedAt: data.last_seen_at,
         },
+        integrations: {
+            resend: resend.status,
+        },
+    });
+}
+
+export async function DELETE(request: NextRequest) {
+    let payload: UnfollowPayload;
+
+    try {
+        payload = await request.json();
+    } catch {
+        return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
+    }
+
+    const email = normalizeEmail(payload.email);
+
+    if (!isValidEmail(email)) {
+        return NextResponse.json({ error: 'Enter a valid email address.' }, { status: 400 });
+    }
+
+    const supabase = getSupabaseAdminClient();
+    if (!supabase) {
+        return NextResponse.json({ error: 'Follow signup is not configured.' }, { status: 503 });
+    }
+
+    const resend = await unsubscribeResendContact(email).catch(() => ({ status: 'failed' as const }));
+    const { error } = await supabase
+        .from('followers')
+        .delete()
+        .eq('email_normalized', email);
+
+    if (error) {
+        console.error('Failed to remove follower', error);
+        return NextResponse.json({ error: 'Could not remove your follow yet.' }, { status: 500 });
+    }
+
+    return NextResponse.json({
+        unfollowed: true,
         integrations: {
             resend: resend.status,
         },
