@@ -126,6 +126,9 @@ export default function HomeLoading() {
                         <SysInfo />
                     </div>
                     <div className="border-b border-bg-border">
+                        <SectionSkeleton title="Follow" rows={1} withIcon={false} withActions={false} />
+                    </div>
+                    <div className="border-b border-bg-border">
                         <Sponsors />
                     </div>
                     <div className="hidden min-[900px]:block border-b border-bg-border min-[900px]:border-b-0">
@@ -151,6 +154,9 @@ export default function HomeLoading() {
                     </div>
                     <div id="ambassadors" className="border-b border-bg-border scroll-mt-12">
                         <SectionSkeleton title="Ambassadors" subtitle="..." rows={5} withIcon={false} withMeta={false} />
+                    </div>
+                    <div id="accelerators" className="border-b border-bg-border scroll-mt-12">
+                        <SectionSkeleton title="Accelerators" subtitle="..." rows={5} />
                     </div>
                     <div id="news" className="border-b border-bg-border scroll-mt-12">
                         <SectionSkeleton title="News" subtitle="..." rows={4} />
