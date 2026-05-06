@@ -136,9 +136,11 @@ function cleanDescription(value: string | null): string {
 export function EventsFeed({
     events = [],
     expanded = false,
+    loading = false,
 }: {
     events?: EventFeedItem[];
     expanded?: boolean;
+    loading?: boolean;
 }) {
     const [showAll, setShowAll] = useState(false);
     const visible = expanded || showAll ? events : events.slice(0, PREVIEW_COUNT);
@@ -162,9 +164,29 @@ export function EventsFeed({
             )}
         >
             <div className={expanded ? 'overflow-auto flex-1 min-h-0' : ''}>
-                {events.length === 0 ? (
+                {loading ? (
+                    <div aria-label="Loading events">
+                        {Array.from({ length: expanded ? 10 : PREVIEW_COUNT }).map((_, index) => (
+                            <div
+                                key={index}
+                                className={`px-5 ${expanded ? 'py-3' : 'py-2.5'} border-b border-bg-border-subtle last:border-b-0`}
+                            >
+                                <div className={`${expanded ? 'grid-cols-[4.75rem_minmax(0,1fr)]' : 'grid-cols-[4.25rem_minmax(0,1fr)]'} grid gap-3 items-start`}>
+                                    <div className={`${expanded ? 'h-14 w-14' : 'h-12 w-12'} rounded-lg bg-bg-elevated animate-pulse`} />
+                                    <div className="min-w-0 pt-1">
+                                        <div className="h-4 w-2/3 rounded bg-bg-elevated animate-pulse" style={{ opacity: 1 - index * 0.05 }} />
+                                        <div className="mt-2 h-3 w-full max-w-md rounded bg-bg-elevated animate-pulse" style={{ opacity: 0.72 - index * 0.04 }} />
+                                        {expanded && (
+                                            <div className="mt-2 h-3 w-full max-w-2xl rounded bg-bg-elevated animate-pulse" style={{ opacity: 0.52 - index * 0.03 }} />
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : events.length === 0 ? (
                     <div className="px-5 py-4 text-sm text-fg-muted">
-                        Event aggregation is ready. Add Supabase credentials and run the ingestion job to populate upcoming events.
+                        No upcoming events yet.
                     </div>
                 ) : (
                     visible.map((event) => {

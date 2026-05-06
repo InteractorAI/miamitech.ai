@@ -12,6 +12,7 @@ import { FAQ } from '../components/FAQ';
 import { Sponsors } from '../components/Sponsors';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { QuickSearch, QuickSearchHint } from '../components/QuickSearch';
+import { FollowMiamiTech } from '../components/FollowMiamiTech';
 import Link from 'next/link';
 import { MobileNav } from '../components/MobileNav';
 import { HomeScrollContainer } from '../components/HomeScrollContainer';
@@ -77,6 +78,9 @@ export default async function Dashboard() {
                         <SysInfo />
                     </div>
                     <div className="border-b border-bg-border">
+                        <FollowMiamiTech />
+                    </div>
+                    <div className="border-b border-bg-border">
                         <Sponsors />
                     </div>
                     <div className="hidden min-[900px]:block border-b border-bg-border min-[900px]:border-b-0">
@@ -92,6 +96,11 @@ export default async function Dashboard() {
                     <div id="communities" className="border-b border-bg-border scroll-mt-12">
                         <CommunitiesDirectory initialData={communitiesData} />
                     </div>
+                    {showEvents && (
+                        <div id="events" className="border-b border-bg-border scroll-mt-12 min-[900px]:hidden">
+                            <EventsFeed events={eventsData} />
+                        </div>
+                    )}
                     <div id="conferences" className="border-b border-bg-border scroll-mt-12">
                         <ConferencesDirectory initialData={conferencesData} />
                     </div>
@@ -112,7 +121,7 @@ export default async function Dashboard() {
                 {/* Right column: optional Events + Capital */}
                 <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-span-5 min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto">
                     {showEvents && (
-                        <div id="events" className="border-b border-bg-border scroll-mt-12">
+                        <div className="hidden border-b border-bg-border scroll-mt-12 min-[900px]:block">
                             <EventsFeed events={eventsData} />
                         </div>
                     )}

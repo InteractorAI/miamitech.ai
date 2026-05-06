@@ -112,9 +112,9 @@ export default function EventCurationAdmin() {
     }
 
     return (
-        <main className="min-h-screen bg-bg-primary text-fg-primary">
-            <div className="h-1 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green" />
-            <header className="border-b border-bg-border bg-bg-card px-5 py-4">
+        <main className="flex h-full min-h-0 flex-col overflow-hidden bg-bg-primary text-fg-primary">
+            <div className="h-1 shrink-0 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green" />
+            <header className="shrink-0 border-b border-bg-border bg-bg-card px-5 py-4">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                     <div>
                         <p className="text-xs font-semibold uppercase tracking-wider text-accent-pink">Internal</p>
@@ -140,7 +140,7 @@ export default function EventCurationAdmin() {
                 </div>
             </header>
 
-            <section className="border-b border-bg-border bg-bg-card px-5 py-3">
+            <section className="shrink-0 border-b border-bg-border bg-bg-card px-5 py-3">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex min-w-0 flex-1 items-center gap-2">
                         <input
@@ -171,7 +171,7 @@ export default function EventCurationAdmin() {
                 )}
             </section>
 
-            <section className="divide-y divide-bg-border">
+            <section className="min-h-0 flex-1 divide-y divide-bg-border overflow-y-auto">
                 {filteredEvents.map((event) => (
                     <article key={event.id} className="grid gap-3 px-5 py-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
                         <div className="min-w-0">
