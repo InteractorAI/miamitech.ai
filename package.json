@@ -12,6 +12,7 @@
     "preview:event-distribution": "node scripts/preview-event-distribution.mjs local",
     "preview:event-distribution:staging": "node scripts/preview-event-distribution.mjs staging",
     "preview:event-distribution:prod": "node scripts/preview-event-distribution.mjs production",
+    "send:test-email": "node scripts/send-test-email.mjs",
     "start": "next start",
     "lint": "next lint"
   },
@@ -21,6 +22,7 @@
     "next": "^16.1.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "resend": "^6.12.2",
     "rss-parser": "^3.13.0"
   },
   "devDependencies": {
