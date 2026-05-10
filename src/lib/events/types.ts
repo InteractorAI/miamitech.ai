@@ -10,7 +10,6 @@ export interface SheetEntity {
     eventCalendarUrl: string;
     aliases: string[];
     notes: string;
-    xHandle?: string;
     sheetTab: string;
     sheetRow: number;
 }

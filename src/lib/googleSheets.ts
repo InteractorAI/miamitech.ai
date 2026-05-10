@@ -39,7 +39,6 @@ export interface CommunityEntry {
     calendar: string;
     aliases: string;
     notes: string;
-    x: string;
 }
 
 export interface AmbassadorEntry {
@@ -226,7 +225,6 @@ export const mappers = {
             calendar: normalizeExternalUrl(hasHeader ? getColumn(row, cols, ['Event calendar', 'Calendar'], hasHandle ? 3 : 2) : hasHandle ? cols[3] || '' : cols[2] || ''),
             aliases: hasHeader ? getColumn(row, cols, ['Aliases', 'Alias'], -1) : hasHandle ? cols[4] || '' : cols[3] || '',
             notes: hasHeader ? getColumn(row, cols, ['Notes', 'Note'], -1) : hasHandle ? cols[5] || '' : cols[4] || '',
-            x: hasHeader ? getColumn(row, cols, ['X', 'Twitter'], -1) : '',
         };
     },
     ambassadors: (cols: string[], row?: SheetRow): AmbassadorEntry => ({

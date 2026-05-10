@@ -17,7 +17,6 @@ function makeEntity(input: {
     eventCalendarUrl: string;
     aliases: string;
     notes: string;
-    xHandle?: string;
     sheetTab: string;
     sheetRow: number;
 }): SheetEntity {
@@ -27,18 +26,7 @@ function makeEntity(input: {
         websiteUrl: input.websiteUrl ? ensureAbsoluteUrl(input.websiteUrl) : '',
         eventCalendarUrl: input.eventCalendarUrl ? ensureAbsoluteUrl(input.eventCalendarUrl) : '',
         aliases: splitAliases(input.aliases),
-        xHandle: normalizeXHandle(input.xHandle || ''),
     };
-}
-
-function normalizeXHandle(value: string): string {
-    const cleaned = value
-        .trim()
-        .replace(/^https?:\/\/(?:www\.)?(?:x|twitter)\.com\//i, '')
-        .replace(/[/?#].*$/, '')
-        .replace(/^@/, '');
-
-    return cleaned ? `@${cleaned}` : '';
 }
 
 export async function fetchSheetEntities(): Promise<SheetEntity[]> {
@@ -58,7 +46,6 @@ export async function fetchSheetEntities(): Promise<SheetEntity[]> {
             eventCalendarUrl: item.calendar,
             aliases: item.aliases,
             notes: item.notes,
-            xHandle: item.x,
             sheetTab: 'Communities',
             sheetRow: idx + 2,
         })),
