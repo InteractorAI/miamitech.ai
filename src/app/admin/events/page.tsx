@@ -23,8 +23,24 @@ type CuratedEvent = {
 };
 
 type FilterMode = 'all' | 'promoted' | 'demoted';
+type WeeklyDigest = {
+    jobId: string;
+    dueAt: string;
+    digestWindow: {
+        start: string;
+        end: string;
+    };
+    mainText: string;
+    postUrl: string;
+    eventCount: number;
+};
 
 const STORAGE_KEY = 'miamitech-event-admin-secret';
+const FILTER_LABELS: Record<FilterMode, string> = {
+    all: 'All',
+    promoted: 'Digest',
+    demoted: 'No digest',
+};
 
 export default function EventCurationAdmin() {
     const [secret, setSecret] = useState('');
@@ -32,6 +48,9 @@ export default function EventCurationAdmin() {
     const [query, setQuery] = useState('');
     const [filter, setFilter] = useState<FilterMode>('all');
     const [loading, setLoading] = useState(false);
+    const [digestLoading, setDigestLoading] = useState(false);
+    const [digest, setDigest] = useState<WeeklyDigest | null>(null);
+    const [copied, setCopied] = useState(false);
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -84,6 +103,39 @@ export default function EventCurationAdmin() {
         }
     }
 
+    async function generateDigest() {
+        if (!secret.trim()) {
+            setError('Enter the job secret first.');
+            return;
+        }
+
+        setDigestLoading(true);
+        setError('');
+        setCopied(false);
+
+        try {
+            const res = await fetch('/api/admin/event-digest', {
+                headers: {
+                    'x-admin-secret': secret.trim(),
+                    accept: 'application/json',
+                },
+            });
+            const body = await res.json();
+            if (!res.ok) throw new Error(body.error || 'Failed to generate digest.');
+            setDigest(body.digest || null);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to generate digest.');
+        } finally {
+            setDigestLoading(false);
+        }
+    }
+
+    async function copyText(value: string) {
+        await navigator.clipboard.writeText(value);
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1400);
+    }
+
     async function updateEvent(id: string, updates: Partial<Pick<CuratedEvent, 'promote_outbound' | 'hidden' | 'pinned'>>) {
         setError('');
         const previous = events;
@@ -119,6 +171,7 @@ export default function EventCurationAdmin() {
                     <div>
                         <p className="text-xs font-semibold uppercase tracking-wider text-accent-pink">Internal</p>
                         <h1 className="text-2xl font-bold">Event Curation</h1>
+                        <p className="mt-1 text-sm text-fg-secondary">Remove events from the Sunday digest without hiding them from the site.</p>
                     </div>
                     <div className="grid gap-2 sm:grid-cols-[minmax(220px,320px)_auto]">
                         <input
@@ -157,12 +210,20 @@ export default function EventCurationAdmin() {
                                 key={mode}
                                 type="button"
                                 onClick={() => setFilter(mode)}
-                                className={`h-8 rounded px-3 text-xs font-semibold capitalize ${filter === mode ? 'bg-fg-primary text-bg-primary' : 'text-fg-secondary hover:bg-bg-hover'}`}
+                                className={`h-8 rounded px-3 text-xs font-semibold ${filter === mode ? 'bg-fg-primary text-bg-primary' : 'text-fg-secondary hover:bg-bg-hover'}`}
                             >
-                                {mode}
+                                {FILTER_LABELS[mode]}
                             </button>
                         ))}
                     </div>
+                    <button
+                        type="button"
+                        onClick={generateDigest}
+                        disabled={digestLoading}
+                        className="h-9 rounded bg-accent-pink px-3 text-xs font-semibold text-white disabled:opacity-50"
+                    >
+                        {digestLoading ? 'Generating' : 'Generate digest'}
+                    </button>
                 </div>
                 {error && (
                     <p className="mt-3 border border-accent-pink bg-accent-pink/10 px-3 py-2 text-sm text-fg-primary">
@@ -172,6 +233,40 @@ export default function EventCurationAdmin() {
             </section>
 
             <section className="min-h-0 flex-1 divide-y divide-bg-border overflow-y-auto">
+                {digest && (
+                    <article className="grid gap-3 bg-bg-card px-5 py-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+                        <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <h2 className="text-base font-semibold text-fg-primary">Sunday X Digest</h2>
+                                <span className="text-xs text-fg-muted">
+                                    {formatDateRange(digest.digestWindow.start, digest.digestWindow.end)} · {digest.eventCount} events
+                                </span>
+                            </div>
+                            <textarea
+                                readOnly
+                                value={digest.mainText}
+                                className="mt-3 h-32 w-full resize-none rounded border border-bg-border bg-bg-primary px-3 py-2 text-sm text-fg-primary"
+                            />
+                        </div>
+                        <div className="flex gap-2 lg:pt-7">
+                            <button
+                                type="button"
+                                onClick={() => copyText(digest.mainText)}
+                                className="h-9 rounded border border-bg-border px-3 text-xs font-semibold text-fg-secondary"
+                            >
+                                {copied ? 'Copied' : 'Copy'}
+                            </button>
+                            <a
+                                href={digest.postUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex h-9 items-center rounded bg-accent-blue px-3 text-xs font-semibold text-white"
+                            >
+                                Open X
+                            </a>
+                        </div>
+                    </article>
+                )}
                 {filteredEvents.map((event) => (
                     <article key={event.id} className="grid gap-3 px-5 py-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
                         <div className="min-w-0">
@@ -179,7 +274,7 @@ export default function EventCurationAdmin() {
                                 <span>{formatDateTime(event.starts_at)}</span>
                                 {getSourceName(event) && <span>{getSourceName(event)}</span>}
                                 {event.pinned && <span className="text-accent-green">Pinned</span>}
-                                {!event.promote_outbound && <span className="text-accent-pink">Demoted</span>}
+                                {event.promote_outbound ? <span>Digest</span> : <span className="text-accent-pink">No digest</span>}
                                 {event.hidden && <span className="text-accent-pink">Hidden</span>}
                             </div>
                             <h2 className="mt-1 truncate text-base font-semibold text-fg-primary">{event.title}</h2>
@@ -201,7 +296,7 @@ export default function EventCurationAdmin() {
                                 onClick={() => updateEvent(event.id, { promote_outbound: !event.promote_outbound })}
                                 className={`h-9 rounded px-3 text-xs font-semibold ${event.promote_outbound ? 'border border-accent-pink text-accent-pink' : 'bg-accent-pink text-white'}`}
                             >
-                                {event.promote_outbound ? 'Demote' : 'Promote'}
+                                {event.promote_outbound ? 'Remove digest' : 'Add digest'}
                             </button>
                             <button
                                 type="button"
@@ -243,4 +338,15 @@ function formatDateTime(value: string) {
         hour: 'numeric',
         minute: '2-digit',
     }).format(new Date(value));
+}
+
+function formatDateRange(startDate: string, endDate: string) {
+    const start = new Date(`${startDate}T12:00:00-05:00`);
+    const end = new Date(`${endDate}T12:00:00-05:00`);
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York',
+        month: 'short',
+        day: 'numeric',
+    });
+    return `${formatter.format(start)}-${formatter.format(end)}`;
 }

@@ -4,6 +4,7 @@ import type { EventRelationship } from './types';
 
 const TIME_ZONE = 'America/New_York';
 const MIAMI_TECH_EVENTS_URL = 'https://miamitech.ai/events';
+const EXCLUDED_DIGEST_SOURCE_HANDLES = new Set(['refresh-miami']);
 
 export type EventDistributionChannel = 'buffer_x' | 'email';
 export type EventDistributionKind = 'event_reminder' | 'weekly_digest';
@@ -66,6 +67,18 @@ export interface EventDistributionPreview {
         url: string;
     };
     previewText: string;
+}
+
+export interface WeeklyXDigestComposer {
+    jobId: string;
+    dueAt: string;
+    digestWindow: {
+        start: string;
+        end: string;
+    };
+    mainText: string;
+    postUrl: string;
+    eventCount: number;
 }
 
 export async function enqueueEventDistributionJobs(supabase: SupabaseClient) {
@@ -148,6 +161,103 @@ export async function ensureWeeklyDigestJobs(supabase: SupabaseClient, reference
         dueAt: window.dueAt.toISOString(),
         insertedJobCount: data?.length || 0,
     };
+}
+
+export async function getWeeklyXDigestComposer(supabase: SupabaseClient, referenceDate = new Date()): Promise<WeeklyXDigestComposer> {
+    const digest = await ensureWeeklyDigestJobs(supabase, referenceDate);
+
+    const { data, error } = await supabase
+        .from('event_distribution_jobs')
+        .select(`
+            id,
+            event_id,
+            channel,
+            kind,
+            due_at,
+            status,
+            digest_window_start,
+            digest_window_end,
+            payload,
+            events (
+                id,
+                title,
+                description,
+                starts_at,
+                ends_at,
+                canonical_url,
+                location_text,
+                pinned,
+                hidden,
+                status,
+                promote_outbound,
+                event_entities (
+                    relationship,
+                    entities (
+                        type,
+                        handle,
+                        name
+                    )
+                )
+            )
+        `)
+        .eq('channel', 'buffer_x')
+        .eq('kind', 'weekly_digest')
+        .eq('digest_window_start', digest.digestWindowStart)
+        .eq('digest_window_end', digest.digestWindowEnd)
+        .in('status', ['pending', 'previewed', 'error'])
+        .order('due_at', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+    if (error) throw error;
+
+    const job = data as unknown as DistributionJob | null;
+    if (!job) throw new Error('No weekly X digest job found.');
+
+    if (!job.digest_window_start || !job.digest_window_end) throw new Error('Weekly digest job is missing a digest window.');
+
+    const events = dedupeEvents(await getDigestEvents(supabase, job.digest_window_start, job.digest_window_end));
+    const mainText = renderWeeklyXDigest(events, job.digest_window_start, job.digest_window_end);
+    const payload = {
+        ...(job.payload || {}),
+        composer: {
+            mainText,
+            eventCount: events.length,
+            generatedAt: new Date().toISOString(),
+            timeZone: TIME_ZONE,
+        },
+    };
+
+    const { error: updateError } = await supabase
+        .from('event_distribution_jobs')
+        .update({
+            status: 'previewed',
+            preview_text: mainText,
+            payload,
+            last_error: null,
+            updated_at: new Date().toISOString(),
+        })
+        .eq('id', job.id);
+
+    if (updateError) throw updateError;
+
+    return {
+        jobId: job.id,
+        dueAt: job.due_at,
+        digestWindow: {
+            start: job.digest_window_start,
+            end: job.digest_window_end,
+        },
+        mainText,
+        postUrl: getXIntentUrl(mainText),
+        eventCount: events.length,
+    };
+}
+
+function getXIntentUrl(text: string) {
+    const url = new URL('https://twitter.com/intent/tweet');
+    url.searchParams.set('text', text);
+    return url.toString();
 }
 
 export async function previewEventDistributionJobs(supabase: SupabaseClient, options: PreviewOptions = {}) {
@@ -355,18 +465,22 @@ async function renderEventReminderPost(event: DistributionEvent): Promise<string
 
 function renderWeeklyXDigest(events: DistributionEvent[], startDate: string, endDate: string): string {
     if (!events.length) {
-        return `Miami tech events this week (${formatDateRange(startDate, endDate)}):\n\nNo listed events yet. Check the live calendar:\n${MIAMI_TECH_EVENTS_URL}`;
+        return `Miami tech events this week (${formatDateRange(startDate, endDate)}):\n\nNo listed events yet.`;
     }
 
-    const lines = [`Miami tech events this week (${formatDateRange(startDate, endDate)}):`, ''];
-    for (const event of events.slice(0, 6)) {
-        const next = `- ${formatDigestEventDate(event.starts_at)}: ${event.title}`;
-        const candidate = [...lines, next, '', `Full list: ${MIAMI_TECH_EVENTS_URL}`].join('\n');
-        if (candidate.length > 275) break;
-        lines.push(next);
+    const lines = [`Miami tech events this week (${formatDateRange(startDate, endDate)}):`];
+    let currentDay = '';
+    for (const event of events) {
+        const day = formatDigestDay(event.starts_at);
+        if (day !== currentDay) {
+            lines.push('', day);
+            currentDay = day;
+        }
+
+        const source = getSourceName(event);
+        lines.push(`- ${event.title}${source ? ` — ${source}` : ''}`);
     }
 
-    lines.push('', `Full list: ${MIAMI_TECH_EVENTS_URL}`);
     return lines.join('\n');
 }
 
@@ -463,6 +577,7 @@ function dedupeEvents(events: DistributionEvent[]) {
     const deduped: DistributionEvent[] = [];
 
     for (const event of events) {
+        if (hasExcludedDigestSource(event)) continue;
         const key = getEventClusterKey(event);
         if (seen.has(key)) continue;
         seen.add(key);
@@ -470,6 +585,14 @@ function dedupeEvents(events: DistributionEvent[]) {
     }
 
     return deduped;
+}
+
+function hasExcludedDigestSource(event: DistributionEvent): boolean {
+    return event.event_entities?.some((item) => (
+        item.relationship === 'source' &&
+        item.entities?.handle &&
+        EXCLUDED_DIGEST_SOURCE_HANDLES.has(item.entities.handle)
+    )) || false;
 }
 
 function getEventClusterKey(event: DistributionEvent): string {
@@ -549,17 +672,12 @@ function formatDateRange(startDate: string, endDate: string): string {
 
 function getNextWeeklyDigestWindow(referenceDate: Date) {
     const zoned = getZonedParts(referenceDate);
-    const daysUntilSunday = (7 - zoned.weekday) % 7;
-    let dueDate = addDaysToYmd(zoned, daysUntilSunday);
-    let dueAt = makeZonedDate(dueDate.year, dueDate.month, dueDate.day, 19, 0);
-
-    if (dueAt.getTime() <= referenceDate.getTime()) {
-        dueDate = addDaysToYmd(dueDate, 7);
-        dueAt = makeZonedDate(dueDate.year, dueDate.month, dueDate.day, 19, 0);
-    }
-
-    const start = addDaysToYmd(dueDate, 1);
+    const start = zoned.weekday === 0
+        ? addDaysToYmd(zoned, 1)
+        : addDaysToYmd(zoned, -((zoned.weekday + 6) % 7));
     const end = addDaysToYmd(start, 6);
+    const dueDate = addDaysToYmd(start, -1);
+    const dueAt = makeZonedDate(dueDate.year, dueDate.month, dueDate.day, 19, 0);
 
     return {
         dueAt,

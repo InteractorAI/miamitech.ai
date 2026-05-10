@@ -4,20 +4,20 @@
 
 MiamiTech.ai should turn approved ingested events into useful outbound content that can be reviewed before any external publishing tool is connected.
 
-The first version should generate reviewable post and digest previews from Supabase event data. Buffer, email, and other destinations should be adapters that can be wired in after the generated content and timing feel right.
+The current next phase gives admin a simple Sunday X digest composer. It generates the digest from approved upcoming events, then opens X compose for manual posting.
 
 ## Principles
 
 - Keep ingestion focused on event truth: source sync, event normalization, dedupe, and associations.
 - Keep distribution separate: what should be sent, when it is due, which channel it targets, and whether it has already been handled.
-- Start with previews, not publishing.
-- Treat Buffer as an optional output adapter, not the foundation.
+- Keep preview generation available for review and debugging.
+- Treat X publishing as manual for now; Buffer can handle direct X integration later if needed.
 - Make email and social use the same event selection logic, with channel-specific rendering.
 - Keep human review in the loop until the cadence and copy quality are proven.
 
-## V1 Scope
+## Current Scope
 
-V1 should create an internal distribution queue and a simple way to inspect generated posts before Buffer is connected.
+The event distribution queue supports reviewable previews plus the admin weekly X digest composer.
 
 Included:
 
@@ -26,15 +26,14 @@ Included:
 - A weekly digest job shape that can support both X and email later.
 - Copy renderers for individual event reminders and weekly digests.
 - A protected preview endpoint that returns generated posts and digest content as JSON.
-- No Buffer credentials, no X API integration, and no live email sending.
+- A protected admin digest endpoint that renders ready-to-post X copy.
+- Admin curation through `/admin/events`, where `promote_outbound = false` removes an event from outbound posts and digests.
 
 Not included:
 
 - Direct posting to X.
 - Buffer draft creation.
 - Email provider integration.
-- Public admin UI.
-- Fully autonomous publishing.
 
 ## Data Model
 
@@ -65,7 +64,7 @@ Suggested `kind` values:
 - `event_reminder`
 - `weekly_digest`
 
-Suggested `status` values:
+Supported `status` values:
 
 - `pending`
 - `previewed`
@@ -99,7 +98,7 @@ For weekly digest:
 - Set `due_at` to Sunday at 7:00 p.m. America/New_York.
 - Define the digest window as the upcoming Monday through Sunday in America/New_York.
 
-The first implementation can create weekly digest jobs from a dedicated endpoint rather than coupling this to every ingestion run.
+The admin digest endpoint creates the relevant digest job idempotently before rendering copy.
 
 ## Curation
 
@@ -110,6 +109,7 @@ Recommended default:
 - Include visible active events unless they are explicitly demoted or hidden.
 - Keep `hidden` for events that should not appear publicly.
 - Add a lightweight curation flag for events that can remain listed on MiamiTech.ai but should not be included in outbound event reminders or digest highlights.
+- Exclude known aggregator feeds from outbound digest generation. Refresh Miami is currently treated as an aggregator source because its feed republishes many outside events and the normalized data does not reliably identify which events are Refresh-owned.
 - Eventually expose this through a simple internal UI so the event list can be reviewed without touching the database directly.
 
 The first implementation can support the data flag before the UI exists.
@@ -168,9 +168,10 @@ Event reminder post:
 Weekly X digest:
 
 - Lead with a concise Miami tech weekly framing.
-- Include 3-6 strongest upcoming events.
+- Include the upcoming digest events without an artificial short-post cap.
 - Prefer events with clear source, date, and URL.
-- Link to the MiamiTech.ai events page for the full list.
+- Keep the generated digest link-free.
+- Include the source community/group on each event line when available.
 
 Weekly email digest:
 
@@ -189,6 +190,24 @@ Weekly email digest:
 6. Add the protected preview endpoint.
 7. Add a local script to call the preview endpoint, mirroring `scripts/ingest-events.mjs`.
 8. Manually inspect generated JSON after a production or staging ingestion run.
+
+## Weekly X Digest
+
+The admin endpoint is:
+
+```text
+/api/admin/event-digest
+```
+
+It:
+
+- Requires the same admin/job secret pattern as the other protected admin endpoints.
+- Ensures the current weekly digest job exists.
+- Selects visible, active/postponed events where `promote_outbound` is true.
+- Renders a link-free X post grouped by day.
+- Includes the source community/group on each event line when available.
+- Stores the generated main post in `preview_text` and composer metadata in `payload`.
+- Returns an X intent URL so admin can open the prefilled composer manually.
 
 ## Later Phases
 
