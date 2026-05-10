@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { generateEventReminderCopy } from './copyModel';
+import { fetchSheetEntities } from './sheetEntities';
 import type { EventRelationship } from './types';
 
 const TIME_ZONE = 'America/New_York';
@@ -217,7 +218,8 @@ export async function getWeeklyXDigestComposer(supabase: SupabaseClient, referen
     if (!job.digest_window_start || !job.digest_window_end) throw new Error('Weekly digest job is missing a digest window.');
 
     const events = dedupeEvents(await getDigestEvents(supabase, job.digest_window_start, job.digest_window_end));
-    const mainText = renderWeeklyXDigest(events, job.digest_window_start, job.digest_window_end);
+    const xHandles = await getXHandlesByEntityHandle();
+    const mainText = renderWeeklyXDigest(events, job.digest_window_start, job.digest_window_end, xHandles);
     const payload = {
         ...(job.payload || {}),
         composer: {
@@ -375,9 +377,10 @@ async function renderPreviewForJob(
     }
 
     const events = dedupeEvents(await getDigestEvents(supabase, job.digest_window_start, job.digest_window_end));
+    const xHandles = job.channel === 'email' ? undefined : await getXHandlesByEntityHandle();
     const previewText = job.channel === 'email'
         ? renderWeeklyEmailDigest(events, job.digest_window_start, job.digest_window_end)
-        : renderWeeklyXDigest(events, job.digest_window_start, job.digest_window_end);
+        : renderWeeklyXDigest(events, job.digest_window_start, job.digest_window_end, xHandles);
 
     return {
         id: job.id,
@@ -463,7 +466,12 @@ async function renderEventReminderPost(event: DistributionEvent): Promise<string
     }, fallback);
 }
 
-function renderWeeklyXDigest(events: DistributionEvent[], startDate: string, endDate: string): string {
+function renderWeeklyXDigest(
+    events: DistributionEvent[],
+    startDate: string,
+    endDate: string,
+    xHandles: Map<string, string> = new Map(),
+): string {
     if (!events.length) {
         return `Miami tech events this week (${formatDateRange(startDate, endDate)}):\n\nNo listed events yet.`;
     }
@@ -477,7 +485,7 @@ function renderWeeklyXDigest(events: DistributionEvent[], startDate: string, end
             currentDay = day;
         }
 
-        const source = getSourceName(event);
+        const source = getSourceMention(event, xHandles);
         lines.push(`- ${event.title}${source ? ` — ${source}` : ''}`);
     }
 
@@ -519,6 +527,21 @@ function isOutboundEvent(event: DistributionEvent) {
 
 function getSourceName(event: DistributionEvent): string {
     return event.event_entities?.find((item) => item.relationship === 'source')?.entities?.name || '';
+}
+
+function getSourceMention(event: DistributionEvent, xHandles: Map<string, string>): string {
+    const source = event.event_entities?.find((item) => item.relationship === 'source')?.entities;
+    if (!source) return '';
+    return xHandles.get(source.handle) || source.name || '';
+}
+
+async function getXHandlesByEntityHandle(): Promise<Map<string, string>> {
+    const entities = await fetchSheetEntities();
+    return new Map(
+        entities
+            .filter((entity) => entity.xHandle)
+            .map((entity) => [entity.handle, entity.xHandle || '']),
+    );
 }
 
 function cleanLocation(value: string | null): string {
