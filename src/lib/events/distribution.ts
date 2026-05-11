@@ -17,6 +17,7 @@ interface DistributionEvent {
     starts_at: string;
     ends_at: string | null;
     canonical_url: string;
+    source_name: string | null;
     location_text: string | null;
     pinned: boolean;
     hidden: boolean;
@@ -185,6 +186,7 @@ export async function getWeeklyXDigestComposer(supabase: SupabaseClient, referen
                 starts_at,
                 ends_at,
                 canonical_url,
+                source_name,
                 location_text,
                 pinned,
                 hidden,
@@ -289,6 +291,7 @@ export async function previewEventDistributionJobs(supabase: SupabaseClient, opt
                 starts_at,
                 ends_at,
                 canonical_url,
+                source_name,
                 location_text,
                 pinned,
                 hidden,
@@ -419,6 +422,7 @@ async function getDigestEvents(supabase: SupabaseClient, startDate: string, endD
             starts_at,
             ends_at,
             canonical_url,
+            source_name,
             location_text,
             pinned,
             hidden,
@@ -518,7 +522,7 @@ function isOutboundEvent(event: DistributionEvent) {
 }
 
 function getSourceName(event: DistributionEvent): string {
-    return event.event_entities?.find((item) => item.relationship === 'source')?.entities?.name || '';
+    return event.event_entities?.find((item) => item.relationship === 'source')?.entities?.name || event.source_name || '';
 }
 
 function cleanLocation(value: string | null): string {

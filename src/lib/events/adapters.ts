@@ -3,6 +3,13 @@ import type { EventSource, NormalizedEvent, SourcePlatform } from './types';
 
 const rssParser = new Parser();
 
+export class EventFetchError extends Error {
+    constructor(message: string, readonly status?: number) {
+        super(message);
+        this.name = 'EventFetchError';
+    }
+}
+
 export async function fetchEventsForSource(source: EventSource): Promise<NormalizedEvent[]> {
     if (source.source_platform === 'luma') {
         return fetchLumaEvents(source.source_url);
@@ -44,7 +51,7 @@ async function fetchLumaEvents(url: string): Promise<NormalizedEvent[]> {
     const featuredItems = Array.isArray(calendarData?.featured_items) ? calendarData.featured_items : [];
 
     return featuredItems
-        .map((item: any) => item?.event)
+        .map((item: any) => item?.event ? { ...item.event, calendar: item.calendar } : null)
         .filter(Boolean)
         .map((event: any) => normalizeLumaEvent(event))
         .filter(Boolean);
@@ -68,6 +75,7 @@ function normalizeLumaEvent(event: any): NormalizedEvent | null {
         endsAt: event.end_at || undefined,
         canonicalUrl: eventPath || `https://lu.ma/${event.api_id}`,
         sourcePlatform: 'luma',
+        sourceName: getLumaSourceName(event),
         externalId: event.api_id,
         locationText,
         imageUrl: event.cover_url || undefined,
@@ -76,7 +84,7 @@ function normalizeLumaEvent(event: any): NormalizedEvent | null {
 
 async function fetchSingleLumaEvent(url: string): Promise<NormalizedEvent> {
     const res = await fetch(url, { headers: { 'user-agent': 'MiamiTech.ai Event Aggregator' } });
-    if (!res.ok) throw new Error(`Luma event fetch failed with ${res.status}`);
+    if (!res.ok) throw new EventFetchError(`Luma event fetch failed with ${res.status}`, res.status);
 
     const html = await res.text();
     const nextData = html.match(/<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/)?.[1];
@@ -90,6 +98,8 @@ async function fetchSingleLumaEvent(url: string): Promise<NormalizedEvent> {
             ...eventData?.event,
             description: eventData?.description,
             description_mirror: eventData?.description_mirror,
+            hosts: eventData?.hosts,
+            calendar: eventData?.calendar,
         }
         : initialData?.data?.event;
 
@@ -114,6 +124,23 @@ function getLumaDescription(event: any): string {
         : extractLumaRichText(event?.description_mirror);
 
     return mirrored || event?.description || '';
+}
+
+function getLumaSourceName(event: any): string {
+    const hostName = Array.isArray(event?.hosts)
+        ? event.hosts.find((host: any) => typeof host?.name === 'string' && host.name.trim())?.name
+        : '';
+    if (hostName) return hostName.trim();
+
+    const personalUserName = event?.calendar?.personal_user?.name;
+    if (typeof personalUserName === 'string' && personalUserName.trim()) return personalUserName.trim();
+
+    const calendarName = event?.calendar?.name;
+    if (typeof calendarName === 'string' && calendarName.trim() && calendarName !== 'Personal') {
+        return calendarName.trim();
+    }
+
+    return '';
 }
 
 function extractLumaRichText(node: any): string {

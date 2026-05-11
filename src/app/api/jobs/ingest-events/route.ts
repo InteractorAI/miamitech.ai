@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cleanupMissingLumaEventUrls, hydrateMissingEventSourceNames } from '../../../../lib/events/hydrate';
 import { ingestEventSources } from '../../../../lib/events/ingest';
 import { syncSheetEntities } from '../../../../lib/events/sync';
 import { getSupabaseAdminClient } from '../../../../lib/supabaseServer';
@@ -28,8 +29,10 @@ export async function POST(request: Request) {
 
     const sync = await syncSheetEntities(supabase);
     const ingest = await ingestEventSources(supabase);
+    const hydrate = await hydrateMissingEventSourceNames(supabase, { limit: 50 });
+    const cleanup = await cleanupMissingLumaEventUrls(supabase, { limit: 100 });
 
-    return NextResponse.json({ ok: true, sync, ingest });
+    return NextResponse.json({ ok: true, sync, ingest, hydrate, cleanup });
 }
 
 export async function GET(request: Request) {

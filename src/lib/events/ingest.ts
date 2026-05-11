@@ -82,6 +82,7 @@ export async function upsertEvent(supabase: SupabaseClient, event: NormalizedEve
             ends_at: event.endsAt || null,
             canonical_url: event.canonicalUrl,
             source_platform: event.sourcePlatform,
+            source_name: event.sourceName || null,
             external_id: event.externalId || null,
             dedupe_key: dedupeKey,
             location_text: event.locationText || null,

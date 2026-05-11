@@ -98,7 +98,7 @@ function dateKeyToUtc(value: string): number {
 }
 
 function getSourceName(event: EventFeedItem): string {
-    return event.event_entities?.find((item) => item.relationship === 'source')?.entities?.name || '';
+    return event.event_entities?.find((item) => item.relationship === 'source')?.entities?.name || event.source_name || '';
 }
 
 function getVenueName(event: EventFeedItem): string {

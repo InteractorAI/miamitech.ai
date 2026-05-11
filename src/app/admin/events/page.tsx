@@ -7,6 +7,7 @@ type CuratedEvent = {
     title: string;
     starts_at: string;
     canonical_url: string;
+    source_name: string | null;
     location_text: string | null;
     status: string;
     hidden: boolean;
@@ -158,7 +159,13 @@ export default function EventCurationAdmin() {
             if (!res.ok) throw new Error(body.error || 'Failed to ingest events.');
 
             await loadEvents();
-            setNotice(`Ingested ${body.ingest?.eventCount || 0} events from ${body.ingest?.sourceCount || 0} sources.`);
+            const hydratedCount = body.hydrate?.updatedCount || 0;
+            const canceledCount = body.cleanup?.canceledCount || 0;
+            const maintenance = [
+                hydratedCount ? `hydrated ${hydratedCount} event hosts` : '',
+                canceledCount ? `removed ${canceledCount} dead event URLs` : '',
+            ].filter(Boolean).join('; ');
+            setNotice(`Ingested ${body.ingest?.eventCount || 0} events from ${body.ingest?.sourceCount || 0} sources${maintenance ? `; ${maintenance}.` : '.'}`);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to ingest events.');
         } finally {
@@ -432,7 +439,7 @@ export default function EventCurationAdmin() {
 }
 
 function getSourceName(event: CuratedEvent) {
-    return event.event_entities?.find((item) => item.relationship === 'source')?.entities?.name || '';
+    return event.event_entities?.find((item) => item.relationship === 'source')?.entities?.name || event.source_name || '';
 }
 
 function formatDateTime(value: string) {

@@ -41,6 +41,7 @@ export async function GET(request: Request) {
             title,
             starts_at,
             canonical_url,
+            source_name,
             location_text,
             status,
             hidden,

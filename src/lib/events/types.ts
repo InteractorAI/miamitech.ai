@@ -21,6 +21,7 @@ export interface NormalizedEvent {
     endsAt?: string;
     canonicalUrl: string;
     sourcePlatform: SourcePlatform;
+    sourceName?: string;
     externalId?: string;
     locationText?: string;
     imageUrl?: string;
@@ -46,6 +47,7 @@ export interface EventFeedItem {
     starts_at: string;
     ends_at: string | null;
     canonical_url: string;
+    source_name: string | null;
     location_text: string | null;
     image_url: string | null;
     pinned: boolean;

@@ -18,6 +18,7 @@ export async function getUpcomingEvents(limit = 10, windowDays = 21): Promise<Ev
             starts_at,
             ends_at,
             canonical_url,
+            source_name,
             location_text,
             image_url,
             pinned,
