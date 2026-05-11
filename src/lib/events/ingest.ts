@@ -62,7 +62,7 @@ export async function ingestEventSources(supabase: SupabaseClient) {
     };
 }
 
-async function upsertEvent(supabase: SupabaseClient, event: NormalizedEvent): Promise<string> {
+export async function upsertEvent(supabase: SupabaseClient, event: NormalizedEvent): Promise<string> {
     const dedupeKey = makeEventDedupeKey({
         canonicalUrl: event.canonicalUrl,
         externalId: event.externalId,
@@ -96,7 +96,7 @@ async function upsertEvent(supabase: SupabaseClient, event: NormalizedEvent): Pr
     return data.id;
 }
 
-async function attachEventToEntity(
+export async function attachEventToEntity(
     supabase: SupabaseClient,
     eventId: string,
     entityId: string,
@@ -117,7 +117,7 @@ async function attachEventToEntity(
     if (error) throw error;
 }
 
-async function attachVenueMatches(supabase: SupabaseClient, eventId: string, locationText: string): Promise<number> {
+export async function attachVenueMatches(supabase: SupabaseClient, eventId: string, locationText: string): Promise<number> {
     const normalizedLocation = normalizeText(locationText);
     if (!normalizedLocation) return 0;
 

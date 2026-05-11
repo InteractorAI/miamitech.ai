@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 
 type CuratedEvent = {
     id: string;
@@ -47,11 +47,14 @@ export default function EventCurationAdmin() {
     const [events, setEvents] = useState<CuratedEvent[]>([]);
     const [query, setQuery] = useState('');
     const [filter, setFilter] = useState<FilterMode>('all');
+    const [manualEventUrl, setManualEventUrl] = useState('');
     const [loading, setLoading] = useState(false);
+    const [importing, setImporting] = useState(false);
     const [digestLoading, setDigestLoading] = useState(false);
     const [digest, setDigest] = useState<WeeklyDigest | null>(null);
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState('');
+    const [notice, setNotice] = useState('');
 
     useEffect(() => {
         setSecret(window.localStorage.getItem(STORAGE_KEY) || '');
@@ -85,6 +88,7 @@ export default function EventCurationAdmin() {
 
         setLoading(true);
         setError('');
+        setNotice('');
 
         try {
             const res = await fetch('/api/admin/events?windowDays=60', {
@@ -111,6 +115,7 @@ export default function EventCurationAdmin() {
 
         setDigestLoading(true);
         setError('');
+        setNotice('');
         setCopied(false);
 
         try {
@@ -138,6 +143,7 @@ export default function EventCurationAdmin() {
 
     async function updateEvent(id: string, updates: Partial<Pick<CuratedEvent, 'promote_outbound' | 'hidden' | 'pinned'>>) {
         setError('');
+        setNotice('');
         const previous = events;
         setEvents((current) => current.map((event) => event.id === id ? { ...event, ...updates } : event));
 
@@ -160,6 +166,46 @@ export default function EventCurationAdmin() {
         } catch (err) {
             setEvents(previous);
             setError(err instanceof Error ? err.message : 'Failed to update event.');
+        }
+    }
+
+    async function importManualEvent(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        if (!secret.trim()) {
+            setError('Enter the job secret first.');
+            return;
+        }
+
+        const url = manualEventUrl.trim();
+        if (!url) {
+            setError('Paste an event URL first.');
+            return;
+        }
+
+        setImporting(true);
+        setError('');
+        setNotice('');
+
+        try {
+            const res = await fetch('/api/admin/events/manual', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'x-admin-secret': secret.trim(),
+                    accept: 'application/json',
+                },
+                body: JSON.stringify({ url }),
+            });
+            const body = await res.json();
+            if (!res.ok) throw new Error(body.error || 'Failed to import event.');
+
+            setManualEventUrl('');
+            await loadEvents();
+            setNotice(`Imported ${body.event?.title || 'event'}.`);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to import event.');
+        } finally {
+            setImporting(false);
         }
     }
 
@@ -195,6 +241,22 @@ export default function EventCurationAdmin() {
 
             <section className="shrink-0 border-b border-bg-border bg-bg-card px-5 py-3">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <form onSubmit={importManualEvent} className="flex min-w-0 flex-1 items-center gap-2">
+                        <input
+                            type="url"
+                            value={manualEventUrl}
+                            onChange={(event) => setManualEventUrl(event.target.value)}
+                            placeholder="Paste Luma event URL"
+                            className="h-9 w-full max-w-xl rounded border border-bg-border bg-bg-primary px-3 text-sm text-fg-primary placeholder:text-fg-muted"
+                        />
+                        <button
+                            type="submit"
+                            disabled={importing}
+                            className="h-9 shrink-0 rounded bg-accent-pink px-3 text-xs font-semibold text-white disabled:opacity-50"
+                        >
+                            {importing ? 'Importing' : 'Import'}
+                        </button>
+                    </form>
                     <div className="flex min-w-0 flex-1 items-center gap-2">
                         <input
                             type="search"
@@ -228,6 +290,11 @@ export default function EventCurationAdmin() {
                 {error && (
                     <p className="mt-3 border border-accent-pink bg-accent-pink/10 px-3 py-2 text-sm text-fg-primary">
                         {error}
+                    </p>
+                )}
+                {notice && (
+                    <p className="mt-3 border border-accent-green bg-accent-green/10 px-3 py-2 text-sm text-fg-primary">
+                        {notice}
                     </p>
                 )}
             </section>

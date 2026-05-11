@@ -19,6 +19,14 @@ export async function fetchEventsForSource(source: EventSource): Promise<Normali
     return [];
 }
 
+export async function fetchSingleEvent(url: string): Promise<NormalizedEvent> {
+    if (isLumaUrl(url)) {
+        return fetchSingleLumaEvent(url);
+    }
+
+    throw new Error('Unsupported manual event URL. Single-event intake currently supports Luma event URLs.');
+}
+
 async function fetchLumaEvents(url: string): Promise<NormalizedEvent[]> {
     const res = await fetch(url, { headers: { 'user-agent': 'MiamiTech.ai Event Aggregator' } });
     if (!res.ok) throw new Error(`Luma fetch failed with ${res.status}`);
@@ -55,7 +63,7 @@ function normalizeLumaEvent(event: any): NormalizedEvent | null {
 
     return {
         title: event.name,
-        description: event.description_mirror || event.description || '',
+        description: getLumaDescription(event),
         startsAt: event.start_at,
         endsAt: event.end_at || undefined,
         canonicalUrl: eventPath || `https://lu.ma/${event.api_id}`,
@@ -64,6 +72,57 @@ function normalizeLumaEvent(event: any): NormalizedEvent | null {
         locationText,
         imageUrl: event.cover_url || undefined,
     };
+}
+
+async function fetchSingleLumaEvent(url: string): Promise<NormalizedEvent> {
+    const res = await fetch(url, { headers: { 'user-agent': 'MiamiTech.ai Event Aggregator' } });
+    if (!res.ok) throw new Error(`Luma event fetch failed with ${res.status}`);
+
+    const html = await res.text();
+    const nextData = html.match(/<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/)?.[1];
+    if (!nextData) throw new Error('Could not find Luma event data on the page.');
+
+    const data = JSON.parse(nextData);
+    const initialData = data?.props?.pageProps?.initialData;
+    const eventData = initialData?.data;
+    const event = initialData?.kind === 'event'
+        ? {
+            ...eventData?.event,
+            description: eventData?.description,
+            description_mirror: eventData?.description_mirror,
+        }
+        : initialData?.data?.event;
+
+    const normalized = normalizeLumaEvent(event);
+    if (!normalized) throw new Error('Could not normalize Luma event data from the page.');
+
+    return normalized;
+}
+
+function isLumaUrl(url: string): boolean {
+    try {
+        const host = new URL(url).hostname.toLowerCase();
+        return host === 'luma.com' || host.endsWith('.luma.com') || host === 'lu.ma' || host.endsWith('.lu.ma');
+    } catch {
+        return false;
+    }
+}
+
+function getLumaDescription(event: any): string {
+    const mirrored = typeof event?.description_mirror === 'string'
+        ? event.description_mirror
+        : extractLumaRichText(event?.description_mirror);
+
+    return mirrored || event?.description || '';
+}
+
+function extractLumaRichText(node: any): string {
+    if (!node) return '';
+    if (typeof node === 'string') return node;
+    if (Array.isArray(node)) return node.map(extractLumaRichText).filter(Boolean).join(' ');
+    if (typeof node.text === 'string') return node.text;
+    if (Array.isArray(node.content)) return node.content.map(extractLumaRichText).filter(Boolean).join(' ');
+    return '';
 }
 
 async function fetchIcalEvents(url: string, sourcePlatform: SourcePlatform = 'ical'): Promise<NormalizedEvent[]> {
