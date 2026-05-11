@@ -50,6 +50,7 @@ export default function EventCurationAdmin() {
     const [manualEventUrl, setManualEventUrl] = useState('');
     const [loading, setLoading] = useState(false);
     const [importing, setImporting] = useState(false);
+    const [ingesting, setIngesting] = useState(false);
     const [digestLoading, setDigestLoading] = useState(false);
     const [digest, setDigest] = useState<WeeklyDigest | null>(null);
     const [copied, setCopied] = useState(false);
@@ -132,6 +133,36 @@ export default function EventCurationAdmin() {
             setError(err instanceof Error ? err.message : 'Failed to generate digest.');
         } finally {
             setDigestLoading(false);
+        }
+    }
+
+    async function runIngest() {
+        if (!secret.trim()) {
+            setError('Enter the job secret first.');
+            return;
+        }
+
+        setIngesting(true);
+        setError('');
+        setNotice('');
+
+        try {
+            const res = await fetch('/api/jobs/ingest-events', {
+                method: 'POST',
+                headers: {
+                    'x-admin-secret': secret.trim(),
+                    accept: 'application/json',
+                },
+            });
+            const body = await res.json();
+            if (!res.ok) throw new Error(body.error || 'Failed to ingest events.');
+
+            await loadEvents();
+            setNotice(`Ingested ${body.ingest?.eventCount || 0} events from ${body.ingest?.sourceCount || 0} sources.`);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to ingest events.');
+        } finally {
+            setIngesting(false);
         }
     }
 
@@ -285,6 +316,14 @@ export default function EventCurationAdmin() {
                         className="h-9 rounded bg-accent-pink px-3 text-xs font-semibold text-white disabled:opacity-50"
                     >
                         {digestLoading ? 'Generating' : 'Generate digest'}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={runIngest}
+                        disabled={ingesting}
+                        className="h-9 rounded border border-bg-border px-3 text-xs font-semibold text-fg-secondary disabled:opacity-50"
+                    >
+                        {ingesting ? 'Ingesting' : 'Run ingest'}
                     </button>
                 </div>
                 {error && (

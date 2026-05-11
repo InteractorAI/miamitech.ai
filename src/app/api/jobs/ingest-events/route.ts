@@ -11,7 +11,9 @@ export async function POST(request: Request) {
 
     const expectedSecret = process.env.CRON_SECRET || process.env.EVENT_INGEST_SECRET;
     if (expectedSecret) {
-        const receivedSecret = request.headers.get('authorization')?.replace(/^Bearer\s+/i, '');
+        const receivedSecret =
+            request.headers.get('x-admin-secret') ||
+            request.headers.get('authorization')?.replace(/^Bearer\s+/i, '');
         if (receivedSecret !== expectedSecret) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }

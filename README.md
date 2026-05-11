@@ -92,7 +92,7 @@ npm run ingest:events:prod
 
 Targets `https://miamitech.ai`.
 
-One-off events can be added from `/admin/events` without adding a recurring source. Manual intake uses `/api/admin/events/manual`, protected by the same event/admin secrets as the event ingestion and curation routes. It currently supports single Luma event pages and saves them into the normal `events` table.
+One-off events can be added from `/admin/events` without adding a recurring source. Admin can also run ingestion on demand from the same page. Manual intake uses `/api/admin/events/manual`, protected by the same event/admin secrets as the event ingestion and curation routes. It currently supports single Luma event pages and saves them into the normal `events` table.
 
 Vercel Cron runs the production ingestion job automatically every 6 hours:
 
