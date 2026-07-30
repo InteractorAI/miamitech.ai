@@ -35,12 +35,13 @@ export async function fetchSingleEvent(url: string): Promise<NormalizedEvent> {
 }
 
 async function fetchLumaEvents(url: string): Promise<NormalizedEvent[]> {
-    const res = await fetch(url, { headers: { 'user-agent': 'MiamiTech.ai Event Aggregator' } });
+    const headers = { 'user-agent': 'MiamiTech.ai Event Aggregator' };
+    const res = await fetch(url, { headers });
     if (!res.ok) throw new Error(`Luma fetch failed with ${res.status}`);
 
     const html = await res.text();
     if (html.includes('BEGIN:VCALENDAR')) {
-        return parseIcalText(html, 'luma');
+        return parseIcalText(html, 'luma').filter(isUpcomingOrOngoing);
     }
 
     const nextData = html.match(/<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/)?.[1];
@@ -49,12 +50,53 @@ async function fetchLumaEvents(url: string): Promise<NormalizedEvent[]> {
     const data = JSON.parse(nextData);
     const calendarData = data?.props?.pageProps?.initialData?.data;
     const featuredItems = Array.isArray(calendarData?.featured_items) ? calendarData.featured_items : [];
-
-    return featuredItems
+    const featuredEvents = featuredItems
         .map((item: any) => item?.event ? { ...item.event, calendar: item.calendar } : null)
         .filter(Boolean)
         .map((event: any) => normalizeLumaEvent(event))
         .filter(Boolean);
+
+    const calendarId = calendarData?.calendar?.api_id;
+    if (typeof calendarId !== 'string' || !calendarId.trim()) {
+        return featuredEvents.filter(isUpcomingOrOngoing);
+    }
+
+    const feedUrl = new URL('https://api.luma.com/ics/get');
+    feedUrl.searchParams.set('entity', 'calendar');
+    feedUrl.searchParams.set('id', calendarId);
+
+    const feedRes = await fetch(feedUrl, { headers });
+    if (!feedRes.ok) throw new Error(`Luma iCal fetch failed with ${feedRes.status}`);
+
+    const calendarName = getLumaSourceName({ calendar: calendarData.calendar });
+    const feedEvents = parseIcalText(await feedRes.text(), 'luma', calendarName);
+
+    return mergeLumaEvents(feedEvents, featuredEvents)
+        .filter(isUpcomingOrOngoing)
+        .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime());
+}
+
+function mergeLumaEvents(feedEvents: NormalizedEvent[], featuredEvents: NormalizedEvent[]): NormalizedEvent[] {
+    const events = new Map<string, NormalizedEvent>();
+
+    for (const event of feedEvents) {
+        events.set(getLumaEventKey(event), event);
+    }
+
+    for (const event of featuredEvents) {
+        events.set(getLumaEventKey(event), event);
+    }
+
+    return [...events.values()];
+}
+
+function getLumaEventKey(event: NormalizedEvent): string {
+    return event.externalId || event.canonicalUrl.toLowerCase();
+}
+
+function isUpcomingOrOngoing(event: NormalizedEvent): boolean {
+    const finalTimestamp = event.endsAt || event.startsAt;
+    return new Date(finalTimestamp).getTime() >= Date.now();
 }
 
 function normalizeLumaEvent(event: any): NormalizedEvent | null {
@@ -159,35 +201,72 @@ async function fetchIcalEvents(url: string, sourcePlatform: SourcePlatform = 'ic
     return parseIcalText(await res.text(), sourcePlatform);
 }
 
-function parseIcalText(text: string, sourcePlatform: SourcePlatform): NormalizedEvent[] {
+function parseIcalText(text: string, sourcePlatform: SourcePlatform, sourceName = ''): NormalizedEvent[] {
     return text
         .replace(/\r?\n[ \t]/g, '')
         .split('BEGIN:VEVENT')
         .slice(1)
         .map((chunk) => chunk.split('END:VEVENT')[0])
-        .map((chunk) => parseIcalEvent(chunk, sourcePlatform))
+        .map((chunk) => parseIcalEvent(chunk, sourcePlatform, sourceName))
         .filter((event): event is NormalizedEvent => Boolean(event));
 }
 
-function parseIcalEvent(chunk: string, sourcePlatform: SourcePlatform): NormalizedEvent | null {
+function parseIcalEvent(chunk: string, sourcePlatform: SourcePlatform, sourceName = ''): NormalizedEvent | null {
     const summary = getIcalValue(chunk, 'SUMMARY');
     const start = getIcalValue(chunk, 'DTSTART');
     if (!summary || !start) return null;
 
     const end = getIcalValue(chunk, 'DTEND');
     const uid = getIcalValue(chunk, 'UID');
-    const url = getIcalValue(chunk, 'URL') || uid || '';
+    const description = getIcalValue(chunk, 'DESCRIPTION') || '';
+    const externalId = sourcePlatform === 'luma'
+        ? uid.replace(/@events\.lu\.ma$/i, '')
+        : uid;
+    const url = sourcePlatform === 'luma'
+        ? getLumaIcalUrl(getIcalValue(chunk, 'URL'), description, externalId)
+        : getIcalValue(chunk, 'URL') || uid || '';
 
     return {
         title: decodeIcalText(summary),
-        description: decodeIcalText(getIcalValue(chunk, 'DESCRIPTION') || ''),
+        description: decodeIcalText(description),
         startsAt: parseIcalDate(start).toISOString(),
         endsAt: end ? parseIcalDate(end).toISOString() : undefined,
         canonicalUrl: url,
         sourcePlatform,
-        externalId: uid || undefined,
+        sourceName: sourceName || undefined,
+        externalId: externalId || undefined,
         locationText: decodeIcalText(getIcalValue(chunk, 'LOCATION') || ''),
     };
+}
+
+function getLumaIcalUrl(explicitUrl: string, description: string, externalId: string): string {
+    const descriptionUrl = description.match(/https?:\/\/(?:www\.)?(?:luma\.com|lu\.ma)\/[^\s\\]+/i)?.[0] || '';
+
+    for (const candidate of [explicitUrl, descriptionUrl]) {
+        const normalized = normalizeLumaUrl(candidate);
+        if (normalized) return normalized;
+    }
+
+    return externalId ? `https://luma.com/event/${externalId}` : '';
+}
+
+function normalizeLumaUrl(value: string): string {
+    if (!value) return '';
+
+    try {
+        const url = new URL(value);
+        const host = url.hostname.toLowerCase();
+        if (host !== 'luma.com' && host !== 'www.luma.com' && host !== 'lu.ma' && !host.endsWith('.lu.ma')) {
+            return '';
+        }
+
+        const path = url.pathname.replace(/^\/+|\/+$/g, '');
+        if (!path) return '';
+        if (path.startsWith('event/')) return `https://luma.com/${path}`;
+        return `https://lu.ma/${path}`;
+    } catch {
+        return '';
+    }
 }
 
 function getIcalValue(chunk: string, key: string): string {

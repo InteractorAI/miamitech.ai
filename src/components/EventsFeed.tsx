@@ -149,7 +149,7 @@ export function EventsFeed({
     return (
         <Panel
             title="Events"
-            subtitle={events.length ? `${events.length} upcoming · next 3 weeks` : 'next 3 weeks'}
+            subtitle={events.length ? `${events.length} upcoming · next 60 days` : 'next 60 days'}
             noPadding
             className={expanded ? 'h-full' : ''}
             action={!expanded && (

@@ -94,10 +94,10 @@ Targets `https://miamitech.ai`.
 
 One-off events can be added from `/admin/events` without adding a recurring source. Admin can also run ingestion on demand from the same page. Manual intake uses `/api/admin/events/manual`, protected by the same event/admin secrets as the event ingestion and curation routes. It currently supports single Luma event pages and saves them into the normal `events` table.
 
-Vercel Cron runs the production ingestion job automatically every 6 hours:
+Vercel Cron runs the production ingestion job automatically every hour:
 
 ```text
-0 */6 * * *
+0 * * * *
 ```
 
 Cron only runs on production deployments, so staging ingestion is manual.
@@ -202,7 +202,7 @@ Run a production build. This uses [scripts/build.mjs](scripts/build.mjs), which 
 
 ## Event Source Notes
 
-The first source adapters support Luma-style calendar feeds, iCal, and RSS/Atom-style sources where event dates can be parsed.
+The first source adapters support Luma calendars, iCal, and RSS/Atom-style sources where event dates can be parsed. Luma calendar ingestion combines the page's rich initial event data with its complete iCal subscription so events beyond the initial page batch are not missed.
 
 Humans still choose which calendars belong in the sheet. The system is not trying to crawl the whole internet for events. That keeps the data set intentional, reviewable, and tied to known ecosystem resources.
 
