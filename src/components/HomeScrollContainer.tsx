@@ -29,7 +29,7 @@ export function HomeScrollContainer({ children }: { children: ReactNode }) {
                 if (isRestoring.current) return;
                 sessionStorage.setItem(SCROLL_KEY, String(e.currentTarget.scrollTop));
             }}
-            className="flex-1 flex flex-col min-h-0 overflow-auto min-[900px]:grid min-[900px]:grid-cols-12 min-[900px]:overflow-hidden"
+            className="site-grid flex-1 flex flex-col min-h-0 overflow-auto min-[900px]:grid min-[900px]:grid-cols-12 min-[900px]:overflow-hidden"
         >
             {children}
         </div>

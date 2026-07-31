@@ -24,21 +24,21 @@
   }
 
   html.precision-light {
-    --bg-primary: 239 244 250;
-    --bg-card: 251 253 255;
-    --bg-elevated: 233 240 248;
-    --bg-hover: 224 234 246;
-    --bg-border: 177 194 214;
-    --bg-border-subtle: rgba(71, 91, 119, 0.14);
-    --fg-primary: 8 17 34;
-    --fg-secondary: 41 56 78;
-    --fg-muted: 87 105 130;
-    --scrollbar-thumb: rgba(83, 105, 135, 0.3);
-    --scrollbar-thumb-hover: rgba(37, 99, 235, 0.62);
-    --selection-bg: rgba(79, 70, 229, 0.16);
-    --selection-fg: #172554;
-    --accent-pink-alpha: rgba(192, 38, 211, 0.09);
-    --accent-blue: #1d63e9;
+    --bg-primary: 247 243 251;
+    --bg-card: 255 253 255;
+    --bg-elevated: 240 228 246;
+    --bg-hover: 222 247 244;
+    --bg-border: 153 97 151;
+    --bg-border-subtle: rgba(105, 52, 103, 0.22);
+    --fg-primary: 35 18 39;
+    --fg-secondary: 78 46 82;
+    --fg-muted: 108 72 106;
+    --scrollbar-thumb: rgba(157, 58, 139, 0.4);
+    --scrollbar-thumb-hover: rgba(0, 154, 178, 0.8);
+    --selection-bg: rgba(236, 45, 151, 0.2);
+    --selection-fg: #28112b;
+    --accent-pink-alpha: rgba(217, 31, 167, 0.11);
+    --accent-blue: #008fac;
   }
 
   html.dark {
@@ -121,52 +121,89 @@
 
   html.precision-light body {
     background:
-      radial-gradient(circle at 12% -12%, rgba(99, 102, 241, 0.13), transparent 32%),
-      radial-gradient(circle at 88% -8%, rgba(6, 182, 212, 0.1), transparent 30%),
-      linear-gradient(180deg, #f8fbff 0%, rgb(var(--bg-primary)) 42%);
+      radial-gradient(circle at 8% -12%, rgba(240, 38, 158, 0.18), transparent 31%),
+      radial-gradient(circle at 90% -10%, rgba(0, 190, 196, 0.2), transparent 32%),
+      linear-gradient(180deg, #fff9ff 0%, rgb(var(--bg-primary)) 46%);
   }
 
   html.precision-light .site-header {
-    background: rgba(251, 253, 255, 0.88);
-    border-color: rgba(112, 135, 164, 0.42);
+    background: rgba(255, 253, 255, 0.96);
+    border-color: rgba(105, 52, 103, 0.46);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.95),
-      0 8px 28px rgba(30, 64, 110, 0.07);
+      0 9px 26px rgba(89, 28, 91, 0.1);
     backdrop-filter: blur(18px) saturate(145%);
   }
 
   html.precision-light .site-spectrum {
-    height: 3px;
+    height: 4px;
     background:
-      linear-gradient(90deg, #d946ef 0%, #7c3aed 33%, #1677ff 66%, #06b6d4 100%);
-    box-shadow: 0 1px 10px rgba(79, 70, 229, 0.18);
+      linear-gradient(90deg, #ff4f8b 0 16%, #d10f83 16% 30%, #7b2cbf 30% 45%, #00a9c4 45% 73%, #00a875 73% 100%);
+    box-shadow: 0 1px 8px rgba(167, 27, 136, 0.3);
+  }
+
+  html.precision-light .site-grid {
+    --panel-accent: #007f74;
+    --panel-accent-rgb: 0 127 116;
+  }
+
+  html.precision-light .site-grid > :nth-child(1) {
+    --panel-accent: #c71b96;
+    --panel-accent-rgb: 199 27 150;
+  }
+
+  html.precision-light .site-grid > :nth-child(2) {
+    --panel-accent: #007fa9;
+    --panel-accent-rgb: 0 127 169;
+  }
+
+  html.precision-light .site-grid > :nth-child(3) {
+    --panel-accent: #007f74;
+    --panel-accent-rgb: 0 127 116;
   }
 
   html.precision-light .panel-header {
-    border-color: rgba(112, 135, 164, 0.38);
+    position: relative;
+    border-color: rgba(105, 52, 103, 0.46);
     background:
-      linear-gradient(100deg, rgba(37, 99, 235, 0.055), rgba(124, 58, 237, 0.018) 55%, transparent);
+      linear-gradient(100deg, rgb(var(--panel-accent-rgb) / 0.12), rgb(var(--panel-accent-rgb) / 0.035) 46%, transparent 78%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
   }
 
+  html.precision-light .panel-header::before {
+    position: absolute;
+    top: 9px;
+    bottom: 9px;
+    left: 0;
+    width: 4px;
+    border-radius: 0 999px 999px 0;
+    background: var(--panel-accent);
+    box-shadow: 0 0 12px rgb(var(--panel-accent-rgb) / 0.22);
+    content: '';
+  }
+
+  html.precision-light .panel-header .text-accent-green {
+    color: var(--panel-accent);
+  }
+
   html.precision-light .panel-action > * {
-    border-color: rgba(112, 135, 164, 0.4);
-    background: rgba(251, 253, 255, 0.72);
+    border-color: rgba(105, 52, 103, 0.44);
+    background: rgba(255, 253, 255, 0.92);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.92),
-      0 1px 2px rgba(30, 64, 110, 0.05);
+      0 1px 3px rgba(89, 28, 91, 0.09);
   }
 
   html.precision-light .text-accent-green {
-    color: #07836b;
+    color: #007f74;
   }
 
   html.precision-light .text-accent-pink {
-    color: #c026d3;
+    color: #c71b96;
   }
 
   html.precision-light .border-bg-border {
-    border-color: rgba(112, 135, 164, 0.42);
+    border-color: rgba(105, 52, 103, 0.46);
   }
 
   html.precision-light .border-bg-border-subtle {
