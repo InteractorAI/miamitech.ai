@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -135,6 +135,12 @@
     backdrop-filter: blur(18px) saturate(145%);
   }
 
+  html.precision-light .site-header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.055em;
+  }
+
   html.precision-light .site-spectrum {
     height: 4px;
     background:
@@ -164,22 +170,40 @@
 
   html.precision-light .panel-header {
     position: relative;
+    height: 58px;
     border-color: rgba(105, 52, 103, 0.46);
     background:
-      linear-gradient(100deg, rgb(var(--panel-accent-rgb) / 0.12), rgb(var(--panel-accent-rgb) / 0.035) 46%, transparent 78%);
+      repeating-linear-gradient(115deg, transparent 0 18px, rgb(var(--panel-accent-rgb) / 0.026) 18px 19px),
+      linear-gradient(100deg, rgb(var(--panel-accent-rgb) / 0.16), rgb(var(--panel-accent-rgb) / 0.045) 48%, transparent 82%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
   }
 
-  html.precision-light .panel-header::before {
-    position: absolute;
-    top: 9px;
-    bottom: 9px;
-    left: 0;
-    width: 4px;
-    border-radius: 0 999px 999px 0;
-    background: var(--panel-accent);
-    box-shadow: 0 0 12px rgb(var(--panel-accent-rgb) / 0.22);
+  html.precision-light .panel-header h2 {
+    display: flex;
+    align-items: center;
+    color: var(--panel-accent);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+
+  html.precision-light .panel-header h2::after {
+    width: 22px;
+    height: 6px;
+    margin-left: 9px;
+    background:
+      repeating-linear-gradient(90deg, var(--panel-accent) 0 4px, transparent 4px 7px);
     content: '';
+    opacity: 0.72;
+    transform: skewX(-18deg);
+  }
+
+  html.precision-light .panel-action button,
+  html.precision-light .panel-action a {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
   }
 
   html.precision-light .panel-header .text-accent-green {
@@ -208,6 +232,27 @@
 
   html.precision-light .border-bg-border-subtle {
     border-color: var(--bg-border-subtle);
+  }
+
+  @media (max-width: 639px), (min-width: 900px) and (max-width: 1399px) {
+    html.precision-light .capital-panel:not(.h-full) .panel-header {
+      height: 96px;
+      flex-wrap: wrap;
+      align-content: center;
+      row-gap: 6px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    html.precision-light .capital-panel:not(.h-full) .panel-title,
+    html.precision-light .capital-panel:not(.h-full) .panel-action {
+      width: 100%;
+    }
+
+    html.precision-light .capital-panel:not(.h-full) .panel-action {
+      flex: none;
+      justify-content: flex-start;
+    }
   }
 
   html.contrast body,

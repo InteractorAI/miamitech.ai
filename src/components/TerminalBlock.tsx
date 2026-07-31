@@ -12,7 +12,7 @@ export function Panel({ title, subtitle, children, className = '', action, noPad
 
         <div className={`bg-bg-card flex flex-col overflow-hidden ${className}`}>
             <div className="panel-header px-5 h-[52px] flex items-center justify-between gap-3 border-b border-bg-border min-w-0 bg-gradient-to-r from-accent-green/[0.03] to-transparent shrink-0">
-                <div className="flex items-center gap-3">
+                <div className="panel-title flex min-w-0 shrink-0 items-center gap-3">
                     <h2 className="text-[15px] font-semibold text-accent-green tracking-tight">{title}</h2>
                     {subtitle && <span className="text-xs text-fg-muted font-normal">{subtitle}</span>}
                 </div>

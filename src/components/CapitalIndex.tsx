@@ -70,16 +70,16 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
     return (
         <Panel
             title="Capital"
-            className={expanded ? 'h-full' : ''}
+            className={`capital-panel ${expanded ? 'h-full' : ''}`}
             noPadding
             action={
-                <div className="flex w-full min-w-0 items-center justify-end gap-2">
-                    <div className="flex min-w-0 gap-1.5 overflow-x-auto no-scrollbar py-1">
+                <div className="capital-filter-bar flex w-full min-w-0 items-center justify-end gap-1 sm:gap-2">
+                    <div className="capital-stage-filters flex min-w-0 gap-1 overflow-x-auto no-scrollbar py-1 sm:gap-1.5">
                         {STAGES.map(s => (
                             <button
                                 key={s}
                                 onClick={() => setStageFilter(s)}
-                                className={`inline-flex h-8 items-center rounded-md px-2.5 text-[11px] transition-colors duration-150 whitespace-nowrap ${stageFilter === s
+                                className={`inline-flex h-8 items-center rounded-md px-2 text-[10px] transition-colors duration-150 whitespace-nowrap sm:px-2.5 sm:text-[11px] ${stageFilter === s
                                     ? 'bg-bg-hover/30 text-fg-primary'
                                     : 'text-fg-muted hover:text-fg-secondary hover:bg-bg-hover'
                                     }`}
