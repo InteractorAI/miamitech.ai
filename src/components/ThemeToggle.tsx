@@ -2,13 +2,15 @@
 import { useState, useEffect } from 'react';
 import { track } from '@vercel/analytics';
 
-type Theme = 'light' | 'dark' | 'miami' | 'contrast' | 'contrast-light';
+type Theme = 'precision-light' | 'light' | 'dark' | 'miami' | 'contrast' | 'contrast-light';
 
 export function ThemeToggle() {
     const [theme, setTheme] = useState<Theme | null>(null);
 
     useEffect(() => {
-        if (document.documentElement.classList.contains('contrast-light')) {
+        if (document.documentElement.classList.contains('precision-light')) {
+            setTheme('precision-light');
+        } else if (document.documentElement.classList.contains('contrast-light')) {
             setTheme('contrast-light');
         } else if (document.documentElement.classList.contains('contrast')) {
             setTheme('contrast');
@@ -25,20 +27,22 @@ export function ThemeToggle() {
         const doc = document.documentElement;
         let next: Theme;
         
-        if (theme === 'light') next = 'dark';
+        if (theme === 'precision-light') next = 'dark';
         else if (theme === 'dark') next = 'miami';
         else if (theme === 'miami') next = 'contrast';
         else if (theme === 'contrast') next = 'contrast-light';
-        else next = 'light';
+        else if (theme === 'contrast-light') next = 'light';
+        else next = 'precision-light';
 
-        doc.classList.remove('dark', 'miami', 'contrast', 'contrast-light');
+        doc.classList.remove('precision-light', 'dark', 'miami', 'contrast', 'contrast-light');
         
+        if (next === 'precision-light') doc.classList.add('precision-light');
         if (next === 'dark') doc.classList.add('dark');
         if (next === 'miami') doc.classList.add('miami');
         if (next === 'contrast') doc.classList.add('contrast');
         if (next === 'contrast-light') doc.classList.add('contrast-light');
 
-        doc.style.colorScheme = next === 'light' || next === 'contrast-light' ? 'light' : 'dark';
+        doc.style.colorScheme = next === 'precision-light' || next === 'light' || next === 'contrast-light' ? 'light' : 'dark';
         localStorage.setItem('theme', next);
         track('theme_toggled', { theme: next });
         
@@ -52,7 +56,27 @@ export function ThemeToggle() {
             aria-label="Toggle theme"
             title={`Theme: ${theme ?? 'loading'}`}
         >
-            {theme === 'light' ? (
+            {theme === 'precision-light' ? (
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18" height="18"
+                    viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="1.8"
+                    strokeLinecap="round" strokeLinejoin="round"
+                    className="animate-fade-in text-accent-blue"
+                >
+                    <path d="M12 3v3" />
+                    <path d="M12 18v3" />
+                    <path d="m4.22 4.22 2.12 2.12" />
+                    <path d="m17.66 17.66 2.12 2.12" />
+                    <path d="M3 12h3" />
+                    <path d="M18 12h3" />
+                    <path d="m4.22 19.78 2.12-2.12" />
+                    <path d="m17.66 6.34 2.12-2.12" />
+                    <circle cx="12" cy="12" r="3.25" />
+                    <path d="m19 9 .65 1.35L21 11l-1.35.65L19 13l-.65-1.35L17 11l1.35-.65L19 9Z" />
+                </svg>
+            ) : theme === 'light' ? (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18" height="18"

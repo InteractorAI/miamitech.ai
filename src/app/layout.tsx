@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 
 export const viewport = {
     themeColor: [
-        { media: '(prefers-color-scheme: light)', color: '#f9fafb' },
+        { media: '(prefers-color-scheme: light)', color: '#eff4fa' },
         { media: '(prefers-color-scheme: dark)', color: '#0b0b0e' },
     ],
 };
@@ -72,8 +72,11 @@ export default function RootLayout({
                         __html: `
               (function () {
                 const savedTheme = localStorage.getItem('theme');
-                const theme = savedTheme || 'contrast-light';
-                if (theme === 'dark') {
+                const theme = savedTheme || 'precision-light';
+                if (theme === 'precision-light') {
+                  document.documentElement.classList.add('precision-light');
+                  document.documentElement.style.colorScheme = 'light';
+                } else if (theme === 'dark') {
                   document.documentElement.classList.add('dark');
                   document.documentElement.style.colorScheme = 'dark';
                 } else if (theme === 'miami') {
@@ -86,6 +89,7 @@ export default function RootLayout({
                   document.documentElement.classList.add('contrast-light');
                   document.documentElement.style.colorScheme = 'light';
                 } else {
+                  document.documentElement.classList.remove('precision-light');
                   document.documentElement.classList.remove('dark');
                   document.documentElement.classList.remove('miami');
                   document.documentElement.classList.remove('contrast');
