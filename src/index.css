@@ -39,6 +39,8 @@
     --selection-fg: #28112b;
     --accent-pink-alpha: rgba(217, 31, 167, 0.11);
     --accent-blue: #008fac;
+    --panel-accent: #007f74;
+    --panel-accent-rgb: 0 127 116;
   }
 
   html.dark {
@@ -138,6 +140,10 @@
   html.precision-light .site-header h1 {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  html.precision-light .site-header h1.text-2xl {
     letter-spacing: -0.055em;
   }
 
@@ -226,7 +232,28 @@
     border-color: var(--bg-border-subtle);
   }
 
-  @media (max-width: 639px), (min-width: 900px) and (max-width: 1399px) {
+  @media (max-width: 639px) {
+    html.precision-light .capital-panel .panel-header {
+      height: 96px;
+      flex-wrap: wrap;
+      align-content: center;
+      row-gap: 6px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    html.precision-light .capital-panel .panel-title,
+    html.precision-light .capital-panel .panel-action {
+      width: 100%;
+    }
+
+    html.precision-light .capital-panel .panel-action {
+      flex: none;
+      justify-content: flex-start;
+    }
+  }
+
+  @media (min-width: 900px) and (max-width: 1399px) {
     html.precision-light .capital-panel:not(.h-full) .panel-header {
       height: 96px;
       flex-wrap: wrap;

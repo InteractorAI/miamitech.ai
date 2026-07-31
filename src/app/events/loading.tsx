@@ -5,7 +5,8 @@ import { ThemeToggle } from '../../components/ThemeToggle';
 export default function EventsLoading() {
     return (
         <div className="h-full flex flex-col overflow-hidden">
-            <header className="flex items-center justify-between px-5 py-3 bg-bg-card border-b border-bg-border shrink-0">
+            <div className="site-spectrum h-1 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green shrink-0 animate-pulse" />
+            <header className="site-header flex items-center justify-between px-5 py-3 bg-bg-card border-b border-bg-border shrink-0">
                 <Link href="/" className="text-xs font-medium text-fg-muted">
                     ← Home
                 </Link>

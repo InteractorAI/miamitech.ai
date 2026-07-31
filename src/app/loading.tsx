@@ -106,8 +106,8 @@ export default function HomeLoading() {
     return (
         <div className="h-full flex flex-col overflow-hidden opacity-60 pointer-events-none transition-opacity duration-300">
             {/* Global quick-search modal */}
-            <div className="h-1 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green shrink-0 animate-pulse" />
-            <header className="flex items-center justify-between px-5 py-3 bg-bg-card border-b border-bg-border shrink-0">
+            <div className="site-spectrum h-1 bg-gradient-to-r from-accent-pink via-accent-blue to-accent-green shrink-0 animate-pulse" />
+            <header className="site-header flex items-center justify-between px-5 py-3 bg-bg-card border-b border-bg-border shrink-0">
                 <Link href="/" className="text-2xl font-bold text-fg-primary tracking-tight cursor-pointer">
                     miamitech<span className="text-accent-pink">.ai</span>
                 </Link>
@@ -119,7 +119,7 @@ export default function HomeLoading() {
 
             <MobileNav showEvents={showEvents} />
 
-            <div className="flex-1 flex flex-col min-[900px]:grid min-[900px]:grid-cols-12 min-h-0 overflow-auto min-[900px]:overflow-hidden">
+            <div className="site-grid flex-1 flex flex-col min-[900px]:grid min-[900px]:grid-cols-12 min-h-0 overflow-auto min-[900px]:overflow-hidden">
                 {/* Left column */}
                 <div className="shrink-0 min-[900px]:col-span-3 min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
