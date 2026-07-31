@@ -210,14 +210,6 @@
     color: var(--panel-accent);
   }
 
-  html.precision-light .panel-action > * {
-    border-color: rgba(105, 52, 103, 0.44);
-    background: rgba(255, 253, 255, 0.92);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.92),
-      0 1px 3px rgba(89, 28, 91, 0.09);
-  }
-
   html.precision-light .text-accent-green {
     color: #007f74;
   }
