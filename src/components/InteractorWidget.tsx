@@ -12,9 +12,9 @@ type InteractorTheme = 'light' | 'dark';
 function getInteractorTheme(): InteractorTheme {
     const root = document.documentElement;
     if (
-        root.classList.contains('dark') ||
-        root.classList.contains('miami') ||
-        root.classList.contains('contrast')
+        root.classList.contains('miami-tech-dark') ||
+        root.classList.contains('simple-dark') ||
+        root.classList.contains('retro-miami')
     ) {
         return 'dark';
     }

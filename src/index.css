@@ -23,7 +23,25 @@
     --accent-blue: #2563eb;
   }
 
-  html.precision-light {
+  html.simple-light {
+    --bg-primary: 248 250 252;
+    --bg-card: 255 255 255;
+    --bg-elevated: 241 245 249;
+    --bg-hover: 226 232 240;
+    --bg-border: 203 213 225;
+    --bg-border-subtle: #e2e8f0;
+    --fg-primary: 15 23 42;
+    --fg-secondary: 51 65 85;
+    --fg-muted: 100 116 139;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-thumb-hover: #94a3b8;
+    --selection-bg: rgba(37, 99, 235, 0.16);
+    --selection-fg: #0f172a;
+    --accent-pink-alpha: rgba(224, 64, 251, 0.1);
+    --accent-blue: #2563eb;
+  }
+
+  html.miami-tech {
     --bg-primary: 247 243 251;
     --bg-card: 255 253 255;
     --bg-elevated: 240 228 246;
@@ -43,25 +61,25 @@
     --panel-accent-rgb: 0 127 116;
   }
 
-  html.dark {
-    --bg-primary: 11 11 14;
-    --bg-card: 17 17 22;
-    --bg-elevated: 24 24 30;
-    --bg-hover: 30 30 38;
-    --bg-border: 35 35 41;
-    --bg-border-subtle: #1d1d24;
-    --fg-primary: 240 240 245;
-    --fg-secondary: 154 154 173;
-    --fg-muted: 85 85 94;
-    --scrollbar-thumb: #232329;
-    --scrollbar-thumb-hover: #333340;
-    --selection-bg: rgba(224, 64, 251, 0.2);
+  html.simple-dark {
+    --bg-primary: 10 11 14;
+    --bg-card: 18 19 24;
+    --bg-elevated: 28 29 35;
+    --bg-hover: 40 42 49;
+    --bg-border: 60 61 70;
+    --bg-border-subtle: #282a31;
+    --fg-primary: 248 250 252;
+    --fg-secondary: 213 215 222;
+    --fg-muted: 153 156 168;
+    --scrollbar-thumb: #34363d;
+    --scrollbar-thumb-hover: #4b4e57;
+    --selection-bg: rgba(255, 255, 255, 0.16);
     --selection-fg: #ffffff;
-    --accent-pink-alpha: rgba(224, 64, 251, 0.12);
-    --accent-blue: #448aff;
+    --accent-pink-alpha: rgba(224, 64, 251, 0.14);
+    --accent-blue: #60a5fa;
   }
 
-  html.miami {
+  html.retro-miami {
     --bg-primary: 0 0 0;
     --bg-card: 10 10 12;
     --bg-elevated: 18 18 20;
@@ -79,31 +97,33 @@
     --accent-blue: #00ffff;
   }
 
-  html.miami * {
+  html.retro-miami * {
     font-family: 'Space Mono', monospace !important;
     text-transform: lowercase;
     border-radius: 0 !important;
   }
 
-  html.contrast {
-    --bg-primary: 0 0 0;
-    --bg-card: 4 8 14;
-    --bg-elevated: 14 22 32;
-    --bg-hover: 26 37 52;
-    --bg-border: 92 116 136;
-    --bg-border-subtle: rgba(185, 218, 240, 0.22);
-    --fg-primary: 255 255 255;
-    --fg-secondary: 230 244 255;
-    --fg-muted: 185 218 240;
-    --scrollbar-thumb: rgba(245, 250, 255, 0.45);
-    --scrollbar-thumb-hover: rgba(0, 229, 255, 0.9);
-    --selection-bg: rgba(0, 229, 255, 0.32);
+  html.miami-tech-dark {
+    --bg-primary: 19 15 24;
+    --bg-card: 30 24 35;
+    --bg-elevated: 41 33 47;
+    --bg-hover: 54 44 60;
+    --bg-border: 132 84 128;
+    --bg-border-subtle: rgba(202, 156, 199, 0.24);
+    --fg-primary: 253 247 253;
+    --fg-secondary: 224 203 223;
+    --fg-muted: 175 145 174;
+    --scrollbar-thumb: rgba(202, 156, 199, 0.35);
+    --scrollbar-thumb-hover: rgba(69, 208, 210, 0.78);
+    --selection-bg: rgba(236, 45, 151, 0.3);
     --selection-fg: #ffffff;
-    --accent-pink-alpha: rgba(255, 0, 230, 0.2);
-    --accent-blue: #00e5ff;
+    --accent-pink-alpha: rgba(236, 45, 151, 0.18);
+    --accent-blue: #48d8df;
+    --panel-accent: #61d6cd;
+    --panel-accent-rgb: 97 214 205;
   }
 
-  html.contrast-light {
+  html.peach {
     --bg-primary: 255 246 236;
     --bg-card: 255 250 242;
     --bg-elevated: 255 231 210;
@@ -121,14 +141,14 @@
     --accent-blue: #006dff;
   }
 
-  html.precision-light body {
+  html.miami-tech body {
     background:
       radial-gradient(circle at 8% -12%, rgba(240, 38, 158, 0.18), transparent 31%),
       radial-gradient(circle at 90% -10%, rgba(0, 190, 196, 0.2), transparent 32%),
       linear-gradient(180deg, #fff9ff 0%, rgb(var(--bg-primary)) 46%);
   }
 
-  html.precision-light .site-header {
+  html.miami-tech .site-header {
     background: rgba(255, 253, 255, 0.96);
     border-color: rgba(105, 52, 103, 0.46);
     box-shadow:
@@ -136,34 +156,34 @@
       0 9px 26px rgba(89, 28, 91, 0.1);
   }
 
-  html.precision-light .site-spectrum {
+  html.miami-tech .site-spectrum {
     height: 4px;
     background:
       linear-gradient(90deg, #ff4f8b 0 16%, #d10f83 16% 30%, #7b2cbf 30% 45%, #00a9c4 45% 73%, #00a875 73% 100%);
     box-shadow: 0 1px 8px rgba(167, 27, 136, 0.3);
   }
 
-  html.precision-light .site-grid {
+  html.miami-tech .site-grid {
     --panel-accent: #007f74;
     --panel-accent-rgb: 0 127 116;
   }
 
-  html.precision-light .site-grid > :nth-child(1) {
+  html.miami-tech .site-grid > :nth-child(1) {
     --panel-accent: #c71b96;
     --panel-accent-rgb: 199 27 150;
   }
 
-  html.precision-light .site-grid > :nth-child(2) {
+  html.miami-tech .site-grid > :nth-child(2) {
     --panel-accent: #007fa9;
     --panel-accent-rgb: 0 127 169;
   }
 
-  html.precision-light .site-grid > :nth-child(3) {
+  html.miami-tech .site-grid > :nth-child(3) {
     --panel-accent: #007f74;
     --panel-accent-rgb: 0 127 116;
   }
 
-  html.precision-light .panel-header {
+  html.miami-tech .panel-header {
     position: relative;
     border-color: rgba(105, 52, 103, 0.46);
     background:
@@ -172,40 +192,151 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
   }
 
-  html.precision-light .panel-header h2 {
+  html.miami-tech .panel-header h2 {
     color: var(--panel-accent);
   }
 
-  html.precision-light .panel-header .text-accent-green {
+  html.miami-tech .panel-header .text-accent-green {
     color: var(--panel-accent);
   }
 
-  html.precision-light .text-accent-green {
+  html.miami-tech .text-accent-green {
     color: #007f74;
   }
 
-  html.precision-light .text-accent-pink {
+  html.miami-tech .text-accent-pink {
     color: #c71b96;
   }
 
-  html.precision-light .border-bg-border {
+  html.miami-tech .border-bg-border {
     border-color: rgba(105, 52, 103, 0.46);
   }
 
-  html.precision-light .border-bg-border-subtle {
+  html.miami-tech .border-bg-border-subtle {
     border-color: var(--bg-border-subtle);
   }
 
-  html.contrast body,
-  html.contrast-light body {
-    background:
-      linear-gradient(90deg, rgba(0, 229, 255, 0.08) 0 1px, transparent 1px 100%),
-      linear-gradient(180deg, rgba(255, 0, 230, 0.07) 0 1px, transparent 1px 100%),
-      rgb(var(--bg-primary));
-    background-size: 32px 32px;
+  html.simple-light .site-header {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgb(var(--bg-border) / 0.9);
   }
 
-  html.contrast-light body {
+  html.simple-light .panel-header {
+    background: linear-gradient(90deg, rgb(var(--bg-elevated) / 0.8), transparent 68%);
+    border-color: rgb(var(--bg-border) / 0.82);
+  }
+
+  html.simple-light .panel-action button[aria-pressed="true"] {
+    background-color: rgb(51 65 85 / 0.1);
+  }
+
+  html.simple-dark .site-header {
+    background: rgba(18, 19, 24, 0.96);
+    border-color: rgb(var(--bg-border) / 0.8);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.03);
+  }
+
+  html.simple-dark .panel-header {
+    background: linear-gradient(90deg, rgb(var(--bg-elevated) / 0.74), transparent 68%);
+    border-color: rgb(var(--bg-border) / 0.78);
+  }
+
+  html.simple-dark .panel-action button[aria-pressed="true"] {
+    background-color: rgb(248 250 252 / 0.1);
+  }
+
+  html.miami-tech .panel-action button[aria-pressed="true"] {
+    background-color: rgb(var(--panel-accent-rgb) / 0.14);
+  }
+
+  html.miami-tech-dark .site-header {
+    background: rgba(30, 24, 35, 0.96);
+    border-color: rgba(202, 156, 199, 0.44);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 9px 26px rgba(5, 3, 8, 0.34);
+  }
+
+  html.miami-tech-dark .site-spectrum {
+    height: 4px;
+    background:
+      linear-gradient(90deg, #ff6d9a 0 16%, #e238a2 16% 30%, #9661da 30% 45%, #42d8e2 45% 73%, #5bd7a8 73% 100%);
+    box-shadow: 0 1px 10px rgba(226, 56, 162, 0.38);
+  }
+
+  html.miami-tech-dark .site-grid {
+    --panel-accent: #61d6cd;
+    --panel-accent-rgb: 97 214 205;
+  }
+
+  html.miami-tech-dark .site-grid > :nth-child(1) {
+    --panel-accent: #ff73b4;
+    --panel-accent-rgb: 255 115 180;
+  }
+
+  html.miami-tech-dark .site-grid > :nth-child(2) {
+    --panel-accent: #5fd5ef;
+    --panel-accent-rgb: 95 213 239;
+  }
+
+  html.miami-tech-dark .panel-header {
+    position: relative;
+    border-color: rgba(202, 156, 199, 0.44);
+    background:
+      repeating-linear-gradient(115deg, transparent 0 18px, rgb(var(--panel-accent-rgb) / 0.045) 18px 19px),
+      linear-gradient(100deg, rgb(var(--panel-accent-rgb) / 0.18), rgb(var(--panel-accent-rgb) / 0.055) 48%, transparent 82%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  html.miami-tech-dark .panel-header h2,
+  html.miami-tech-dark .panel-header .text-accent-green {
+    color: var(--panel-accent);
+  }
+
+  html.miami-tech-dark .text-accent-green {
+    color: #61d6cd;
+  }
+
+  html.miami-tech-dark .text-accent-pink {
+    color: #ff73b4;
+  }
+
+  html.miami-tech-dark .border-bg-border {
+    border-color: rgba(202, 156, 199, 0.44);
+  }
+
+  html.miami-tech-dark .border-bg-border-subtle {
+    border-color: var(--bg-border-subtle);
+  }
+
+  html.miami-tech-dark .panel-action button[aria-pressed="true"] {
+    border-color: transparent;
+    background-color: rgb(var(--panel-accent-rgb) / 0.1);
+  }
+
+  html.miami-tech-dark .panel-action button[aria-pressed="true"]:hover {
+    border-color: transparent;
+    background-color: rgb(var(--panel-accent-rgb) / 0.14);
+  }
+
+  html.miami-tech-dark .capital-search {
+    border: 1px solid rgb(var(--bg-border) / 0.42);
+    background-color: transparent;
+  }
+
+  html.miami-tech-dark .capital-search:focus-within {
+    border-color: rgb(var(--panel-accent-rgb) / 0.72);
+    background-color: rgb(var(--panel-accent-rgb) / 0.06);
+  }
+
+  html.miami-tech-dark body {
+    background:
+      radial-gradient(circle at 8% -12%, rgba(240, 38, 158, 0.22), transparent 31%),
+      radial-gradient(circle at 90% -10%, rgba(0, 190, 196, 0.2), transparent 32%),
+      linear-gradient(180deg, #211824 0%, rgb(var(--bg-primary)) 46%);
+  }
+
+  html.peach body {
     background:
       linear-gradient(90deg, rgba(255, 111, 64, 0.08) 0 1px, transparent 1px 100%),
       linear-gradient(180deg, rgba(255, 0, 180, 0.05) 0 1px, transparent 1px 100%),
@@ -213,21 +344,11 @@
     background-size: 32px 32px;
   }
 
-  html.contrast .text-accent-green,
-  html.contrast-light .text-accent-green {
-    color: #50ff7a;
-  }
-
-  html.contrast-light .text-accent-green {
+  html.peach .text-accent-green {
     color: #008f6a;
   }
 
-  html.contrast .text-accent-pink,
-  html.contrast-light .text-accent-pink {
-    color: #ff4df3;
-  }
-
-  html.contrast-light .text-accent-pink {
+  html.peach .text-accent-pink {
     color: #d4008f;
   }
 
@@ -239,50 +360,44 @@
     box-shadow: none;
   }
 
-  html.contrast .text-accent-blue,
-  html.contrast-light .text-accent-blue {
+  html.peach .text-accent-blue {
     color: var(--accent-blue);
   }
 
-  html.contrast-light .text-accent-blue {
-    color: var(--accent-blue);
-  }
-
-  html.contrast .panel-header,
-  html.contrast-light .panel-header {
+  html.miami-tech-dark .panel-header,
+  html.peach .panel-header {
     border-color: rgb(var(--bg-border) / 0.42);
   }
 
-  html.contrast-light .border-bg-border {
+  html.peach .border-bg-border {
     border-color: rgb(var(--bg-border) / 0.38);
   }
 
-  html.contrast-light .border-bg-border-subtle {
+  html.peach .border-bg-border-subtle {
     border-color: var(--bg-border-subtle);
   }
 
-  html.contrast .panel-action > *,
-  html.contrast-light .panel-action > * {
+  html.peach .panel-action > * {
     border-color: rgb(var(--bg-border) / 0.46);
     background: rgb(var(--bg-card) / 0.72);
     color: rgb(var(--fg-primary));
     box-shadow: none;
   }
 
-  html.contrast .panel-action button,
-  html.contrast .panel-action a,
-  html.contrast-light .panel-action button,
-  html.contrast-light .panel-action a {
+  html.miami-tech-dark .panel-action button,
+  html.miami-tech-dark .panel-action a,
+  html.peach .panel-action button,
+  html.peach .panel-action a {
     color: rgb(var(--fg-primary));
   }
 
-  html.contrast .panel-action button,
-  html.contrast-light .panel-action button {
+  html.miami-tech-dark .panel-action button,
+  html.peach .panel-action button {
     box-shadow: none;
   }
 
-  html.contrast .panel-action [class*="bg-accent-pink-alpha"],
-  html.contrast-light .panel-action [class*="bg-accent-pink-alpha"] {
+  html.miami-tech-dark .panel-action [class*="bg-accent-pink-alpha"],
+  html.peach .panel-action [class*="bg-accent-pink-alpha"] {
     border: 0;
     background: var(--accent-pink-alpha);
     box-shadow: none;
@@ -300,10 +415,10 @@
     color: rgb(var(--fg-primary));
   }
 
-  html.contrast .panel-action a:hover,
-  html.contrast .panel-action button:hover,
-  html.contrast-light .panel-action a:hover,
-  html.contrast-light .panel-action button:hover {
+  html.miami-tech-dark .panel-action a:hover,
+  html.miami-tech-dark .panel-action button:hover,
+  html.peach .panel-action a:hover,
+  html.peach .panel-action button:hover {
     background: rgb(var(--bg-hover) / 0.7);
     border-color: rgb(var(--bg-border) / 0.72);
     box-shadow: none;
@@ -462,7 +577,7 @@ button[title="Ask Interactor"]:active {
   transform: scale(0.98);
 }
 
-html.contrast-light button[title="Ask Interactor"]:hover {
+html.peach button[title="Ask Interactor"]:hover {
   color: #d4008f;
 }
 

@@ -71,31 +71,19 @@ export default function RootLayout({
                     dangerouslySetInnerHTML={{
                         __html: `
               (function () {
+                const legacyThemes = {
+                  'precision-light': 'miami-tech',
+                  light: 'simple-light',
+                  dark: 'simple-dark',
+                  miami: 'retro-miami',
+                  contrast: 'miami-tech-dark',
+                  'contrast-light': 'peach',
+                };
+                const validThemes = ['miami-tech', 'miami-tech-dark', 'simple-light', 'simple-dark', 'retro-miami', 'peach'];
                 const savedTheme = localStorage.getItem('theme');
-                const theme = savedTheme || 'precision-light';
-                if (theme === 'precision-light') {
-                  document.documentElement.classList.add('precision-light');
-                  document.documentElement.style.colorScheme = 'light';
-                } else if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                  document.documentElement.style.colorScheme = 'dark';
-                } else if (theme === 'miami') {
-                  document.documentElement.classList.add('miami');
-                  document.documentElement.style.colorScheme = 'dark';
-                } else if (theme === 'contrast') {
-                  document.documentElement.classList.add('contrast');
-                  document.documentElement.style.colorScheme = 'dark';
-                } else if (theme === 'contrast-light') {
-                  document.documentElement.classList.add('contrast-light');
-                  document.documentElement.style.colorScheme = 'light';
-                } else {
-                  document.documentElement.classList.remove('precision-light');
-                  document.documentElement.classList.remove('dark');
-                  document.documentElement.classList.remove('miami');
-                  document.documentElement.classList.remove('contrast');
-                  document.documentElement.classList.remove('contrast-light');
-                  document.documentElement.style.colorScheme = 'light';
-                }
+                const theme = validThemes.includes(savedTheme) ? savedTheme : legacyThemes[savedTheme] || 'miami-tech';
+                document.documentElement.classList.add(theme);
+                document.documentElement.style.colorScheme = ['miami-tech-dark', 'simple-dark', 'retro-miami'].includes(theme) ? 'dark' : 'light';
               })();
             `,
                     }}

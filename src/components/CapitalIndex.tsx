@@ -104,7 +104,7 @@ export function CapitalIndex({ data, loading, expanded = false }: CapitalIndexPr
         >
             {/* Search */}
             <div className={`${expanded ? 'px-5 py-3' : 'px-5 py-3'} border-b border-bg-border shrink-0`}>
-                <div className="flex items-center rounded-md bg-bg-hover/45 transition-colors">
+                <div className="capital-search flex items-center rounded-md bg-bg-hover/45 transition-colors">
                     <div className="pl-3 flex items-center justify-center pointer-events-none">
                         <svg className="w-3.5 h-3.5 text-fg-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
