@@ -15,7 +15,7 @@ export function SysInfo() {
     };
 
     return (
-        <Panel title="About">
+        <Panel title="About" className="about-panel" contentClassName="about-panel-body">
             <div className="space-y-5">
                 <p className="text-sm text-fg-secondary leading-relaxed">
                     The AI concierge and index for the Miami tech ecosystem, connecting you to the best resources in our community.

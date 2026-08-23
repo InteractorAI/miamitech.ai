@@ -352,6 +352,49 @@
     color: #d4008f;
   }
 
+  .about-panel-body {
+    background-color: rgb(var(--bg-card));
+    background-position: right 54%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  html.miami-tech .about-panel-body {
+    background-image:
+      linear-gradient(90deg, rgba(255, 253, 255, 0.96) 0%, rgba(255, 253, 255, 0.88) 51%, rgba(255, 249, 255, 0.46) 100%),
+      url('/retro-miami-about-v2.png');
+  }
+
+  html.miami-tech-dark .about-panel-body {
+    background-image:
+      linear-gradient(90deg, rgba(19, 15, 24, 0.97) 0%, rgba(19, 15, 24, 0.82) 51%, rgba(19, 15, 24, 0.34) 100%),
+      url('/retro-miami-about-v2.png');
+  }
+
+  html.simple-light .about-panel-body {
+    background-image:
+      linear-gradient(90deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.9) 51%, rgba(255, 255, 255, 0.56) 100%),
+      url('/retro-miami-about-v2.png');
+  }
+
+  html.simple-dark .about-panel-body {
+    background-image:
+      linear-gradient(90deg, rgba(10, 11, 14, 0.97) 0%, rgba(10, 11, 14, 0.85) 51%, rgba(10, 11, 14, 0.4) 100%),
+      url('/retro-miami-about-v2.png');
+  }
+
+  html.retro-miami .about-panel-body {
+    background-image:
+      linear-gradient(90deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.7) 51%, rgba(0, 0, 0, 0.18) 100%),
+      url('/retro-miami-about-v2.png');
+  }
+
+  html.peach .about-panel-body {
+    background-image:
+      linear-gradient(90deg, rgba(255, 250, 242, 0.97) 0%, rgba(255, 250, 242, 0.87) 51%, rgba(255, 246, 235, 0.46) 100%),
+      url('/retro-miami-about-v2.png');
+  }
+
   button:focus-visible,
   a:focus-visible,
   input:focus-visible,

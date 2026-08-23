@@ -73,23 +73,23 @@ export default async function Dashboard() {
 
             <HomeScrollContainer>
                 {/* Left column */}
-                <div className="shrink-0 min-[900px]:col-span-3 min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
+                <div className="shrink-0 min-[1200px]:col-span-1 min-[1200px]:flex min-[1200px]:flex-col min-[1200px]:border-r border-bg-border min-[1200px]:min-h-0 min-[1200px]:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
                         <SysInfo />
                     </div>
                     <div className="border-b border-bg-border">
-                        <FollowMiamiTech />
-                    </div>
-                    <div className="border-b border-bg-border">
                         <Sponsors />
                     </div>
-                    <div className="hidden min-[900px]:block border-b border-bg-border min-[900px]:border-b-0">
+                    <div className="border-b border-bg-border">
+                        <FollowMiamiTech />
+                    </div>
+                    <div className="hidden min-[1200px]:block border-b border-bg-border min-[1200px]:border-b-0">
                         <QuickSearchHint />
                     </div>
                 </div>
 
                 {/* Middle column */}
-                <div className="shrink-0 min-[900px]:col-span-4 min-[900px]:flex min-[900px]:flex-col min-[900px]:border-r border-bg-border min-[900px]:min-h-0 min-[900px]:overflow-auto">
+                <div className="shrink-0 min-[1200px]:col-span-1 min-[1200px]:flex min-[1200px]:flex-col min-[1200px]:border-r border-bg-border min-[1200px]:min-h-0 min-[1200px]:overflow-auto">
                     <div id="spaces" className="border-b border-bg-border scroll-mt-12">
                         <SpacesDirectory initialData={spacesData} coffeeShops={coffeeShopsData} />
                     </div>
@@ -97,7 +97,7 @@ export default async function Dashboard() {
                         <CommunitiesDirectory initialData={communitiesData} />
                     </div>
                     {showEvents && (
-                        <div id="events" className="border-b border-bg-border scroll-mt-12 min-[900px]:hidden">
+                        <div id="events" className="border-b border-bg-border scroll-mt-12 min-[1200px]:hidden">
                             <EventsFeed events={eventsData} />
                         </div>
                     )}
@@ -113,15 +113,15 @@ export default async function Dashboard() {
                     <div id="news" className="border-b border-bg-border scroll-mt-12">
                         <NewsSources initialData={newsData} />
                     </div>
-                    <div id="faq" className="border-b border-bg-border min-[900px]:border-b-0 scroll-mt-12">
+                    <div id="faq" className="border-b border-bg-border min-[1200px]:border-b-0 scroll-mt-12">
                         <FAQ initialData={faqData} />
                     </div>
                 </div>
 
                 {/* Right column: optional Events + Capital */}
-                <div className="min-h-[60vh] min-[900px]:min-h-0 min-[900px]:col-span-5 min-[900px]:flex min-[900px]:flex-col min-[900px]:overflow-auto">
+                <div className="min-h-[60vh] min-[1200px]:min-h-0 min-[1200px]:col-span-1 min-[1200px]:flex min-[1200px]:flex-col min-[1200px]:overflow-auto">
                     {showEvents && (
-                        <div className="hidden border-b border-bg-border scroll-mt-12 min-[900px]:block">
+                        <div className="hidden border-b border-bg-border scroll-mt-12 min-[1200px]:block">
                             <EventsFeed events={eventsData} />
                         </div>
                     )}
