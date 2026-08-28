@@ -16,9 +16,8 @@ const SECTIONS = [
 export function MobileNav({ showEvents = true }: { showEvents?: boolean }) {
     const scrollTo = useCallback((id: string) => {
         const el = document.getElementById(id);
-        if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        const target = el?.getClientRects().length ? el : document.getElementById(`${id}-mobile`);
+        target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, []);
 
     return (
