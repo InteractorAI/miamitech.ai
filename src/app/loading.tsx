@@ -119,7 +119,7 @@ export default function HomeLoading() {
 
             <MobileNav showEvents={showEvents} />
 
-            <div className="site-grid flex-1 flex flex-col min-h-0 overflow-auto min-[900px]:grid min-[900px]:grid-cols-[minmax(0,4fr)_minmax(0,5fr)] min-[900px]:grid-rows-[auto_1fr] min-[900px]:items-start min-[1200px]:grid-cols-[minmax(280px,360px)_minmax(360px,4fr)_minmax(420px,5fr)] min-[1200px]:grid-rows-1 min-[1200px]:items-stretch min-[1200px]:overflow-hidden">
+            <div className="site-grid flex-1 flex flex-col min-h-0 overflow-auto min-[900px]:grid min-[900px]:grid-cols-[minmax(0,440px)_minmax(0,1fr)] min-[900px]:grid-rows-[auto_1fr] min-[900px]:items-start min-[1200px]:grid-cols-[minmax(280px,360px)_minmax(360px,4fr)_minmax(420px,5fr)] min-[1200px]:grid-rows-1 min-[1200px]:items-stretch min-[1200px]:overflow-hidden">
                 {/* About sits above the directories in the two-column layout. */}
                 <div className="shrink-0 min-w-0 min-[900px]:col-start-1 min-[900px]:row-start-1 min-[900px]:border-r border-bg-border min-[1200px]:flex min-[1200px]:flex-col min-[1200px]:min-h-0 min-[1200px]:overflow-auto">
                     <div id="about" className="border-b border-bg-border scroll-mt-12">
