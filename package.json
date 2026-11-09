@@ -14,7 +14,9 @@
     "preview:event-distribution:prod": "node scripts/preview-event-distribution.mjs production",
     "send:test-email": "node scripts/send-test-email.mjs",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "events:admin": "node scripts/event-admin.mjs",
+    "test:event-admin": "node --test scripts/event-admin.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.1",
